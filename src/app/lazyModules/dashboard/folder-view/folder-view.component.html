@@ -1,0 +1,6 @@
+folder view
+  <div *ngFor="let item of items">
+    <a (click)="onClick(item.path)">
+      <h2>{{ item.data['name'] }}</h2>
+    </a>
+  </div>

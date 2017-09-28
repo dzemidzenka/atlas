@@ -1,0 +1,20 @@
+<div class="filter_container animated bounceInDown">
+  <input #filter type="text" (keyup)="onKeyUp(filter.value)" placeholder="&#xf002; filter">
+</div>
+<hr>
+
+<nav>
+  <ng-container *ngIf="!itemView">
+    <div *ngFor="let folder of folders">
+      <a (click)="onFolderClick(folder.data.folder)">
+        <h2>Folder: {{ folder.data['folder'] }}</h2>
+      </a>
+    </div>
+  </ng-container>
+
+  <div *ngFor="let item of items">
+    <a (click)="onClick(item.path)">
+      <h2>{{ item.data['name'] }}</h2>
+    </a>
+  </div>
+</nav>
