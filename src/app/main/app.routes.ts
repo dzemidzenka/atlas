@@ -3,45 +3,82 @@ import { RouteGuardService } from '../providers/route-guard.service';
 import { RouteResolverService } from '../providers/route-resolver.service';
 
 
+
 export const ROUTES: Routes = [
-  {
-    path: '',
-    redirectTo: '/US/dashboard',
-    pathMatch: 'full'
-  },
-  {
-    path: ':country/signin',
-    loadChildren: '../lazyModules/signin/signin.module#SigninModule'
-  },
-  {
-    path: ':country/dashboard',
-    loadChildren: '../lazyModules/dashboard/dashboard.module#DashboardModule',
-    canActivate: [RouteGuardService],
-    resolve: { RouteResolverService }
-  },
   {
     path: ':country/order',
     loadChildren: '../lazyModules/order/order.module#OrderModule',
     canActivate: [RouteGuardService],
-    data: { folder: 'main', name: 'Order' },
-    resolve: { RouteResolverService }
+    resolve: { RouteResolverService },
+    data: {
+      active: true,
+      isComponent: true,
+      name: 'Order',
+    },
   },
   {
-    path: ':country/settings',
+    path: ':country/atlas/test/admin',
     loadChildren: '../lazyModules/settings/settings.module#SettingsModule',
     canActivate: [RouteGuardService],
-    data: { folder: 'main', name: 'Settings' },
-    resolve: { RouteResolverService }
+    resolve: { RouteResolverService },
+    data: {
+      active: true,
+      isComponent: true,
+      name: 'Admin',
+    },
   },
   {
-    path: ':country/demo',
+    path: ':country/atlas/test/admin1',
     loadChildren: '../lazyModules/settings/settings.module#SettingsModule',
     canActivate: [RouteGuardService],
-    data: { name: 'Demo' },
-    resolve: { RouteResolverService }
+    resolve: { RouteResolverService },
+    data: {
+      active: true,
+      isComponent: true,
+      name: 'Admin1',
+    },
+  },
+  {
+    path: ':country/sap/app1',
+    loadChildren: '../lazyModules/settings/settings.module#SettingsModule',
+    canActivate: [RouteGuardService],
+    resolve: { RouteResolverService },
+    data: {
+      active: true,
+      isComponent: true,
+      name: 'Settings',
+    },
+  },
+
+
+
+
+  {
+    path: '',
+    loadChildren: '../lazyModules/dashboard/dashboard.module#DashboardModule',
   },
   // {
-  //   path: '**',
-  //   redirectTo: '/US/dashboard'
-  // }
+  //   path: ':country',
+  //   loadChildren: '../lazyModules/dashboard/dashboard.module#DashboardModule',
+  // },
+  {
+    path: ':country/atlas',
+    loadChildren: '../lazyModules/dashboard/dashboard.module#DashboardModule',
+  },
+  {
+    path: ':country/atlas/test',
+    loadChildren: '../lazyModules/dashboard/dashboard.module#DashboardModule',
+  },
+  {
+    path: ':country/sap',
+    loadChildren: '../lazyModules/dashboard/dashboard.module#DashboardModule',
+  },
+  {
+    path: ':country/signin',
+    loadChildren: '../lazyModules/signin/signin.module#SigninModule',
+  },
+  {
+    path: ':country/page-not-found',
+    loadChildren: '../lazyModules/page-not-found/page-not-found.module#PageNotFoundModule',
+  },
 ];

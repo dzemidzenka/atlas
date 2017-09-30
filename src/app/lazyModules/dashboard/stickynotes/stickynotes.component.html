@@ -1,20 +1,21 @@
-<div class="filter_container animated bounceInDown">
+<!-- <div class="filter_container animated bounceInDown">
   <input #filter type="text" (keyup)="onKeyUp(filter.value)" placeholder="&#xf002; filter">
 </div>
-<hr>
+<hr> -->
 
 <nav>
-  <ng-container *ngIf="!itemView">
-    <div *ngFor="let folder of folders">
-      <a (click)="onFolderClick(folder.data.folder)">
-        <h2>Folder: {{ folder.data['folder'] }}</h2>
-      </a>
-    </div>
-  </ng-container>
+  <div *ngFor="let item of menu">
+    <a (click)="onClick(item.urlParams)">
+      <p>{{ item.routerPath }}</p>
 
-  <div *ngFor="let item of items">
-    <a (click)="onClick(item.path)">
-      <h2>{{ item.data['name'] }}</h2>
+      <ng-container *ngIf="item.isComponent else isFolder">
+        TCODE: {{ item.tcode }}
+      </ng-container>
+      <ng-template #isFolder>
+        <span>FOLDER</span>
+        <!-- <p>items {{ item.folderItemsCount }}</p> -->
+      </ng-template>
+      <!-- <h2>{{ item.name }}</h2> -->
     </a>
   </div>
 </nav>

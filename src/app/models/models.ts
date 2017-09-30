@@ -2,24 +2,42 @@ export enum ACTION {
   LOGIN = 'LOGIN',
   LOGOUT = 'LOGOUT',
   ROUTE = 'ROUTE',
+  LANGUAGE = 'LANGUAGE',
+  MENU_VIEW_TCODE = 'MENU_VIEW_TCODE',
+  MENU_VIEW_FAVORITE = 'MENU_FAVORITE_VIEW',
+  MENU_FAVORITE_ADD = 'MENU_FAVORITE_ADD',
+  MENU_FAVORITE_REMOVE = 'MENU_FAVORITE_REMOVE',
 }
 
+export enum COUNTRY {
+  US = 'us',
+  DE = 'de',
+  RU = 'ru',
+}
+
+export enum LANGUAGE {
+  ENSLISH = 'ENSLISH',
+  GERMAN = 'GERMAN',
+  RUSSIAN = 'RUSSIAN',
+}
 
 export interface IActionModel {
   op: ACTION;
-  user?: string;
+  user?: IUserModel;
+  urlParams?: Array<string>;
   country?: string;
-  component?: string;
-  folder?: string;
+  language?: LANGUAGE;
 }
 
 
 export interface IStateModel {
-  actions: Array<IActionModel>;
-  user: string;
+  action: IActionModel;
+  urlParams: Array<string>;
+  user: IUserModel;
   country: string;
-  component: string;
-  folder: string;
+  language: LANGUAGE;
+  menu: Array<IMenuModel>;
+  menuTcodeView: boolean;
 }
 
 
@@ -27,6 +45,17 @@ export interface IUserModel {
   id: number;
   nameFirst: string;
   nameLast: string;
-  country: string;
+  countryDefault: string;
+  allowedCountries: Array<string>;
 }
 
+export interface IMenuModel {
+  id: number;
+  active: boolean;
+  name: string;
+  isComponent: boolean;
+  routerPath: string;
+  urlParams: Array<string>;
+  tcode: string;
+  favorite: boolean;
+}

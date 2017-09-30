@@ -1,0 +1,6 @@
+main {
+    overflow-y: auto;
+    overflow-y: overlay; //Chrome only
+    overflow-x: hidden;
+    height: calc(100vh - 100px);
+}

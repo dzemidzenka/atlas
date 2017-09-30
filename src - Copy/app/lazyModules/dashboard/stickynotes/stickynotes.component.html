@@ -1,0 +1,18 @@
+<!-- <div class="filter_container animated bounceInDown">
+  <input #filter type="text" (keyup)="onKeyUp(filter.value)" placeholder="&#xf002; filter">
+</div>
+<hr> -->
+
+<nav>
+  <div *ngFor="let item of menu">
+    <a (click)="onClick(item.urlParams)">
+      <p>{{ item.routerPath }}</p>
+
+      <ng-container *ngIf="!item.isComponent">
+        <span>FOLDER</span>
+        <!-- <p>items {{ item.folderItemsCount }}</p> -->
+      </ng-container>
+      <h2>{{ item.name }}</h2>
+    </a>
+  </div>
+</nav>

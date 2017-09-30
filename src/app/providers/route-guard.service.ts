@@ -17,8 +17,11 @@ export class RouteGuardService implements CanActivate {
     if (this._authService.isLoggedIn()) {
       return true;
     }
-
-    this._router.navigate([`/${route.params.country}/signin`], { queryParams: { returnUrl: state.url } });
+    if (state.url.length > 1) {
+      this._router.navigate([`/${route.params.country}/signin`], { queryParams: { returnUrl: state.url } });
+    } else {
+      this._router.navigate([`/${route.params.country}/signin`]);
+    }
     return false;
   }
 }

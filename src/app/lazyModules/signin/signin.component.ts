@@ -17,6 +17,6 @@ export class SigninComponent {
 
 
   signIn() {
-    this._authService.signIn('email@company.com', 'password');
+    this._authService.logIn('email@company.com', 'password');
   }
 }

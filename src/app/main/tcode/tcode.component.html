@@ -1,0 +1,4 @@
+<div *ngIf="country$ | async" class="filter_container animated bounceInDown">
+  <input #tcode type="text" (keyup.enter)="onEnter(tcode.value); tcode.value = '';" placeholder="&#xf002; tcode launcher">
+</div>
+<hr>

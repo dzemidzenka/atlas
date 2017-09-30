@@ -1,0 +1,29 @@
+.filter_container {
+    display: flex;
+    justify-content: center; // margin-bottom: 1rem;
+    margin-top: 0.5rem;
+}
+
+input {
+    width: 50rem;
+    height: 2.5rem;
+    font-size: 1rem;
+    text-transform: uppercase;
+    box-sizing: content-box;
+    padding-left: 0.5rem;
+    outline: none; // transition: box-shadow 0.3s, border 0.3s;
+    // border: 1px solid red;
+    border: none;
+    background-color: lightyellow;
+    font-family: 'FontAwesome';
+    &:focus {
+        border: 1px solid red;
+        box-shadow: 0px 0px 10px 2px rgba(240, 193, 75, 1);
+        transform: scale(1.01, 1.01); // transition: background-color 2s, transform 5s;
+        background-color: lightyellow;
+        font-size: 1.5rem;
+    }
+    &::placeholder {
+        color: red;
+    }
+}
