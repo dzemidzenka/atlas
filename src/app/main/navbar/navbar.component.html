@@ -1,15 +1,20 @@
 <ng-container *ngIf="isLoggedIn$ | async">
-  <a (click)="logOut()">SignOut</a>
-  <a (click)="dashboard()">Dashboard</a>
-  <a (click)="switchCountry('us')">USA</a>
-  <a (click)="switchCountry('de')">Germany</a>
-  <a (click)="switchCountry('ru')">Russia</a>
-  <a (click)="tcodeView()">
-    <ng-container *ngIf="(isTcodeView$ | async) else folderView">
+  <button (click)="logOut()">SignOut</button>
+
+  <button (click)="switchCountry('us')">USA</button>
+  <button (click)="switchCountry('de')">Germany</button>
+  <button (click)="switchCountry('ru')">Russia</button>
+  <!-- <a (click)="viewTcode()">
+    <ng-container *ngIf="(isViewTcode$ | async) else folderView">
       SwitchToFolderView
     </ng-container>
     <ng-template #folderView>SwitchToTcodeView</ng-template>
-  </a>
+  </a> -->
+
+  <button (click)="switchView(DASHBOARD)">Dashboard</button>
+  <button (click)="switchView(FAVORITE)">Favorites</button>
+  <button (click)="switchView(RECENT)">Recent</button>
+
   <atlas-tcode> </atlas-tcode>
 </ng-container>
 

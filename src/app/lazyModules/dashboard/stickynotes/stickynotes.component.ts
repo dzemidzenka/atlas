@@ -1,9 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
-// import { ReduxService } from '../../../providers/redux.service';
+import { ReduxService } from '../../../providers/redux.service';
 import { IMenuModel } from '../../../models/models';
-
-// import uniqBy from 'lodash-es/uniqBy';
 
 
 
@@ -15,11 +13,23 @@ import { IMenuModel } from '../../../models/models';
 export class StickynotesComponent {
   constructor(
     private _router: Router,
+    private _reduxService: ReduxService,
   ) { }
 
   @Input() menu: Array<IMenuModel>;
 
+
   onClick(urlParams: Array<string>) {
-     this._router.navigate([urlParams.join('/')]);
+    this._router.navigate([urlParams.join('/')]);
+  }
+
+
+  favoriteAdd(item: IMenuModel) {
+    this._reduxService.actionFavoriteAdd(item);
+  }
+
+
+  favoriteRemove(item: IMenuModel) {
+    this._reduxService.actionFavoriteRemove(item);
   }
 }

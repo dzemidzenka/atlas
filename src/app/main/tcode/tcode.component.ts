@@ -25,12 +25,12 @@ export class TcodeComponent {
       return;
     }
 
-    const urlParams: Array<string> = this._reduxService.getMenu()
+    const urlParams: Array<string> = this._reduxService.getCurrentState().menu
       .filter(menu => menu.isComponent)
       .filter(menu => menu.hasOwnProperty('tcode'))
       .filter(menu => menu.tcode.trim().toLowerCase() === tcode.toLowerCase())[0].urlParams;
 
-    urlParams[0] = this._reduxService.getCountry();
+    urlParams[0] = this._reduxService.getCurrentState().country;
     this._router.navigate([urlParams.join('/')]);
   }
 }

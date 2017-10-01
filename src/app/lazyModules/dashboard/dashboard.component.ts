@@ -1,18 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ReduxService } from '../../providers/redux.service';
-import { ACTION } from '../../models/models';
 
 @Component({
   selector: 'atlas-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss']
+  styleUrls: ['./dashboard.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardComponent {
   constructor(
     private _reduxService: ReduxService,
   ) { }
 
-  menu$ = this._reduxService.state$
-    .filter(state => state.action.op === ACTION.ROUTE || state.action.op === ACTION.MENU_VIEW_TCODE)
-    .map(state => state.menu.filter(menu => menu.active));
+  menu$ = this._reduxService.state$.map(state => state.menu.filter(menu => menu.active));
 }

@@ -15,6 +15,7 @@ const ROUTES: Routes = [
     RouterModule.forChild(ROUTES),
     CommonModule,
   ],
-  declarations: [OrderComponent]
+  declarations: [OrderComponent],
+
 })
 export class OrderModule { }

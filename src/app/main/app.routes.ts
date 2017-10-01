@@ -11,8 +11,8 @@ export const ROUTES: Routes = [
     canActivate: [RouteGuardService],
     resolve: { RouteResolverService },
     data: {
-      active: true,
       isComponent: true,
+      isFavorite: true,
       name: 'Order',
     },
   },
@@ -22,7 +22,6 @@ export const ROUTES: Routes = [
     canActivate: [RouteGuardService],
     resolve: { RouteResolverService },
     data: {
-      active: true,
       isComponent: true,
       name: 'Admin',
     },
@@ -33,7 +32,6 @@ export const ROUTES: Routes = [
     canActivate: [RouteGuardService],
     resolve: { RouteResolverService },
     data: {
-      active: true,
       isComponent: true,
       name: 'Admin1',
     },
@@ -44,7 +42,6 @@ export const ROUTES: Routes = [
     canActivate: [RouteGuardService],
     resolve: { RouteResolverService },
     data: {
-      active: true,
       isComponent: true,
       name: 'Settings',
     },
@@ -64,19 +61,29 @@ export const ROUTES: Routes = [
   {
     path: ':country/atlas',
     loadChildren: '../lazyModules/dashboard/dashboard.module#DashboardModule',
+    data: {
+      name: 'atlas',
+    },
   },
   {
     path: ':country/atlas/test',
     loadChildren: '../lazyModules/dashboard/dashboard.module#DashboardModule',
+    data: {
+      name: 'test',
+    },
   },
   {
     path: ':country/sap',
     loadChildren: '../lazyModules/dashboard/dashboard.module#DashboardModule',
+    data: {
+      name: 'sap',
+    }
   },
   {
     path: ':country/signin',
     loadChildren: '../lazyModules/signin/signin.module#SigninModule',
   },
+
   {
     path: ':country/page-not-found',
     loadChildren: '../lazyModules/page-not-found/page-not-found.module#PageNotFoundModule',

@@ -1,8 +1,3 @@
-<!-- <div class="filter_container animated bounceInDown">
-  <input #filter type="text" (keyup)="onKeyUp(filter.value)" placeholder="&#xf002; filter">
-</div>
-<hr> -->
-
 <nav>
   <div *ngFor="let item of menu">
     <a (click)="onClick(item.urlParams)">
@@ -10,12 +5,23 @@
 
       <ng-container *ngIf="item.isComponent else isFolder">
         TCODE: {{ item.tcode }}
+        <p>
+          <ng-container *ngIf="item.isFavorite else isNotFavorite">
+            <span (click)="favoriteRemove(item)">remove from favorite</span>
+          </ng-container>
+          <ng-template #isNotFavorite>
+            <span (click)="favoriteAdd(item)">add to favorite</span>
+          </ng-template>
+        </p>
       </ng-container>
       <ng-template #isFolder>
         <span>FOLDER</span>
         <!-- <p>items {{ item.folderItemsCount }}</p> -->
       </ng-template>
+
+
       <!-- <h2>{{ item.name }}</h2> -->
+
     </a>
   </div>
 </nav>

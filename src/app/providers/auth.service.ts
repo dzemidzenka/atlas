@@ -32,28 +32,36 @@ export class AuthService {
       countryDefault: COUNTRY.US,
       allowedCountries: COUNTRY
     }));
+
+    const queryParams = this._route.snapshot.queryParams;
     const returnUrl = this._route.snapshot.queryParams['returnUrl'];
+    const view = this._route.snapshot.queryParams['view'];
+
     if (returnUrl) {
-      this._router.navigate([returnUrl]);
-    } else if (this._reduxService.getCountry() !== 'undefined') {
-      this._router.navigate([`/${this._reduxService.getCountry()}`]);
+      this._router.navigate([returnUrl], { queryParams: { view: view } });
     } else {
       this._router.navigate(['']);
     }
   }
 
+
   logOut() {
     this._isLoggedIn = false;
     this._reduxService.actionLogOut();
-    if (this._reduxService.getUrlParams.length > 0) {
+
+    const country = this._reduxService.getCurrentState().country;
+    const urlParams = this._reduxService.getCurrentState().urlParams;
+    const queryParams = this._reduxService.getCurrentState().queryParams;
+
+    if (urlParams.length > 0) {
       this._router.navigate(
-        [`/${this._reduxService.getCountry()}/signin`],
-        { queryParams: { returnUrl: this._reduxService.getUrlParams().join('/') } });
+        [`/${country}/signin`],
+        { queryParams: { returnUrl: urlParams.join('/'), ...queryParams } });
     } else {
-      this._router.navigate(
-        [`/${this._reduxService.getCountry()}/signin`]);
+      this._router.navigate([`/${country}/signin`]);
     }
   }
+
 
   passwordReset(email: string) {
   }
