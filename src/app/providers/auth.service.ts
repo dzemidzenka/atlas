@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ReduxService } from './redux.service';
-import { COUNTRY } from '../models/models';
+import { COUNTRY, IUserModel, INotificationModel } from '../models/models';
 
 @Injectable()
 export class AuthService {
@@ -11,13 +11,23 @@ export class AuthService {
     private _reduxService: ReduxService,
   ) {
     this._isLoggedIn = true;
+
     this._reduxService.actionLogIn(Object.assign({
       email: 'test@company.com',
       nameFirst: 'Steve',
       nameLast: 'Dz',
+      nameDisplay: 'Steve D',
       countryDefault: COUNTRY.US,
       allowedCountries: COUNTRY
-    }));
+    }),
+      [Object.assign(
+        {
+          message: 'Steve D logged in. Hello!',
+          date: Date.now(),
+        }
+      )]
+    );
+
   }
 
   private _isLoggedIn = false;
@@ -25,13 +35,20 @@ export class AuthService {
 
   logIn(email: string, password: string) {
     this._isLoggedIn = true;
-    this._reduxService.actionLogIn(Object.assign({
+    const user: IUserModel = {
+      id: 1,
       email: email,
       nameFirst: 'Steve',
       nameLast: 'Dz',
+      nameDisplay: 'Steve D',
       countryDefault: COUNTRY.US,
-      allowedCountries: COUNTRY
-    }));
+      allowedCountries: [...Object.keys(COUNTRY)]
+    };
+    const notification: INotificationModel = {
+      message: `${user.nameDisplay} logged in. Hello!`,
+      date: Date.now(),
+    };
+    this._reduxService.actionLogIn(user, [notification]);
 
     const queryParams = this._route.snapshot.queryParams;
     const returnUrl = this._route.snapshot.queryParams['returnUrl'];

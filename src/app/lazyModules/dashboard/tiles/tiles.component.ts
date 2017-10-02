@@ -1,15 +1,14 @@
 import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { IMenuModel } from '../../../models/models';
 
-
-
 @Component({
-  selector: 'atlas-stickynotes',
-  templateUrl: './stickynotes.component.html',
-  styleUrls: ['./stickynotes.component.scss'],
+  selector: 'atlas-tiles',
+  templateUrl: './tiles.component.html',
+  styleUrls: ['./tiles.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class StickynotesComponent {
+export class TilesComponent {
+
   constructor() { }
 
   @Input() menu: Array<IMenuModel>;

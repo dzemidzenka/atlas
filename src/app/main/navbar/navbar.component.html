@@ -1,24 +1,54 @@
-<ng-container *ngIf="isLoggedIn$ | async">
-  <button (click)="logOut()">SignOut</button>
+<md-toolbar color="primary">
+  <img src="./assets/atlas-logo.png" alt="logo">
 
-  <button (click)="switchCountry('us')">USA</button>
-  <button (click)="switchCountry('de')">Germany</button>
-  <button (click)="switchCountry('ru')">Russia</button>
-  <!-- <a (click)="viewTcode()">
+  <span class="userName">Hello {{ (user$ | async).nameDisplay }}!</span>
+  <img class="userImg" src="./assets/steve.jpg" alt="user">
+
+  <span class="spacer"></span>
+  <ng-container *ngIf="isLoggedIn$ | async">
+    <!-- <md-icon>dashboard</md-icon>
+      <md-icon>favorite</md-icon> -->
+    <button md-button *ngFor="let view of VIEW" (click)="switchView(view)">{{ view | uppercase }}</button>
+
+    <md-icon *ngIf="notifications$ | async as notifications" mdTooltip="{{ notifications.length }} Notifications" [ngClass]="{notificationIcon: notifications.length > 0}">notifications
+    </md-icon>
+
+    <button md-button (click)="logOut()">LogOut</button>
+    <!-- <button md-button [mdMenuTriggerFor]="appMenu"><md-icon>menu</md-icon></button> -->
+    <md-icon [mdMenuTriggerFor]="appMenu">menu</md-icon>
+
+  </ng-container>
+</md-toolbar>
+
+
+<md-menu #appMenu="mdMenu">
+  <button md-menu-item [mdMenuTriggerFor]="countryMenu">Country</button>
+  <button md-menu-item [mdMenuTriggerFor]="themeMenu">Theme</button>
+  <button md-menu-item><md-icon>settings</md-icon>Settings</button>
+  <button md-menu-item><md-icon>help</md-icon>Help</button>
+</md-menu>
+
+
+<md-menu #countryMenu="mdMenu">
+  <button *ngFor="let country of COUNTRY" md-menu-item (click)="switchCountry(country)">{{ country | uppercase }}</button>
+</md-menu>
+
+
+<md-menu #themeMenu="mdMenu">
+  <button *ngFor="let theme of DASHBOARD_THEME" md-menu-item (click)="switchTheme(theme)">{{ theme | uppercase }}</button>
+</md-menu>
+
+
+<ng-container *ngIf="isLoggedIn$ | async">
+  <atlas-tcode></atlas-tcode>
+</ng-container>
+
+<!-- <a (click)="viewTcode()">
     <ng-container *ngIf="(isViewTcode$ | async) else folderView">
       SwitchToFolderView
     </ng-container>
     <ng-template #folderView>SwitchToTcodeView</ng-template>
   </a> -->
-
-  <button (click)="switchView(DASHBOARD)">Dashboard</button>
-  <button (click)="switchView(FAVORITE)">Favorites</button>
-  <button (click)="switchView(RECENT)">Recent</button>
-
-  <atlas-tcode> </atlas-tcode>
-</ng-container>
-
-
 
 
 

@@ -5,6 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
 // RxJs operators
+import 'rxjs/add/operator/startWith';
 import 'rxjs/add/operator/scan';
 import 'rxjs/add/operator/publishBehavior';
 import 'rxjs/add/operator/map';
@@ -20,7 +21,7 @@ import { RouteResolverService } from '../providers/route-resolver.service';
 import { TranslateService } from '@ngx-translate/core';
 
 // routes
-import { ROUTES } from './app.routes';
+import { ROUTES } from '../routes/app.routes';
 
 // components (non-lazy)
 import { AppComponent } from './app.component';
@@ -93,10 +94,12 @@ const TOKEN_PROVIDERS = [
     FormsModule,
     ReactiveFormsModule,
     HttpModule,
+
     BrowserAnimationsModule,
 
-    MdAutocompleteModule,
-    MdButtonModule,
+    MdAutocompleteModule,  //
+    MdButtonModule,  //
+
     MdButtonToggleModule,
     MdCardModule,
     MdCheckboxModule,
@@ -104,12 +107,17 @@ const TOKEN_PROVIDERS = [
     MdDatepickerModule,
     MdDialogModule,
     MdExpansionModule,
-    MdFormFieldModule,
+
+    MdFormFieldModule,  //
+
     MdGridListModule,
-    MdIconModule,
+    MdIconModule,   //
+
     MdInputModule,
     MdListModule,
-    MdMenuModule,
+
+    MdMenuModule,  //
+
     MdPaginatorModule,
     MdProgressBarModule,
     MdProgressSpinnerModule,
@@ -122,7 +130,9 @@ const TOKEN_PROVIDERS = [
     MdSortModule,
     MdTableModule,
     MdTabsModule,
-    MdToolbarModule,
+
+    MdToolbarModule,   //
+
     MdTooltipModule,
     MdStepperModule,
   ],

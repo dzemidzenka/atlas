@@ -1,5 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Router } from '@angular/router';
 import { ReduxService } from '../../providers/redux.service';
+import { DASHBOARD_THEME, IMenuModel } from '../../models/models';
 
 @Component({
   selector: 'atlas-dashboard',
@@ -9,8 +11,21 @@ import { ReduxService } from '../../providers/redux.service';
 })
 export class DashboardComponent {
   constructor(
+    private _router: Router,
     private _reduxService: ReduxService,
   ) { }
 
+  TILES = DASHBOARD_THEME.TILES;
+  STICKY_NOTES = DASHBOARD_THEME.STICKY_NOTES;
   menu$ = this._reduxService.state$.map(state => state.menu.filter(menu => menu.active));
+  theme$ = this._reduxService.state$.map(state => state.theme);
+
+
+  onNavigate(urlParams: Array<string>) {
+    this._router.navigate([urlParams.join('/')]);
+  }
+
+  onFavoriteToggle(item: IMenuModel) {
+    this._reduxService.actionFavoriteToggle(item);
+  }
 }

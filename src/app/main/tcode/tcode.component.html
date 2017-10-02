@@ -1,4 +1,17 @@
-<div *ngIf="country$ | async" class="filter_container animated bounceInDown">
-  <input #tcode type="text" (keyup.enter)="onEnter(tcode.value); tcode.value = '';" placeholder="&#xf002; tcode launcher">
-</div>
-<hr>
+<!-- <nav *ngIf="country$ | async">
+  <input #tcode type="text" (keyup.enter)="onEnter(tcode.value); tcode.value = '';" placeholder="&#xE039;" class="material-icons">
+    <hr>
+</nav> -->
+
+<nav *ngIf="country$ | async">
+  <form>
+    <md-form-field>
+      <input #tcode mdInput placeholder="Tcode" aria-label="tcode" [mdAutocomplete]="auto" [formControl]="menuCtrl" (keyup.enter)="onSelect(tcode.value)">
+      <md-autocomplete #auto="mdAutocomplete" (optionSelected)="onSelect($event.option.value);">
+        <md-option *ngFor="let menu of filteredMenu | async" [value]="menu.tcode">
+          <span>{{ menu.tcode | uppercase}} ({{menu.description}})</span>
+        </md-option>
+      </md-autocomplete>
+    </md-form-field>
+  </form>
+</nav>

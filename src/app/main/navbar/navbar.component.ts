@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../providers/auth.service';
 import { ReduxService } from '../../providers/redux.service';
-import { ACTION, VIEW } from '../../models/models';
+import { ACTION, VIEW, DASHBOARD_THEME, COUNTRY, IUserModel } from '../../models/models';
 import isEmpty from 'lodash-es/isEmpty';
 
 
@@ -18,17 +18,20 @@ export class NavbarComponent {
     private _reduxService: ReduxService,
   ) { }
 
+  isViewTcode$ = this._reduxService.state$.map(state => state.menuViewTcode);
+  user$ = this._reduxService.state$.map(state => state.user);
+  notifications$ = this._reduxService.state$.map(state => state.notifications);
   isLoggedIn$ = this._reduxService.state$
     // .filter(state => Object.keys(state).length > 0)
     // .filter(state => state.action.op === ACTION.LOGIN || state.action.op === ACTION.LOGOUT)
     .map(state => !isEmpty(state.user));
 
-  isViewTcode$ = this._reduxService.state$.map(state => state.menuViewTcode);
 
-  DASHBOARD: VIEW = VIEW.DASHBOARD;
-  FAVORITE: VIEW = VIEW.FAVORITE;
-  RECENT: VIEW = VIEW.RECENT;
-
+  VIEW = Object.values(VIEW);
+  COUNTRY = Object.values(COUNTRY);
+  DASHBOARD_THEME = Object.values(DASHBOARD_THEME);
+  // TILES = DASHBOARD_THEME.TILES;
+  // STICKY_NOTES = DASHBOARD_THEME.STICKY_NOTES;
 
 
   logOut() {
@@ -57,7 +60,9 @@ export class NavbarComponent {
     this._router.navigate([params.join('/')]);
   }
 
-
+  switchTheme(theme: string) {
+    this._reduxService.actionDashboardTheme(theme);
+  }
 
 
   displayMode: string = 'default';

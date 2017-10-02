@@ -1,27 +1,22 @@
 <nav>
   <div *ngFor="let item of menu">
-    <a (click)="onClick(item.urlParams)">
-      <p>{{ item.routerPath }}</p>
+    <a (click)="onNavigate(item.urlParams)">
+      <!-- <p>{{ item.routerPath }}</p> -->
 
       <ng-container *ngIf="item.isComponent else isFolder">
-        TCODE: {{ item.tcode }}
+        <p>{{ item.description }}</p>
+        <p>TCODE: {{ item.tcode }}</p>
         <p>
-          <ng-container *ngIf="item.isFavorite else isNotFavorite">
-            <span (click)="favoriteRemove(item)">remove from favorite</span>
-          </ng-container>
-          <ng-template #isNotFavorite>
-            <span (click)="favoriteAdd(item)">add to favorite</span>
+          <md-icon *ngIf="item.isFavorite else notFavorite" (click)="onFavoriteToggle(item)">favorite</md-icon>
+          <ng-template #notFavorite>
+            <md-icon (click)="onFavoriteToggle(item)">favorite_border</md-icon>
           </ng-template>
         </p>
       </ng-container>
+
       <ng-template #isFolder>
-        <span>FOLDER</span>
-        <!-- <p>items {{ item.folderItemsCount }}</p> -->
+        <p>{{ item.description }}</p>
       </ng-template>
-
-
-      <!-- <h2>{{ item.name }}</h2> -->
-
     </a>
   </div>
 </nav>

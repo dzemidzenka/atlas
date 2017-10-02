@@ -3,9 +3,10 @@ export enum ACTION {
   LOGOUT = 'LOGOUT',
   ROUTE = 'ROUTE',
   LANGUAGE = 'LANGUAGE',
+  FAVORITE_TOGGLE = 'FAVORITE_TOGGLE',
+  NOTIFICATION = 'NOTIFICATION',
   MENU_VIEW_TCODE = 'MENU_VIEW_TCODE',
-  MENU_FAVORITE_ADD = 'MENU_FAVORITE_ADD',
-  MENU_FAVORITE_REMOVE = 'MENU_FAVORITE_REMOVE',
+  DASHBOARD_THEME = 'DASHBOARD_THEME'
 }
 
 
@@ -24,9 +25,21 @@ export enum LANGUAGE {
 
 export enum VIEW {
   DASHBOARD = 'dashboard',
-  FAVORITE = 'favorite',
+  FAVORITE = 'favorites',
   RECENT = 'recent',
 }
+
+export enum DASHBOARD_THEME {
+  TILES = 'TILES',
+  STICKY_NOTES = 'STICKY_NOTES',
+}
+
+
+
+export const TOASTER_DURATION = 2000;
+
+
+
 
 export interface IActionModel {
   op: ACTION;
@@ -37,6 +50,8 @@ export interface IActionModel {
   country?: string;
   language?: LANGUAGE;
   menuItem?: IMenuModel;
+  dashboard_theme?: DASHBOARD_THEME;
+  notifications?: Array<INotificationModel>;
 }
 
 
@@ -45,18 +60,28 @@ export interface IStateModel {
   url: string;
   urlParams: Array<string>;
   queryParams: Array<string>;
+  isComponent: boolean;
   user: IUserModel;
   country: string;
   language: LANGUAGE;
   view: VIEW;
+  theme: DASHBOARD_THEME;
   menu: Array<IMenuModel>;
   menuRecent: Array<string>;
   menuViewTcode: boolean;
+  notifications: Array<INotificationModel>;
 }
 
 
+export interface INotificationModel {
+  message: string;
+  date: number;
+  doNotKeep?: boolean;
+}
+
 export interface IUserModel {
   id: number;
+  email: string;
   nameFirst: string;
   nameLast: string;
   nameDisplay: string;
@@ -68,10 +93,11 @@ export interface IUserModel {
 export interface IMenuModel {
   id: number;
   active: boolean;
-  name: string;
+  description: string;
+  help: string;
   isComponent: boolean;
+  isFavorite: boolean;
   routerPath: string;
   urlParams: Array<string>;
   tcode: string;
-  isFavorite: boolean;
 }

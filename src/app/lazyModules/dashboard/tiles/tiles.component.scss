@@ -1,0 +1,16 @@
+md-card {
+    width: 250px;
+    height: 250px;
+    margin: 10px;
+    box-sizing: border-box;
+    border-top: 2px solid transparent;
+    &:hover{
+      border-top: 2px solid blue;
+    }
+}
+
+nav {
+    display: flex;
+    justify-content: start;
+    flex-wrap: wrap;
+}

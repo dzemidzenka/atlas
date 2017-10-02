@@ -2,6 +2,7 @@ import { Injectable, Inject } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
+import { MdSnackBar } from '@angular/material';
 
 // import { ACTION, COUNTRY, IStateModel, IActionModel, IUserModel, IMenuModel } from '../models/models';
 import * as models from '../models/models';
@@ -13,20 +14,19 @@ import sortedUniq from 'lodash-es/sortedUniq';
 import cloneDeep from 'lodash-es/cloneDeep';
 import isEmpty from 'lodash-es/isEmpty';
 
-import { RouteGuardService } from '../providers/route-guard.service';
-import { RouteResolverService } from '../providers/route-resolver.service';
-
+// import { RouteGuardService } from '../providers/route-guard.service';
+// import { RouteResolverService } from '../providers/route-resolver.service';
 
 @Injectable()
 export class ReduxService {
   constructor(
     // @Inject(LOCAL_STORAGE_NAME_PROVIDER) private _localStorageName,
     private _router: Router,
+    public snackBar: MdSnackBar
   ) {
     // INITIALIZE REDUCER FUNCTIONS
     this._initReducers();
-
-    // generateAdditionalRoutes(this._router.config);
+    generateAdditionalRoutes(this._router.config);
 
     // // DERIVE MENU FROM THE ROUTES
     // this._menu = this._router.config
@@ -77,8 +77,6 @@ export class ReduxService {
 
 
 
-
-
   // APPLICATION STATE STORE
   state$: Observable<models.IStateModel> = this._actionSubject$
     .merge(this._routerEvents$)
@@ -86,7 +84,6 @@ export class ReduxService {
     .do(state => this._currentState = state)
     .publishBehavior({})
     .refCount() as Observable<models.IStateModel>;
-
 
 
 
@@ -107,18 +104,22 @@ export class ReduxService {
   private _initReducers() {
     this._reducers[models.ACTION.LOGIN] = (state: models.IStateModel, action: models.IActionModel) => {
       state.user = action.user;
-      generateAdditionalRoutes(this._router.config);
+      state.notifications = [...action.notifications];
+      action.notifications.forEach(
+        notification => this.snackBar.open(notification.message, '', { duration: models.TOASTER_DURATION })
+      );
 
       // DERIVE MENU FROM THE ROUTES
       state.menu = this._router.config
         .filter(route => route.hasOwnProperty('data'))
-        .filter(route => route.data.hasOwnProperty('name'))
+        .filter(route => route.data.hasOwnProperty('description'))
         .map(menuItemFromRoute)
         .map((menu: models.IMenuModel, i) => { menu.id = i + 1; return menu; });        // assign menu item ID
     };
 
 
     this._reducers[models.ACTION.LOGOUT] = (state: models.IStateModel, action: models.IActionModel) => {
+      this.snackBar.open(`${state.user.nameDisplay} logged out. Goodbye!`, '', { duration: models.TOASTER_DURATION });
       state.user = {} as models.IUserModel;
     };
 
@@ -128,26 +129,33 @@ export class ReduxService {
     };
 
 
+    this._reducers[models.ACTION.NOTIFICATION] = (state: models.IStateModel, action: models.IActionModel) => {
+      state.notifications.concat(...action.notifications);
+      action.notifications.forEach(
+        notification => this.snackBar.open(notification.message, '', { duration: models.TOASTER_DURATION })
+      );
+    };
+
+
     this._reducers[models.ACTION.MENU_VIEW_TCODE] = (state: models.IStateModel, action: models.IActionModel) => {
       state.menuViewTcode = !state.menuViewTcode;
       getActiveMenu(state);
     };
 
 
-    this._reducers[models.ACTION.MENU_FAVORITE_ADD] = (state: models.IStateModel, action: models.IActionModel) => {
-      state.menu
-        .filter(menu => menu.id === action.menuItem.id)
-        .map(menu => menu.isFavorite = true);
+    this._reducers[models.ACTION.DASHBOARD_THEME] = (state: models.IStateModel, action: models.IActionModel) => {
+      state.theme = action.dashboard_theme;
       getActiveMenu(state);
     };
 
 
-    this._reducers[models.ACTION.MENU_FAVORITE_REMOVE] = (state: models.IStateModel, action: models.IActionModel) => {
+    this._reducers[models.ACTION.FAVORITE_TOGGLE] = (state: models.IStateModel, action: models.IActionModel) => {
       state.menu
         .filter(menu => menu.id === action.menuItem.id)
-        .map(menu => menu.isFavorite = false);
+        .map(menu => menu.isFavorite = !menu.isFavorite);
       getActiveMenu(state);
     };
+
 
 
     this._reducers[models.ACTION.ROUTE] = (state: models.IStateModel, action: models.IActionModel) => {
@@ -167,8 +175,10 @@ export class ReduxService {
       const _urlParams = [...state.urlParams];
       _urlParams[0] = ':country';
       const _routerPath = _urlParams.join('/');
+      state.isComponent = false;
       if (!state.menuRecent.some(recent => recent === _routerPath)) {
         if (state.menu.some(menu => menu.isComponent === true && menu.routerPath === _routerPath)) {
+          state.isComponent = true;
           state.menuRecent.unshift(_routerPath);
         }
         state.menuRecent = state.menuRecent.slice(0, 4);     // keep at most 5 recent items
@@ -182,9 +192,10 @@ export class ReduxService {
   }
 
 
+
   // REDUX ACTIONS
-  actionLogIn(user: models.IUserModel) {
-    this._actionSubject$.next(Object.assign({ op: models.ACTION.LOGIN, user: user }));
+  actionLogIn(user: models.IUserModel, notifications: Array<models.INotificationModel>) {
+    this._actionSubject$.next(Object.assign({ op: models.ACTION.LOGIN, user: user, notifications: notifications }));
   }
 
   actionLogOut() {
@@ -195,12 +206,12 @@ export class ReduxService {
     this._actionSubject$.next(Object.assign({ op: models.ACTION.MENU_VIEW_TCODE }));
   }
 
-  actionFavoriteAdd(menuItem: models.IMenuModel) {
-    this._actionSubject$.next(Object.assign({ op: models.ACTION.MENU_FAVORITE_ADD, menuItem: menuItem }));
+  actionFavoriteToggle(menuItem: models.IMenuModel) {
+    this._actionSubject$.next(Object.assign({ op: models.ACTION.FAVORITE_TOGGLE, menuItem: menuItem }));
   }
 
-  actionFavoriteRemove(menuItem: models.IMenuModel) {
-    this._actionSubject$.next(Object.assign({ op: models.ACTION.MENU_FAVORITE_REMOVE, menuItem: menuItem }));
+  actionDashboardTheme(theme: string) {
+    this._actionSubject$.next(Object.assign({ op: models.ACTION.DASHBOARD_THEME, dashboard_theme: theme }));
   }
 
   // current state getter to prevent direct state update
@@ -298,7 +309,7 @@ function generateAdditionalRoutes(routes) {
         loadChildren: '../lazyModules/dashboard/dashboard.module#DashboardModule',
         canActivate: [],
         resolve: {},
-        data: { name: country.toUpperCase() },
+        data: { description: country.toUpperCase() },
       }));
 
   _routes.push(

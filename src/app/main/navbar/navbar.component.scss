@@ -1,6 +1,23 @@
-.md-expansion-demo-width {
-  width: 600px;
-  display: block;
+.spacer {
+    flex: 1 1 auto;
+}
+
+.userName {
+    margin-left: 2rem;
+}
+
+.userImg {
+    margin-left: 1rem;
+    border-radius: 50%;
+    height: 32px!important;
+    width: 32px!important;
+}
+
+md-toolbar img {
+    height: 80%;
 }
 
 
+.notificationIcon{
+  color: red;
+}

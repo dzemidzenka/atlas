@@ -1,0 +1,17 @@
+<nav>
+  <md-card *ngFor="let item of menu" (click)="onNavigate(item.urlParams)">
+    <md-card-header>
+      <!-- <md-card-title>{{ item.routerPath | uppercase}} </md-card-title> -->
+      <md-card-subtitle *ngIf="item.isComponent">TCODE: {{ item.tcode }}</md-card-subtitle>
+      <md-card-subtitle *ngIf="!item.isComponent">FOLDER</md-card-subtitle>
+    </md-card-header>
+    <md-card-content>{{ item.description | uppercase }}</md-card-content>
+
+    <md-card-actions *ngIf="item.isComponent">
+      <md-icon *ngIf="item.isFavorite else notFavorite" (click)="onFavoriteToggle(item)">favorite</md-icon>
+      <ng-template #notFavorite>
+        <md-icon (click)="onFavoriteToggle(item)">favorite_border</md-icon>
+      </ng-template>
+    </md-card-actions>
+  </md-card>
+</nav>

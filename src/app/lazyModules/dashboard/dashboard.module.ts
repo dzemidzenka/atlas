@@ -4,6 +4,15 @@ import { RouterModule, Routes } from '@angular/router';
 import { RouteGuardService } from '../../providers/route-guard.service';
 import { DashboardComponent } from './dashboard.component';
 import { StickynotesComponent } from './stickynotes/stickynotes.component';
+import { TilesComponent } from './tiles/tiles.component';
+
+import {
+  MdButtonModule,
+  MdCardModule,
+  MdIconModule,
+} from '@angular/material';
+
+
 
 
 const ROUTES: Routes = [
@@ -19,10 +28,14 @@ const ROUTES: Routes = [
   imports: [
     RouterModule.forChild(ROUTES),
     CommonModule,
+    MdButtonModule,
+    MdCardModule,
+    MdIconModule,
   ],
   declarations: [
     DashboardComponent,
     StickynotesComponent,
+    TilesComponent,
   ],
   providers: [
     RouteGuardService,
