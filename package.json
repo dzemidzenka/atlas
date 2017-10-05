@@ -1,16 +1,19 @@
 {
   "name": "atlas",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "license": "Nuvasive",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --open --watch",
     "build": "ng build --aot --prod --stats-json --build-optimizer --vendor-chunk",
-    "test": "ng test",
+    "test": "ng test --browser ChromeHeadless --single-run",
+    "watch": "ng test --browser ChromeHeadless",
     "lint": "ng lint",
     "e2e": "ng e2e",
+    "release": "standard-version",
     "deploy": "./node_modules/.bin/firebase deploy",
-    "bundle-report": "webpack-bundle-analyzer dist/stats.json"
+    "bundle-report": "webpack-bundle-analyzer dist/stats.json",
+    "i18n": "ng-xi18n"
   },
   "private": true,
   "dependencies": {
@@ -20,10 +23,11 @@
     "@angular/compiler": "^4.2.4",
     "@angular/core": "^4.2.4",
     "@angular/forms": "^4.2.4",
-    "@angular/http": "^4.2.4",
+    "@angular/http": "^4.4.4",
     "@angular/material": "^2.0.0-beta.11",
     "@angular/platform-browser": "^4.2.4",
     "@angular/platform-browser-dynamic": "^4.2.4",
+    "@angular/platform-server": "^4.4.4",
     "@angular/router": "^4.2.4",
     "@covalent/core": "^1.0.0-beta.7",
     "@nebular/theme": "^2.0.0-rc.2",
@@ -56,6 +60,7 @@
     "karma-jasmine": "~1.1.0",
     "karma-jasmine-html-reporter": "^0.2.2",
     "protractor": "~5.1.2",
+    "standard-version": "^4.2.0",
     "ts-node": "~3.2.0",
     "tslint": "~5.3.2",
     "typescript": "^2.3.3",
