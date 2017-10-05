@@ -2,11 +2,11 @@ import { Component } from '@angular/core';
 import { AuthService } from '../../providers/auth.service';
 
 @Component({
-  selector: 'atlas-signin',
-  templateUrl: './signin.component.html',
-  styleUrls: ['./signin.component.scss']
+  selector: 'atlas-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss']
 })
-export class SigninComponent {
+export class LoginComponent {
 
   loading = false;
   model: any = {};
@@ -16,7 +16,7 @@ export class SigninComponent {
   ) { }
 
 
-  signIn() {
+  logIn() {
     this._authService.logIn('email@company.com', 'password');
   }
 }

@@ -1,6 +1,11 @@
 main {
-    overflow-y: auto;
-    overflow-y: overlay; //Chrome only
-    overflow-x: hidden;
-    height: calc(100vh - 200px);
+    width: 100vw;
+    height: calc(100vh - 100px);
+    // overflow-y: auto;
+    // overflow-y: overlay; //Chrome only
+}
+
+md-sidenav {
+  background-color: lightblue;
+  width: 200px;
 }

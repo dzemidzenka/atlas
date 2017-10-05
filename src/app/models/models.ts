@@ -5,7 +5,7 @@ export enum ACTION {
   LANGUAGE = 'LANGUAGE',
   FAVORITE_TOGGLE = 'FAVORITE_TOGGLE',
   NOTIFICATION = 'NOTIFICATION',
-  MENU_VIEW_TCODE = 'MENU_VIEW_TCODE',
+  NOTIFICATION_CLEAR = 'NOTIFICATION_CLEAR',
   DASHBOARD_THEME = 'DASHBOARD_THEME'
 }
 
@@ -18,9 +18,9 @@ export enum COUNTRY {
 
 
 export enum LANGUAGE {
-  ENSLISH = 'ENSLISH',
-  GERMAN = 'GERMAN',
-  RUSSIAN = 'RUSSIAN',
+  EN = 'en',
+  DE = 'de',
+  RU = 'ru',
 }
 
 export enum VIEW {
@@ -37,6 +37,7 @@ export enum DASHBOARD_THEME {
 
 
 export const TOASTER_DURATION = 2000;
+export const MAX_OF_FAVARITES = 5;
 
 
 
@@ -67,8 +68,8 @@ export interface IStateModel {
   view: VIEW;
   theme: DASHBOARD_THEME;
   menu: Array<IMenuModel>;
-  menuRecent: Array<string>;
-  menuViewTcode: boolean;
+  menuItemCurrent: IMenuModel;
+  menuRecent: Array<IMenuModel>;
   notifications: Array<INotificationModel>;
 }
 
@@ -85,8 +86,9 @@ export interface IUserModel {
   nameFirst: string;
   nameLast: string;
   nameDisplay: string;
-  countryDefault: string;
+  countryDefault: COUNTRY;
   allowedCountries: Array<string>;
+  defaultLanguage: LANGUAGE;
 }
 
 

@@ -1,35 +1,35 @@
 import { Routes } from '@angular/router';
 import { RouteGuardService } from '../providers/route-guard.service';
 import { RouteResolverService } from '../providers/route-resolver.service';
-
+import { DashboardComponent } from '../main/dashboard/dashboard.component';
 
 
 export const ATLAS_ROUTES: Routes = [
   // ***** FOLDERS *****
   {
     path: ':country/atlas',
-    loadChildren: '../lazyModules/dashboard/dashboard.module#DashboardModule',
+    component: DashboardComponent,
     data: {
       description: 'atlas',
     },
   },
   {
     path: ':country/atlas/manage',
-    loadChildren: '../lazyModules/dashboard/dashboard.module#DashboardModule',
+    component: DashboardComponent,
     data: {
       description: 'Manage',
     },
   },
   {
     path: ':country/atlas/inventory',
-    loadChildren: '../lazyModules/dashboard/dashboard.module#DashboardModule',
+    component: DashboardComponent,
     data: {
       description: 'Inventory',
     },
   },
   {
     path: ':country/atlas/reports',
-    loadChildren: '../lazyModules/dashboard/dashboard.module#DashboardModule',
+    component: DashboardComponent,
     data: {
       description: 'Reports',
     },
@@ -37,7 +37,6 @@ export const ATLAS_ROUTES: Routes = [
 
 
   // ***** COMPONENTS *****
-  // ATLAS
   {
     path: ':country/atlas/order',
     loadChildren: '../lazyModules/order/order.module#OrderModule',
@@ -125,7 +124,7 @@ export const ATLAS_ROUTES: Routes = [
 
 
 
-// ATLAS/INVENTORY
+  // ATLAS/INVENTORY
   {
     path: ':country/atlas/inventory/contrained_materials',
     loadChildren: '../lazyModules/settings/settings.module#SettingsModule',
@@ -179,36 +178,36 @@ export const ATLAS_ROUTES: Routes = [
 
 
 
-// ATLAS/REPORTS
-{
-  path: ':country/atlas/reports/orders',
-  loadChildren: '../lazyModules/settings/settings.module#SettingsModule',
-  canActivate: [RouteGuardService],
-  resolve: { RouteResolverService },
-  data: {
-    isComponent: true,
-    description: 'Orders Report',
+  // ATLAS/REPORTS
+  {
+    path: ':country/atlas/reports/orders',
+    loadChildren: '../lazyModules/settings/settings.module#SettingsModule',
+    canActivate: [RouteGuardService],
+    resolve: { RouteResolverService },
+    data: {
+      isComponent: true,
+      description: 'Orders Report',
+    },
   },
-},
-{
-  path: ':country/atlas/reports/inventory',
-  loadChildren: '../lazyModules/settings/settings.module#SettingsModule',
-  canActivate: [RouteGuardService],
-  resolve: { RouteResolverService },
-  data: {
-    isComponent: true,
-    description: 'Inventory Report',
+  {
+    path: ':country/atlas/reports/inventory',
+    loadChildren: '../lazyModules/settings/settings.module#SettingsModule',
+    canActivate: [RouteGuardService],
+    resolve: { RouteResolverService },
+    data: {
+      isComponent: true,
+      description: 'Inventory Report',
+    },
   },
-},
-{
-  path: ':country/atlas/reports/customer_relationships',
-  loadChildren: '../lazyModules/settings/settings.module#SettingsModule',
-  canActivate: [RouteGuardService],
-  resolve: { RouteResolverService },
-  data: {
-    isComponent: true,
-    description: 'Customer Relationships Report',
+  {
+    path: ':country/atlas/reports/customer_relationships',
+    loadChildren: '../lazyModules/settings/settings.module#SettingsModule',
+    canActivate: [RouteGuardService],
+    resolve: { RouteResolverService },
+    data: {
+      isComponent: true,
+      description: 'Customer Relationships Report',
+    },
   },
-},
 
 ];

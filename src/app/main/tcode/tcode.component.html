@@ -3,15 +3,13 @@
     <hr>
 </nav> -->
 
-<nav *ngIf="country$ | async">
-  <form>
-    <md-form-field>
-      <input #tcode mdInput placeholder="Tcode" aria-label="tcode" [mdAutocomplete]="auto" [formControl]="menuCtrl" (keyup.enter)="onSelect(tcode.value)">
-      <md-autocomplete #auto="mdAutocomplete" (optionSelected)="onSelect($event.option.value);">
-        <md-option *ngFor="let menu of filteredMenu | async" [value]="menu.tcode">
-          <span>{{ menu.tcode | uppercase}} ({{menu.description}})</span>
-        </md-option>
-      </md-autocomplete>
-    </md-form-field>
-  </form>
-</nav>
+<form *ngIf="country$ | async">
+  <md-form-field>
+    <input #tcode mdInput placeholder="Search For Apps" aria-label="tcode" [mdAutocomplete]="auto" [formControl]="menuCtrl" (keyup.enter)="onSelect(tcode.value)">
+    <md-autocomplete #auto="mdAutocomplete" (optionSelected)="onSelect($event.option.value);">
+      <md-option *ngFor="let menu of filteredMenu | async" [value]="menu.tcode">
+        <span>{{ menu.tcode | uppercase}} ({{menu.description}})</span>
+      </md-option>
+    </md-autocomplete>
+  </md-form-field>
+</form>

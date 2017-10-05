@@ -1,6 +1,0 @@
-<ng-container *ngIf="(theme$ | async) === TILES else sticky_notes">
-  <atlas-tiles [menu]="menu$ | async" (navigate)="onNavigate($event)" (favoriteToggle)="onFavoriteToggle($event)"></atlas-tiles>
-</ng-container>
-<ng-template #sticky_notes>
-  <atlas-stickynotes [menu]="menu$ | async" (navigate)="onNavigate($event)" (favoriteToggle)="onFavoriteToggle($event)"></atlas-stickynotes>
-</ng-template>

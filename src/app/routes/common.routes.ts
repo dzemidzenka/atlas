@@ -1,18 +1,18 @@
 import { Routes } from '@angular/router';
-import { RouteGuardService } from '../providers/route-guard.service';
-import { RouteResolverService } from '../providers/route-resolver.service';
+import { DashboardComponent } from '../main/dashboard/dashboard.component';
+import { LoginComponent } from '../main/login/login.component';
 
 
 export const COMMON_ROUTES: Routes = [
   {
     path: '',
-    loadChildren: '../lazyModules/dashboard/dashboard.module#DashboardModule',
+    pathMatch: 'full',
+    component: DashboardComponent,
   },
   {
-    path: ':country/signin',
-    loadChildren: '../lazyModules/signin/signin.module#SigninModule',
+    path: ':country/login',
+    component: LoginComponent,
   },
-
   {
     path: ':country/page-not-found',
     loadChildren: '../lazyModules/page-not-found/page-not-found.module#PageNotFoundModule',

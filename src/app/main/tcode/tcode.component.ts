@@ -1,6 +1,6 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import {MdAutocompleteTrigger} from '@angular/material';
+import { MdAutocompleteTrigger } from '@angular/material';
 
 import { Router } from '@angular/router';
 import { ReduxService } from '../../providers/redux.service';
@@ -11,7 +11,8 @@ import { IMenuModel } from '../../models/models';
 @Component({
   selector: 'atlas-tcode',
   templateUrl: './tcode.component.html',
-  styleUrls: ['./tcode.component.scss']
+  styleUrls: ['./tcode.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TcodeComponent implements OnInit {
 
@@ -61,6 +62,5 @@ export class TcodeComponent implements OnInit {
     this._router.navigate([urlParams.join('/')]);
     this.menuCtrl.setValue(null);
     this.trigger.closePanel();
-    window.focus();
   }
 }

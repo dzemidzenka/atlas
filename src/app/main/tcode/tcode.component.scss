@@ -1,9 +1,15 @@
-nav {
-    display: flex;
-    justify-content: center; // margin-bottom: 1rem;
-    align-items: center;
-    // margin-top: 0.5rem;
+// nav {
+//     display: flex;
+//     justify-content: center; // margin-bottom: 1rem;
+//     align-items: center;
+//     // margin-top: 0.5rem;
+// }
+:host{
+  min-width: 20em;
+  margin-left: 1em;
+  margin-right: 2em;
 }
+
 
 input {
     // width: 50rem;

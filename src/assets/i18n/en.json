@@ -1,0 +1,12 @@
+{
+  "order": {
+    "hello": "Hello"
+  },
+  "dashboard": {
+    "hello": "Hello {{value}}",
+    "dashboard": "dashboard",
+    "favorites": "favorites",
+    "recent": "recent",
+    "logout": "logout"
+  }
+}

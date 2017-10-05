@@ -13,11 +13,32 @@
     width: 32px!important;
 }
 
+.logo {
+    margin-left: 2rem;
+    margin-right: 2rem;
+}
+
 md-toolbar img {
     height: 80%;
 }
 
+:host::ng-deep .td-notification-count {
+    background-color: red;
+    border-radius: 50%;
+}
 
-.notificationIcon{
-  color: red;
+.flex {
+    display: flex;
+    align-items: center;
+    background-color: #3f51b5;
+    background-color: #3d3780;
+    z-index: 99999!important;
+}
+
+.navigation {
+    font-size: 2.5rem;
+    text-decoration: none;
+    i {
+        display: block;
+    }
 }

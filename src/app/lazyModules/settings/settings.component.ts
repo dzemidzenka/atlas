@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ReduxService } from '../../providers/redux.service';
 
 @Component({
   selector: 'atlas-settings',
@@ -7,8 +8,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SettingsComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private _reduxService: ReduxService,
+  ) { }
 
   ngOnInit() {
+  }
+
+
+  onClick() {
+    this._reduxService.actionNotify([{
+      message: 'New notification' + Math.random(),
+      date: Date.now(),
+    }]);
   }
 }

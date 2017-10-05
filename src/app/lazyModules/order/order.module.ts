@@ -1,11 +1,14 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { OrderComponent } from './order.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 const ROUTES: Routes = [
-  { path: '', component: OrderComponent }
+  {
+    path: '',
+    component: OrderComponent,
+  }
 ];
 
 
@@ -13,7 +16,7 @@ const ROUTES: Routes = [
 @NgModule({
   imports: [
     RouterModule.forChild(ROUTES),
-    CommonModule,
+    TranslateModule.forChild(),
   ],
   declarations: [OrderComponent],
 

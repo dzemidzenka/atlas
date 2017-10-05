@@ -1,0 +1,12 @@
+{
+  "order": {
+    "hello": "Здравствуйте"
+  },
+  "dashboard": {
+    "hello": "Здравствуйте {{value}}",
+    "dashboard": "панель",
+    "favorites": "избранное",
+    "recent": "недавний",
+    "logout": "выйти"
+  }
+}

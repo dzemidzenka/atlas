@@ -1,8 +1,6 @@
 <nav>
   <div *ngFor="let item of menu">
     <a (click)="onNavigate(item.urlParams)">
-      <!-- <p>{{ item.routerPath }}</p> -->
-
       <ng-container *ngIf="item.isComponent else isFolder">
         <p>{{ item.description }}</p>
         <p>TCODE: {{ item.tcode }}</p>
@@ -20,3 +18,5 @@
     </a>
   </div>
 </nav>
+
+

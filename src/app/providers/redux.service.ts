@@ -3,6 +3,8 @@ import { Router, NavigationEnd } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { MdSnackBar } from '@angular/material';
+import { TranslateService } from '@ngx-translate/core';
+
 
 // import { ACTION, COUNTRY, IStateModel, IActionModel, IUserModel, IMenuModel } from '../models/models';
 import * as models from '../models/models';
@@ -14,26 +16,34 @@ import sortedUniq from 'lodash-es/sortedUniq';
 import cloneDeep from 'lodash-es/cloneDeep';
 import isEmpty from 'lodash-es/isEmpty';
 
-// import { RouteGuardService } from '../providers/route-guard.service';
-// import { RouteResolverService } from '../providers/route-resolver.service';
+
+
 
 @Injectable()
 export class ReduxService {
   constructor(
     // @Inject(LOCAL_STORAGE_NAME_PROVIDER) private _localStorageName,
     private _router: Router,
-    public snackBar: MdSnackBar
+    public _snackBar: MdSnackBar,
+    private _translate: TranslateService,
   ) {
     // INITIALIZE REDUCER FUNCTIONS
     this._initReducers();
+    console.log('ROUTES', this._router.config);
     generateAdditionalRoutes(this._router.config);
-
     // // DERIVE MENU FROM THE ROUTES
     // this._menu = this._router.config
     //   .filter(route => route.hasOwnProperty('data'))
     //   .filter(route => route.data.hasOwnProperty('name'))
     //   .map(menuItemFromRoute)
     //   .map((menu: models.IMenuModel, i) => { menu.id = i + 1; return menu; });        // assign menu item ID
+
+
+    this._translate.setDefaultLang('en');
+    this._translate.use('en');
+    // this._translate.get('HOME.HELLO', { value: 'world' }).subscribe((res: string) => {
+    //   console.log(res);
+    // });
 
 
     // SUBSCRIBE TO REDUX STATE - nessesary to maintain at least one subscription active while the app is running
@@ -45,7 +55,6 @@ export class ReduxService {
 
 
   private _currentState: models.IStateModel;
-  private _menu: Array<models.IMenuModel>;
   private _reducers: Array<Function> = [];
   private _actionSubject$ = new Subject<models.IActionModel>();
   private _initialState: models.IStateModel = (function () {
@@ -104,42 +113,40 @@ export class ReduxService {
   private _initReducers() {
     this._reducers[models.ACTION.LOGIN] = (state: models.IStateModel, action: models.IActionModel) => {
       state.user = action.user;
+      state.language = action.user.defaultLanguage;
+      this._translate.use(action.user.defaultLanguage);
+
       state.notifications = [...action.notifications];
       action.notifications.forEach(
-        notification => this.snackBar.open(notification.message, '', { duration: models.TOASTER_DURATION })
+        notification => this._snackBar.open(notification.message, '', { duration: models.TOASTER_DURATION })
       );
-
-      // DERIVE MENU FROM THE ROUTES
-      state.menu = this._router.config
-        .filter(route => route.hasOwnProperty('data'))
-        .filter(route => route.data.hasOwnProperty('description'))
-        .map(menuItemFromRoute)
-        .map((menu: models.IMenuModel, i) => { menu.id = i + 1; return menu; });        // assign menu item ID
     };
 
 
     this._reducers[models.ACTION.LOGOUT] = (state: models.IStateModel, action: models.IActionModel) => {
-      this.snackBar.open(`${state.user.nameDisplay} logged out. Goodbye!`, '', { duration: models.TOASTER_DURATION });
+      this._snackBar.open(`${state.user.nameDisplay} logged out. Goodbye!`, '', { duration: models.TOASTER_DURATION });
       state.user = {} as models.IUserModel;
     };
 
 
     this._reducers[models.ACTION.LANGUAGE] = (state: models.IStateModel, action: models.IActionModel) => {
       state.language = action.language;
+      this._translate.use(state.language);
     };
 
 
     this._reducers[models.ACTION.NOTIFICATION] = (state: models.IStateModel, action: models.IActionModel) => {
-      state.notifications.concat(...action.notifications);
       action.notifications.forEach(
-        notification => this.snackBar.open(notification.message, '', { duration: models.TOASTER_DURATION })
+        notification => {
+          state.notifications.push(notification);
+          this._snackBar.open(notification.message, '', { duration: models.TOASTER_DURATION });
+        }
       );
     };
 
 
-    this._reducers[models.ACTION.MENU_VIEW_TCODE] = (state: models.IStateModel, action: models.IActionModel) => {
-      state.menuViewTcode = !state.menuViewTcode;
-      getActiveMenu(state);
+    this._reducers[models.ACTION.NOTIFICATION_CLEAR] = (state: models.IStateModel, action: models.IActionModel) => {
+      state.notifications = [];
     };
 
 
@@ -159,6 +166,16 @@ export class ReduxService {
 
 
     this._reducers[models.ACTION.ROUTE] = (state: models.IStateModel, action: models.IActionModel) => {
+      if (!state.menu) {
+        state.menu = this._router.config
+          .filter(route => route.hasOwnProperty('data'))
+          .filter(route => route.data.hasOwnProperty('description'))
+          .map(menuItemFromRoute)
+          .map((menu: models.IMenuModel, i) => { menu.id = i + 1; return menu; });        // assign menu item ID
+      }
+
+
+
       state.url = action.url;
       state.urlParams = action.urlParams.filter(param => param.length > 0).map(param => param.toLowerCase());
       state.queryParams = action.queryParams;
@@ -171,22 +188,24 @@ export class ReduxService {
         state.menuRecent = [];
       }
 
-      // add to recent if a component is called (not a folder)
       const _urlParams = [...state.urlParams];
-      _urlParams[0] = ':country';
+      if (_urlParams.length > 1) {
+        _urlParams[0] = ':country';
+      }
       const _routerPath = _urlParams.join('/');
+      state.menuItemCurrent = state.menu.find(item => item.routerPath === _routerPath);
       state.isComponent = false;
-      if (!state.menuRecent.some(recent => recent === _routerPath)) {
-        if (state.menu.some(menu => menu.isComponent === true && menu.routerPath === _routerPath)) {
-          state.isComponent = true;
-          state.menuRecent.unshift(_routerPath);
-        }
-        state.menuRecent = state.menuRecent.slice(0, 4);     // keep at most 5 recent items
+      if (state.menuItemCurrent) {
+        state.isComponent = state.menuItemCurrent.isComponent;
       }
 
-      // if (!state.menu) {
-      //   state.menu = this._menu;
-      // }
+      // add component to recent
+      if (state.isComponent) {
+        if (!state.menuRecent.some(recent => recent.id === state.menuItemCurrent.id)) {
+          state.menuRecent.unshift(state.menuItemCurrent);
+          state.menuRecent = state.menuRecent.slice(0, models.MAX_OF_FAVARITES - 1);
+        }
+      }
       getActiveMenu(state);
     };
   }
@@ -202,8 +221,8 @@ export class ReduxService {
     this._actionSubject$.next(Object.assign({ op: models.ACTION.LOGOUT }));
   }
 
-  actionViewTcode() {
-    this._actionSubject$.next(Object.assign({ op: models.ACTION.MENU_VIEW_TCODE }));
+  actionLanguage(language: models.LANGUAGE) {
+    this._actionSubject$.next(Object.assign({ op: models.ACTION.LANGUAGE, language: language }));
   }
 
   actionFavoriteToggle(menuItem: models.IMenuModel) {
@@ -212,6 +231,14 @@ export class ReduxService {
 
   actionDashboardTheme(theme: string) {
     this._actionSubject$.next(Object.assign({ op: models.ACTION.DASHBOARD_THEME, dashboard_theme: theme }));
+  }
+
+  actionNotify(notifications: Array<models.INotificationModel>) {
+    this._actionSubject$.next(Object.assign({ op: models.ACTION.NOTIFICATION, notifications: notifications }));
+  }
+
+  actionClearNotifications() {
+    this._actionSubject$.next(Object.assign({ op: models.ACTION.NOTIFICATION_CLEAR }));
   }
 
   // current state getter to prevent direct state update
@@ -257,12 +284,8 @@ function getActiveMenu(state: models.IStateModel) {
       }
       if (state.view === models.VIEW.RECENT) {
         if (state.hasOwnProperty('menuRecent')) {
-          item.active = state.menuRecent.some(menuItem => menuItem === item.routerPath);
+          item.active = state.menuRecent.some(menuItem => menuItem.id === item.id);
         }
-        return item;
-      }
-      if (state.menuViewTcode) {                  // if tcode view, then do not show any folders
-        item.active = item.isComponent;
         return item;
       }
 
@@ -299,25 +322,23 @@ function getActiveMenu(state: models.IStateModel) {
 
 function generateAdditionalRoutes(routes) {
 
-  const _routes = routes;
+  // const _routes = routes;
   // create a route for each country
-  Object.keys(models.COUNTRY)
-    .map(country => country.toLowerCase())
-    .forEach(country => _routes.push(
-      {
-        path: country.toLowerCase(),
-        loadChildren: '../lazyModules/dashboard/dashboard.module#DashboardModule',
-        canActivate: [],
-        resolve: {},
-        data: { description: country.toUpperCase() },
-      }));
+  // Object.keys(models.COUNTRY)
+  //   .map(country => country.toLowerCase())
+  //   .forEach(country => _routes.push(
+  //     {
+  //       path: country.toLowerCase(),
+  //       component: 'DashboardComponent',
+  //       canActivate: [],
+  //       resolve: {},
+  //       data: { description: country.toUpperCase() },
+  //     }));
 
-  _routes.push(
-    {
-      path: '**',
-      redirectTo: 'us/page-not-found',
-    }
-  );
-  // routes = sortBy(_routes, 'path');           // cannot sort as configured route priority is very important
-  console.log('ROUTES', _routes);
+  // _routes.push(
+  //   {
+  //     path: '**',
+  //     redirectTo: 'us/page-not-found',
+  //   }
+  // );
 }

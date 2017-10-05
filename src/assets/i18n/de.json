@@ -1,0 +1,12 @@
+{
+  "order": {
+    "hello": "Hallo"
+  },
+  "dashboard": {
+    "hello": "Hallo {{value}}",
+    "dashboard": "instrumententafel",
+    "favorites": "favoriten",
+    "recent": "kürzlich",
+    "logout": "ausloggen"
+  }
+}

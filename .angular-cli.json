@@ -20,7 +20,10 @@
       "testTsconfig": "tsconfig.spec.json",
       "prefix": "atlas",
       "styles": [
-        "styles.css"
+        "styles.scss",
+        "../node_modules/bootstrap/dist/css/bootstrap.css",
+        "../node_modules/nebular-icons/scss/nebular-icons.scss",
+        "./app/@theme/styles/styles.scss"
       ],
       "scripts": [],
       "environmentSource": "environments/environment.ts",
@@ -56,6 +59,8 @@
   },
   "defaults": {
     "styleExt": "scss",
-    "component": {}
+    "component": {
+      "changeDetection": "OnPush"
+    }
   }
 }

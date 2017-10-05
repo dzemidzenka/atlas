@@ -1,0 +1,68 @@
+<main *ngIf="path$ | async as path">
+  <md-chip-list>
+    <ng-container *ngFor="let param of path.urlParams; let index = index; let first = first; let last = last">
+      <ng-container *ngIf="first else notFirst">
+        <md-chip [mdMenuTriggerFor]="languageMenu">
+          <md-icon>language</md-icon>
+          <span>&nbsp; Language: {{path.language | uppercase}}</span>
+        </md-chip>
+
+        <md-chip [mdMenuTriggerFor]="appMenu">
+          <md-icon>home</md-icon>
+          <span>&nbsp; Country: {{param | uppercase }}</span>
+        </md-chip>
+      </ng-container>
+
+
+      <ng-template #notFirst>
+        <md-chip (click)="onClick(param, index + 1)">
+          <ng-container *ngIf="path && (!last || last && !path.isComponent) else isComponent">
+            <md-icon>folder</md-icon>
+            <span>&nbsp; Folder: {{param | uppercase}}</span>
+          </ng-container>
+          <ng-template #isComponent>
+            <md-icon>extension</md-icon>
+            <span>&nbsp; Tcode: {{param | uppercase}}</span>
+          </ng-template>
+        </md-chip>
+      </ng-template>
+    </ng-container>
+  </md-chip-list>
+</main>
+
+
+<md-menu #appMenu="mdMenu">
+  <button *ngFor="let country of COUNTRY" md-menu-item (click)="switchCountry(country)">{{ country | uppercase }}</button>
+</md-menu>
+
+
+
+<md-menu #languageMenu="mdMenu">
+  <button *ngFor="let language of LANGUAGE" md-menu-item (click)="switchLanguage(language)">{{language | uppercase}}</button>
+</md-menu>
+
+
+
+
+
+
+
+
+
+<!-- <main *ngIf="path$ | async as path">
+    <md-chip-list>
+      <md-chip *ngFor="let param of path.urlParams; let index = index; let last = last" (click)="onClick(param, index + 1)" [mdMenuTriggerFor]="appMenu">
+        <ng-container *ngTemplateOutlet="template; context: param"></ng-container>
+      </md-chip>
+
+      <ng-template #template>
+        <md-icon *ngIf="path && (!last || last && !path.isComponent) else isComponent">folder</md-icon>
+        <md-icon *ngIf="!path.isComponent else isComponent">folder</md-icon>
+        <ng-template #isComponent>
+          <md-icon>extension</md-icon>
+        </ng-template>
+        <span>&nbsp; {{param}}</span>
+      </ng-template>
+
+    </md-chip-list>
+  </main> -->

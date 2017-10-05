@@ -1,4 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -18,19 +19,22 @@ import { ReduxService } from '../providers/redux.service';
 import { AuthService } from '../providers/auth.service';
 import { RouteGuardService } from '../providers/route-guard.service';
 import { RouteResolverService } from '../providers/route-resolver.service';
-import { TranslateService } from '@ngx-translate/core';
 
 // routes
 import { ROUTES } from '../routes/app.routes';
 
 // components (non-lazy)
 import { AppComponent } from './app.component';
-import { HeaderComponent } from './header/header.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { TcodeComponent } from './tcode/tcode.component';
+import { PathComponent } from './path/path.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { StickynotesComponent } from './dashboard/stickynotes/stickynotes.component';
+import { TilesComponent } from './dashboard/tiles/tiles.component';
+import { LoginComponent } from './login/login.component';
 
 
-
+import { CovalentNotificationsModule } from '@covalent/core';
 import {
   MdAutocompleteModule,
   MdButtonModule,
@@ -66,6 +70,7 @@ import {
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
+import { ThemeModule } from '../@theme/theme.module';
 
 
 //  INJECTION TOKENS
@@ -78,15 +83,35 @@ const TOKEN_PROVIDERS = [
 
 
 
+// translation
+import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+
+// AoT requires an exported function for factories
+export function createTranslateLoader(http: HttpClient) {
+  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+}
+
+
+
+
+
+
+
 
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    HeaderComponent,
     NavbarComponent,
     TcodeComponent,
+    PathComponent,
+    DashboardComponent,
+    StickynotesComponent,
+    TilesComponent,
+    LoginComponent,
   ],
   imports: [
     RouterModule.forRoot(ROUTES),
@@ -94,8 +119,21 @@ const TOKEN_PROVIDERS = [
     FormsModule,
     ReactiveFormsModule,
     HttpModule,
+    HttpClientModule,
+
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: (createTranslateLoader),
+        deps: [HttpClient]
+      }
+    }),
+
+    ThemeModule.forRoot(),
 
     BrowserAnimationsModule,
+    CovalentNotificationsModule,
+
 
     MdAutocompleteModule,  //
     MdButtonModule,  //
@@ -136,6 +174,9 @@ const TOKEN_PROVIDERS = [
     MdTooltipModule,
     MdStepperModule,
   ],
+  exports: [
+    CommonModule,
+  ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA
   ],
@@ -145,7 +186,6 @@ const TOKEN_PROVIDERS = [
     AuthService,
     RouteGuardService,
     RouteResolverService,
-    TranslateService,
   ],
   bootstrap: [AppComponent]
 })

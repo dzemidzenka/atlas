@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { SettingsComponent } from './settings.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 const ROUTES: Routes = [
@@ -13,7 +13,7 @@ const ROUTES: Routes = [
 @NgModule({
   imports: [
     RouterModule.forChild(ROUTES),
-    CommonModule,
+    TranslateModule.forChild(),
   ],
   declarations: [SettingsComponent]
 })
