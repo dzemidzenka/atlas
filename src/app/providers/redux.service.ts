@@ -5,10 +5,7 @@ import { Subject } from 'rxjs/Subject';
 import { MdSnackBar } from '@angular/material';
 import { TranslateService } from '@ngx-translate/core';
 
-
-// import { ACTION, COUNTRY, IStateModel, IActionModel, IUserModel, IMenuModel } from '../models/models';
 import * as models from '../models/models';
-// import { LOCAL_STORAGE_NAME_PROVIDER } from '../providers/tokens';
 import * as tokens from '../providers/tokens';
 
 import sortBy from 'lodash-es/sortBy';
@@ -24,7 +21,7 @@ export class ReduxService {
   constructor(
     // @Inject(LOCAL_STORAGE_NAME_PROVIDER) private _localStorageName,
     private _router: Router,
-    public _snackBar: MdSnackBar,
+    // public _snackBar: MdSnackBar,
     private _translate: TranslateService,
   ) {
     // INITIALIZE REDUCER FUNCTIONS
@@ -113,19 +110,21 @@ export class ReduxService {
   private _initReducers() {
     this._reducers[models.ACTION.LOGIN] = (state: models.IStateModel, action: models.IActionModel) => {
       state.user = action.user;
+      state.isLoggedIn = true;
       state.language = action.user.defaultLanguage;
       this._translate.use(action.user.defaultLanguage);
 
       state.notifications = [...action.notifications];
-      action.notifications.forEach(
-        notification => this._snackBar.open(notification.message, '', { duration: models.TOASTER_DURATION })
-      );
+      // action.notifications.forEach(
+      //   notification => this._snackBar.open(notification.message, '', { duration: models.TOASTER_DURATION })
+      // );
     };
 
 
     this._reducers[models.ACTION.LOGOUT] = (state: models.IStateModel, action: models.IActionModel) => {
-      this._snackBar.open(`${state.user.nameDisplay} logged out. Goodbye!`, '', { duration: models.TOASTER_DURATION });
+      // this._snackBar.open(`${state.user.nameDisplay} logged out. Goodbye!`, '', { duration: models.TOASTER_DURATION });
       state.user = {} as models.IUserModel;
+      state.isLoggedIn = false;
     };
 
 
@@ -139,7 +138,7 @@ export class ReduxService {
       action.notifications.forEach(
         notification => {
           state.notifications.push(notification);
-          this._snackBar.open(notification.message, '', { duration: models.TOASTER_DURATION });
+          // this._snackBar.open(notification.message, '', { duration: models.TOASTER_DURATION });
         }
       );
     };

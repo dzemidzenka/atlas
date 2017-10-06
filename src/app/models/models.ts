@@ -62,6 +62,7 @@ export interface IStateModel {
   urlParams: Array<string>;
   queryParams: Array<string>;
   isComponent: boolean;
+  isLoggedIn: boolean;
   user: IUserModel;
   country: string;
   language: LANGUAGE;

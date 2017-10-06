@@ -1,11 +1,11 @@
-main {
-    width: 100vw;
-    height: calc(100vh - 100px);
-    // overflow-y: auto;
-    // overflow-y: overlay; //Chrome only
-}
+// md-sidenav {
+//   background-color: lightblue;
+//   width: 200px;
+// }
 
-md-sidenav {
-  background-color: lightblue;
-  width: 200px;
+
+.path {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
 }

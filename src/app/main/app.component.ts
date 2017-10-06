@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Title } from '@angular/platform-browser';
+import { AuthService } from '../providers/auth.service';
 import { ReduxService } from '../providers/redux.service';
-// import { TranslateService } from '@ngx-translate/core';
 
 import {
   NbMediaBreakpoint,
@@ -18,6 +18,7 @@ import 'rxjs/add/operator/delay';
 import isEmpty from 'lodash-es/isEmpty';
 
 
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -26,22 +27,14 @@ import isEmpty from 'lodash-es/isEmpty';
 })
 export class AppComponent implements OnInit {
   constructor(
-    private _titleService: Title,
+    private _authService: AuthService,
     private _reduxService: ReduxService,
-    // private _translate: TranslateService,
-
+    private _titleService: Title,
     protected menuService: NbMenuService,
     protected themeService: NbThemeService,
     protected bpService: NbMediaBreakpointsService,
     protected sidebarService: NbSidebarService,
   ) {
-
-    // this._translate.setDefaultLang('en');
-    // this._translate.use('en');
-    // this._translate.get('HELLO', { value: 'world' }).subscribe((res: string) => {
-    //   console.log(res);
-    // });
-
     const isBp = this.bpService.getByName('is');
     this.menuClick$ = this.menuService.onItemSelect()
       .withLatestFrom(this.themeService.onMediaQueryChange())
@@ -63,7 +56,7 @@ export class AppComponent implements OnInit {
   // state$ = this._reduxService.state$.map(state => state.isComponent);
   state$ = this._reduxService.state$.map(state => Object.assign({
     country: state.country,
-    isLoggedIn: !isEmpty(state.user),
+    isLoggedIn: state.isLoggedIn,
     user: state.user,
     notifications: state.notifications
   }));

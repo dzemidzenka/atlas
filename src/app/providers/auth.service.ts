@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http, Headers, Response } from '@angular/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ReduxService } from './redux.service';
 import { COUNTRY, LANGUAGE, IUserModel, INotificationModel } from '../models/models';
@@ -11,28 +11,25 @@ export class AuthService {
     private _router: Router,
     private _route: ActivatedRoute,
     private _reduxService: ReduxService,
-    private _http: Http,
+    private _http: HttpClient,
   ) {
-    this._isLoggedIn = true;
-    // this._logIn('', '');
-
-    this._reduxService.actionLogIn(Object.assign({
-      email: 'test@company.com',
-      nameFirst: 'Steve',
-      nameLast: 'Dz',
-      nameDisplay: 'Steve D',
-      countryDefault: COUNTRY.US,
-      allowedCountries: [...Object.values(COUNTRY)],
-      defaultLanguage: LANGUAGE.EN,
-    }),
-      [Object.assign(
-        {
-          message: 'Steve D logged in. Hello!',
-          date: Date.now(),
-        }
-      )]
-    );
-
+    // this._isLoggedIn = true;
+    // this._reduxService.actionLogIn(Object.assign({
+    //   email: 'test@company.com',
+    //   nameFirst: 'Steve',
+    //   nameLast: 'Dz',
+    //   nameDisplay: 'Steve D',
+    //   countryDefault: COUNTRY.US,
+    //   allowedCountries: [...Object.values(COUNTRY)],
+    //   defaultLanguage: LANGUAGE.EN,
+    // }),
+    //   [Object.assign(
+    //     {
+    //       message: 'Steve D logged in. Hello!',
+    //       date: Date.now(),
+    //     }
+    //   )]
+    // );
   }
 
   private _isLoggedIn = false;

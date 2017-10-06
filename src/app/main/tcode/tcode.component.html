@@ -5,7 +5,8 @@
 
 <form *ngIf="country$ | async">
   <md-form-field>
-    <input #tcode mdInput placeholder="Search For Apps" aria-label="tcode" [mdAutocomplete]="auto" [formControl]="menuCtrl" (keyup.enter)="onSelect(tcode.value)">
+    <input type="text" #tcode mdInput placeholder="Search For Apps" aria-label="tcode" [mdAutocomplete]="auto" [formControl]="menuCtrl"
+      (keyup.enter)="onSelect(tcode.value)">
     <md-autocomplete #auto="mdAutocomplete" (optionSelected)="onSelect($event.option.value);">
       <md-option *ngFor="let menu of filteredMenu | async" [value]="menu.tcode">
         <span>{{ menu.tcode | uppercase}} ({{menu.description}})</span>

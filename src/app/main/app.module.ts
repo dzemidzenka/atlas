@@ -1,9 +1,9 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
 
 // RxJs operators
 import 'rxjs/add/operator/startWith';
@@ -32,9 +32,11 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { StickynotesComponent } from './dashboard/stickynotes/stickynotes.component';
 import { TilesComponent } from './dashboard/tiles/tiles.component';
 import { LoginComponent } from './login/login.component';
+import { HeaderComponent } from './header/header.component';
 
 
-import { CovalentNotificationsModule } from '@covalent/core';
+// import { CovalentNotificationsModule } from '@covalent/core';
+
 import {
   MdAutocompleteModule,
   MdButtonModule,
@@ -61,11 +63,11 @@ import {
   MdSlideToggleModule,
   MdSnackBarModule,
   MdSortModule,
-  MdTableModule,
+  // MdTableModule,
   MdTabsModule,
   MdToolbarModule,
   MdTooltipModule,
-  MdStepperModule,
+  // MdStepperModule,
 } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -84,19 +86,12 @@ const TOKEN_PROVIDERS = [
 
 
 // translation
-import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-
 // AoT requires an exported function for factories
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
-
-
-
-
-
 
 
 
@@ -112,13 +107,13 @@ export function createTranslateLoader(http: HttpClient) {
     StickynotesComponent,
     TilesComponent,
     LoginComponent,
+    HeaderComponent
   ],
   imports: [
     RouterModule.forRoot(ROUTES),
     BrowserModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpModule,
     HttpClientModule,
 
     TranslateModule.forRoot({
@@ -132,8 +127,7 @@ export function createTranslateLoader(http: HttpClient) {
     ThemeModule.forRoot(),
 
     BrowserAnimationsModule,
-    CovalentNotificationsModule,
-
+    // CovalentNotificationsModule,
 
     MdAutocompleteModule,  //
     MdButtonModule,  //
@@ -166,13 +160,13 @@ export function createTranslateLoader(http: HttpClient) {
     MdSlideToggleModule,
     MdSnackBarModule,
     MdSortModule,
-    MdTableModule,
+    // MdTableModule,
     MdTabsModule,
 
     MdToolbarModule,   //
 
     MdTooltipModule,
-    MdStepperModule,
+    // MdStepperModule,
   ],
   exports: [
     CommonModule,

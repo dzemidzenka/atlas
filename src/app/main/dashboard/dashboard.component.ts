@@ -3,11 +3,13 @@ import { Router } from '@angular/router';
 import { ReduxService } from '../../providers/redux.service';
 import { DASHBOARD_THEME, VIEW, IMenuModel } from '../../models/models';
 
+
 @Component({
   selector: 'atlas-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+
 })
 export class DashboardComponent {
   constructor(
@@ -20,7 +22,8 @@ export class DashboardComponent {
 
   state$ = this._reduxService.state$.map(state => Object.assign({
     view: state.view,
-    theme: state.theme,
+    theme: DASHBOARD_THEME.TILES,
+    // state.theme,
     menu: state.menu.filter(menu => menu.active)
   }));
 

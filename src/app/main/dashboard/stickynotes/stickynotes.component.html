@@ -1,5 +1,5 @@
 <nav>
-  <div *ngFor="let item of menu">
+  <div *ngFor="let item of menu" [@queryAnimation]="item.active ? 'goAnimate' : ''">
     <a (click)="onNavigate(item.urlParams)">
       <ng-container *ngIf="item.isComponent else isFolder">
         <p>{{ item.description }}</p>
@@ -18,5 +18,3 @@
     </a>
   </div>
 </nav>
-
-

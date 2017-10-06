@@ -1,8 +1,6 @@
 import { ModuleWithProviders, NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-// import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-// "@ng-bootstrap/ng-bootstrap": "1.0.0-alpha.26",
 
 import { RouterModule, Routes } from '@angular/router';
 
@@ -21,7 +19,6 @@ import {
 } from '@nebular/theme';
 
 import {
-  HeaderComponent,
   ThemeSwitcherComponent,
 } from './components';
 
@@ -40,12 +37,10 @@ const NB_MODULES = [
   NbSearchModule,
   NbSidebarModule,
   NbCheckboxModule,
-  // NgbModule,
 ];
 
 const COMPONENTS = [
   ThemeSwitcherComponent,
-  HeaderComponent,
 ];
 
 
@@ -61,7 +56,7 @@ const NB_THEME_PROVIDERS = [
 ];
 
 @NgModule({
-  imports: [...BASE_MODULES, ...NB_MODULES],
+  imports: [...BASE_MODULES, ...NB_MODULES,],
   exports: [...BASE_MODULES, ...NB_MODULES, ...COMPONENTS],
   declarations: [...COMPONENTS],
   schemas: [

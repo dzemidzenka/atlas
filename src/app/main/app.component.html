@@ -14,45 +14,38 @@
 
 
 
-<atlas-navbar></atlas-navbar>
-
 <ng-container *ngIf="state$ | async as state">
   <ng-container *ngIf="state.isLoggedIn else notLoggedIn">
-
     <nb-layout [center]="layout.id === 'center-column'" windowMode>
-      <!-- <nb-layout-header fixed>
-        <ngx-header [position]="sidebar.id === 'left' ? 'normal': 'inverse'">
-        </ngx-header>
-      </nb-layout-header> -->
-
+      <nb-layout-header fixed>
+        <atlas-header [position]="sidebar.id === 'left' ? 'normal': 'inverse'"></atlas-header>
+      </nb-layout-header>
 
       <nb-sidebar class="menu-sidebar" tag="menu-sidebar" responsive state="compacted" [right]="sidebar.id === 'right'">
-        <!-- <nb-sidebar-header>
-      <a href="https://github.com/akveo/nebular" target="_blank" class="btn btn-hero-success main-btn">
-        <i class="ion ion-social-github"></i> <span>Nuvasive</span>
-      </a>
-    </nb-sidebar-header> -->
         <nb-menu [items]="menu"></nb-menu>
-        <!-- <ng-content select="nb-menu"></ng-content> -->
       </nb-sidebar>
 
 
-
       <nb-layout-column class="main-content">
+        <nav class="path">
+          <atlas-path></atlas-path>
+        </nav>
         <router-outlet></router-outlet>
       </nb-layout-column>
-
 
       <nb-sidebar class="settings-sidebar" tag="settings-sidebar" state="collapsed" fixed [right]="sidebar.id !== 'right'">
         <ngx-theme-switcher></ngx-theme-switcher>
       </nb-sidebar>
     </nb-layout>
-
   </ng-container>
 </ng-container>
 
 
 
 <ng-template #notLoggedIn>
-  <router-outlet></router-outlet>
+  <nb-layout [center]="layout.id === 'center-column'" windowMode>
+    <nb-layout-column class="main-content">
+      <atlas-login></atlas-login>
+    </nb-layout-column>
+  </nb-layout>
 </ng-template>

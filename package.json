@@ -1,6 +1,6 @@
 {
   "name": "atlas",
-  "version": "0.0.3",
+  "version": "0.0.5",
   "license": "Nuvasive",
   "scripts": {
     "ng": "ng",
@@ -10,7 +10,7 @@
     "watch": "ng test --browser ChromeHeadless",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "release": "standard-version",
+    "release": "standard-version && git push —-follow-tags origin master",
     "deploy": "./node_modules/.bin/firebase deploy",
     "bundle-report": "webpack-bundle-analyzer dist/stats.json",
     "i18n": "ng-xi18n"
@@ -29,7 +29,6 @@
     "@angular/platform-browser-dynamic": "^4.2.4",
     "@angular/platform-server": "^4.4.4",
     "@angular/router": "^4.2.4",
-    "@covalent/core": "^1.0.0-beta.7",
     "@nebular/theme": "^2.0.0-rc.2",
     "@ngx-translate/core": "^8.0.0",
     "@ngx-translate/http-loader": "^2.0.0",

@@ -1,7 +1,6 @@
-<md-toolbar color="primary">
+<!-- <md-toolbar color="primary">
   <nb-action class="control-item">
     <a (click)="toggleSidebar()" href="#" class="navigation"><i class="nb-menu"></i></a>
-    <!-- <md-icon  md-icon-button (click)="toggleSidebar()">menu</md-icon> -->
   </nb-action>
 
   <img class="logo" src="./assets/atlas-logo.png" alt="logo">
@@ -13,21 +12,14 @@
   <ng-container *ngIf="state$ | async as state">
     <ng-container *ngIf="state.isLoggedIn">
 
-      <!-- <span class="userName">Hello {{ state.user.nameDisplay }}!</span>
-      <img class="userImg" src="./assets/steve.jpg" alt="user"> -->
-
-      <nb-user [menu]="userMenu" [name]="('dashboard.hello' | translate:{value: 'Steve D!'})" picture="../../../../assets/steve.jpg" (menuClick)="menuClick($event)"></nb-user>
+      <nb-user [menu]="userMenu" [name]="('dashboard.hello' | translate:{value: state.user.nameDisplay + '!'})" picture="../../../../assets/steve.jpg"
+        (menuClick)="menuClick($event)"></nb-user>
 
       <span class="spacer"></span>
-      <!-- <md-icon>dashboard</md-icon>
-      <md-icon>favorite</md-icon> -->
       <ng-container *ngIf="state.country">
         <button md-button *ngFor="let view of VIEW" (click)="switchView(view)">{{ ('dashboard.' + view) | translate | uppercase }}
           </button>
       </ng-container>
-
-      <!-- <md-icon *ngIf="notifications$ | async as notifications" mdTooltip="{{ notifications.length }} Notifications" class="notificationIcon">notifications
-    </md-icon> -->
 
       <ng-container *ngIf="state.notifications.length > 0">
         <td-notification-count [notifications]="state.notifications.length" [mdMenuTriggerFor]="notificationsMenu">
@@ -43,7 +35,6 @@
                 <a md-list-item>
                   <md-icon mdListAvatar>today</md-icon>
                   <h4 mdLine><span class="text-wrap">{{ notification.message }}</span></h4>
-                  <!-- <p mdLine>22 minutes ago</p> -->
                 </a>
                 <md-divider *ngIf="!last"></md-divider>
               </ng-container>
@@ -76,15 +67,15 @@
       </nb-actions>
 
 
+
+    </ng-container>
+  </ng-container>
+</md-toolbar> -->
+
+
       <!-- <button md-icon-button>
         <md-icon [mdMenuTriggerFor]="appMenu">menu</md-icon>
       </button> -->
-    </ng-container>
-  </ng-container>
-</md-toolbar>
-
-
-
 <!-- <md-menu #appMenu="mdMenu">
   <button md-menu-item [mdMenuTriggerFor]="countryMenu">Country</button>
   <button md-menu-item [mdMenuTriggerFor]="themeMenu">Theme</button>
@@ -103,10 +94,10 @@
 </md-menu> -->
 
 
-<nav class="flex" *ngIf="(state$ | async).isLoggedIn">
+<!-- <nav class="flex" *ngIf="(state$ | async).isLoggedIn">
   <atlas-tcode></atlas-tcode>
   <atlas-path></atlas-path>
-</nav>
+</nav> -->
 
 
 
