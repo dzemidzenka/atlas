@@ -1,6 +1,6 @@
 {
   "name": "atlas",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "license": "Nuvasive",
   "scripts": {
     "ng": "ng",
