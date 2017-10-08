@@ -37,8 +37,7 @@ export enum DASHBOARD_THEME {
 
 
 export const TOASTER_DURATION = 2000;
-export const MAX_OF_FAVARITES = 5;
-
+export const MAX_OF_FAVORITES = 5;
 
 
 

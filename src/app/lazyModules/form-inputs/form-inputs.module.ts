@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { FormInputsComponent } from './form-inputs.component';
 import { ThemeModule } from '../../@theme/theme.module';
 import { TranslateModule } from '@ngx-translate/core';
+import { SharedModule } from '../../shared/shared.module';
 
 
 const ROUTES: Routes = [
@@ -14,6 +15,7 @@ const ROUTES: Routes = [
 
 @NgModule({
   imports: [
+    SharedModule,
     RouterModule.forChild(ROUTES),
     ThemeModule,
     TranslateModule.forChild(),

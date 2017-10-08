@@ -13,23 +13,23 @@ export class AuthService {
     private _reduxService: ReduxService,
     private _http: HttpClient,
   ) {
-    // this._isLoggedIn = true;
-    // this._reduxService.actionLogIn(Object.assign({
-    //   email: 'test@company.com',
-    //   nameFirst: 'Steve',
-    //   nameLast: 'Dz',
-    //   nameDisplay: 'Steve D',
-    //   countryDefault: COUNTRY.US,
-    //   allowedCountries: [...Object.values(COUNTRY)],
-    //   defaultLanguage: LANGUAGE.EN,
-    // }),
-    //   [Object.assign(
-    //     {
-    //       message: 'Steve D logged in. Hello!',
-    //       date: Date.now(),
-    //     }
-    //   )]
-    // );
+    this._isLoggedIn = true;
+    this._reduxService.actionLogIn(Object.assign({
+      email: 'test@company.com',
+      nameFirst: 'Steve',
+      nameLast: 'Dz',
+      nameDisplay: 'Steve D',
+      countryDefault: COUNTRY.US,
+      allowedCountries: [...Object.values(COUNTRY)],
+      defaultLanguage: LANGUAGE.EN,
+    }),
+      [Object.assign(
+        {
+          message: 'Steve D logged in. Hello!',
+          date: Date.now(),
+        }
+      )]
+    );
   }
 
   private _isLoggedIn = false;

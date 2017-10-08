@@ -1,5 +1,4 @@
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { AuthService } from '../../providers/auth.service';
 import { ReduxService } from '../../providers/redux.service';
 import { ACTION, VIEW, DASHBOARD_THEME, COUNTRY, IUserModel } from '../../models/models';
@@ -19,16 +18,19 @@ export class HeaderComponent {
     private menuService: NbMenuService,
     private _authService: AuthService,
     private _reduxService: ReduxService,
-    private _router: Router,
   ) { }
 
-  @Input() position = 'normal';
   VIEW = Object.values(VIEW);
   COUNTRY = Object.values(COUNTRY);
 
   user: any;
+  userMenu = [
+    { title: 'Profile' },
+    { title: 'Logout', target: 'logout' }
+  ];
 
-  userMenu = [{ title: 'Profile' }, { title: 'Logout', target: 'logout' }];
+
+
 
   state$ = this._reduxService.state$.map(state => Object.assign({
     country: state.country,
@@ -43,21 +45,15 @@ export class HeaderComponent {
   }
 
   switchView(view: VIEW) {
-    const country = this._reduxService.getCurrentState().country;
-    if (country) {
-      this._router.navigate([`/${country}/`], { queryParams: { view: view } });
-    } else {
-      this._router.navigate(['']);
-    }
+    this._reduxService.navigateToDashboard(view);
   }
 
   logOut() {
     this._authService.logOut();
   }
 
-
   toggleSidebar(): boolean {
-    this.sidebarService.toggle(true, 'menu-sidebar');
+    this.sidebarService.toggle(false, 'menu-sidebar');
     return false;
   }
 
@@ -68,7 +64,6 @@ export class HeaderComponent {
 
   startSearch() {
   }
-
 
   menuClick(event) {
     if (event.target === 'logout') {

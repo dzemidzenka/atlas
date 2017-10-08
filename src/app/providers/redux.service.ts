@@ -2,8 +2,9 @@ import { Injectable, Inject } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
-import { MdSnackBar } from '@angular/material';
+// import { MdSnackBar } from '@angular/material';
 import { TranslateService } from '@ngx-translate/core';
+import { ToasterService, ToasterConfig, Toast, BodyOutputType } from 'angular2-toaster';
 
 import * as models from '../models/models';
 import * as tokens from '../providers/tokens';
@@ -19,9 +20,10 @@ import isEmpty from 'lodash-es/isEmpty';
 @Injectable()
 export class ReduxService {
   constructor(
-    // @Inject(LOCAL_STORAGE_NAME_PROVIDER) private _localStorageName,
+    // @Optional() @Inject(models.LOCAL_STORAGE_NAME_PROVIDER) private _localStorageName,
     private _router: Router,
     // public _snackBar: MdSnackBar,
+    private _toasterService: ToasterService,
     private _translate: TranslateService,
   ) {
     // INITIALIZE REDUCER FUNCTIONS
@@ -113,16 +115,15 @@ export class ReduxService {
       state.isLoggedIn = true;
       state.language = action.user.defaultLanguage;
       this._translate.use(action.user.defaultLanguage);
-
       state.notifications = [...action.notifications];
-      // action.notifications.forEach(
-      //   notification => this._snackBar.open(notification.message, '', { duration: models.TOASTER_DURATION })
-      // );
+      // action.notifications.forEach(notification => this.sendToasterNotification(notification.message));
+      // notification => this._snackBar.open(notification.message, '', { duration: models.TOASTER_DURATION })
     };
 
 
     this._reducers[models.ACTION.LOGOUT] = (state: models.IStateModel, action: models.IActionModel) => {
       // this._snackBar.open(`${state.user.nameDisplay} logged out. Goodbye!`, '', { duration: models.TOASTER_DURATION });
+      this.sendToasterNotification(`${state.user.nameDisplay} logged out. Goodbye!`);
       state.user = {} as models.IUserModel;
       state.isLoggedIn = false;
     };
@@ -138,6 +139,7 @@ export class ReduxService {
       action.notifications.forEach(
         notification => {
           state.notifications.push(notification);
+          this.sendToasterNotification(notification.message);
           // this._snackBar.open(notification.message, '', { duration: models.TOASTER_DURATION });
         }
       );
@@ -202,7 +204,7 @@ export class ReduxService {
       if (state.isComponent) {
         if (!state.menuRecent.some(recent => recent.id === state.menuItemCurrent.id)) {
           state.menuRecent.unshift(state.menuItemCurrent);
-          state.menuRecent = state.menuRecent.slice(0, models.MAX_OF_FAVARITES - 1);
+          state.menuRecent = state.menuRecent.slice(0, models.MAX_OF_FAVORITES - 1);
         }
       }
       getActiveMenu(state);
@@ -243,6 +245,27 @@ export class ReduxService {
   // current state getter to prevent direct state update
   getCurrentState(): models.IStateModel {
     return this._currentState;
+  }
+
+
+  navigateToDashboard(view: models.VIEW){
+    const country = this._currentState.country;
+    if (country) {
+      this._router.navigate([`/${country}/`], { queryParams: { view: view } });
+    } else {
+      this._router.navigate(['']);
+    }
+  }
+
+
+  private sendToasterNotification(message: string) {
+    const toast1: Toast = {
+      type: 'default',
+      // title: 'Notification',
+      body: message,
+      bodyOutputType: BodyOutputType.TrustedHtml,
+    };
+    this._toasterService.popAsync(toast1);
   }
 }
 

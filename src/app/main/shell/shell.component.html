@@ -1,0 +1,36 @@
+<ng-container *ngIf="state$ | async as state">
+  <ng-container *ngIf="state.isLoggedIn else notLoggedIn">
+    <nb-layout [center]="layout.id === 'center-column'" windowMode>
+      <nb-layout-header fixed>
+        <atlas-header></atlas-header>
+      </nb-layout-header>
+
+      <nb-sidebar class="menu-sidebar" tag="menu-sidebar" fixed state="collapsed">
+        <atlas-tcode></atlas-tcode>
+        <nb-menu [items]="menu"></nb-menu>
+        <hr>
+        <ngx-theme-switcher></ngx-theme-switcher>
+      </nb-sidebar>
+
+
+      <nb-layout-column class="main-content">
+        <atlas-path></atlas-path>
+        <router-outlet></router-outlet>
+      </nb-layout-column>
+
+      <!-- <nb-sidebar class="settings-sidebar" tag="settings-sidebar" state="collapsed" fixed right="true">
+        <ngx-theme-switcher></ngx-theme-switcher>
+      </nb-sidebar> -->
+    </nb-layout>
+  </ng-container>
+</ng-container>
+
+
+
+<ng-template #notLoggedIn>
+  <nb-layout [center]="true" windowMode>
+    <nb-layout-column class="main-content">
+      <atlas-login></atlas-login>
+    </nb-layout-column>
+  </nb-layout>
+</ng-template>

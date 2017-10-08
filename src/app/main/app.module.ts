@@ -1,9 +1,14 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { CommonModule } from '@angular/common';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+// import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { SharedModule } from '../shared/shared.module';
+
+import { CovalentNotificationsModule } from '@covalent/core';
+import { ToasterModule } from 'angular2-toaster';
+import { ThemeModule } from '../@theme/theme.module';
+
 
 // RxJs operators
 import 'rxjs/add/operator/startWith';
@@ -25,7 +30,7 @@ import { ROUTES } from '../routes/app.routes';
 
 // components (non-lazy)
 import { AppComponent } from './app.component';
-import { NavbarComponent } from './navbar/navbar.component';
+import { ShellComponent } from './shell/shell.component';
 import { TcodeComponent } from './tcode/tcode.component';
 import { PathComponent } from './path/path.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -34,45 +39,10 @@ import { TilesComponent } from './dashboard/tiles/tiles.component';
 import { LoginComponent } from './login/login.component';
 import { HeaderComponent } from './header/header.component';
 
-
-// import { CovalentNotificationsModule } from '@covalent/core';
-
-import {
-  MdAutocompleteModule,
-  MdButtonModule,
-  MdButtonToggleModule,
-  MdCardModule,
-  MdCheckboxModule,
-  MdChipsModule,
-  MdDatepickerModule,
-  MdDialogModule,
-  MdExpansionModule,
-  MdFormFieldModule,
-  MdGridListModule,
-  MdIconModule,
-  MdInputModule,
-  MdListModule,
-  MdMenuModule,
-  MdPaginatorModule,
-  MdProgressBarModule,
-  MdProgressSpinnerModule,
-  MdRadioModule,
-  MdSelectModule,
-  MdSidenavModule,
-  MdSliderModule,
-  MdSlideToggleModule,
-  MdSnackBarModule,
-  MdSortModule,
-  // MdTableModule,
-  MdTabsModule,
-  MdToolbarModule,
-  MdTooltipModule,
-  // MdStepperModule,
-} from '@angular/material';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ShellMdComponent } from './shell/md/shell.component';
+import { HeaderMdComponent } from './header/md/header.component';
 
 
-import { ThemeModule } from '../@theme/theme.module';
 
 
 //  INJECTION TOKENS
@@ -100,22 +70,25 @@ export function createTranslateLoader(http: HttpClient) {
 @NgModule({
   declarations: [
     AppComponent,
-    NavbarComponent,
+    ShellComponent,
     TcodeComponent,
     PathComponent,
     DashboardComponent,
     StickynotesComponent,
     TilesComponent,
     LoginComponent,
-    HeaderComponent
+    HeaderComponent,
+
+    ShellMdComponent,
+    HeaderMdComponent,
   ],
   imports: [
-    RouterModule.forRoot(ROUTES),
-    BrowserModule,
-    FormsModule,
-    ReactiveFormsModule,
+    SharedModule,
+    BrowserAnimationsModule,
+    // NoopAnimationsModule,
     HttpClientModule,
-
+    RouterModule.forRoot(ROUTES),
+    // BrowserModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -123,53 +96,9 @@ export function createTranslateLoader(http: HttpClient) {
         deps: [HttpClient]
       }
     }),
-
     ThemeModule.forRoot(),
-
-    BrowserAnimationsModule,
-    // CovalentNotificationsModule,
-
-    MdAutocompleteModule,  //
-    MdButtonModule,  //
-
-    MdButtonToggleModule,
-    MdCardModule,
-    MdCheckboxModule,
-    MdChipsModule,
-    MdDatepickerModule,
-    MdDialogModule,
-    MdExpansionModule,
-
-    MdFormFieldModule,  //
-
-    MdGridListModule,
-    MdIconModule,   //
-
-    MdInputModule,
-    MdListModule,
-
-    MdMenuModule,  //
-
-    MdPaginatorModule,
-    MdProgressBarModule,
-    MdProgressSpinnerModule,
-    MdRadioModule,
-    MdSelectModule,
-    MdSidenavModule,
-    MdSliderModule,
-    MdSlideToggleModule,
-    MdSnackBarModule,
-    MdSortModule,
-    // MdTableModule,
-    MdTabsModule,
-
-    MdToolbarModule,   //
-
-    MdTooltipModule,
-    // MdStepperModule,
-  ],
-  exports: [
-    CommonModule,
+    ToasterModule,
+    CovalentNotificationsModule,
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA

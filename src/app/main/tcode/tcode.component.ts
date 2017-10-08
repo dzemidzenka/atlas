@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { MdAutocompleteTrigger } from '@angular/material';
+import { MatAutocompleteTrigger } from '@angular/material';
 
 import { Router } from '@angular/router';
 import { ReduxService } from '../../providers/redux.service';
@@ -21,7 +21,7 @@ export class TcodeComponent implements OnInit {
     private _reduxService: ReduxService,
   ) { }
 
-  @ViewChild(MdAutocompleteTrigger) trigger;
+  @ViewChild(MatAutocompleteTrigger) trigger;
   country$ = this._reduxService.state$.map(state => state.country);
 
 

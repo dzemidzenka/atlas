@@ -1,16 +1,9 @@
-<!-- <nav *ngIf="country$ | async">
-  <input #tcode type="text" (keyup.enter)="onEnter(tcode.value); tcode.value = '';" placeholder="&#xE039;" class="material-icons">
-    <hr>
-</nav> -->
-
 <form *ngIf="country$ | async">
-  <md-form-field>
-    <input type="text" #tcode mdInput placeholder="Search For Apps" aria-label="tcode" [mdAutocomplete]="auto" [formControl]="menuCtrl"
-      (keyup.enter)="onSelect(tcode.value)">
-    <md-autocomplete #auto="mdAutocomplete" (optionSelected)="onSelect($event.option.value);">
-      <md-option *ngFor="let menu of filteredMenu | async" [value]="menu.tcode">
-        <span>{{ menu.tcode | uppercase}} ({{menu.description}})</span>
-      </md-option>
-    </md-autocomplete>
-  </md-form-field>
+  <input type="text" #tcode mdInput placeholder="Search For Apps" aria-label="tcode" [matAutocomplete]="auto" [formControl]="menuCtrl"
+    (keyup.enter)="onSelect(tcode.value)">
+  <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSelect($event.option.value);">
+    <mat-option *ngFor="let menu of filteredMenu | async" [value]="menu.tcode">
+      <span>{{ menu.tcode | uppercase}} ({{menu.description}})</span>
+    </mat-option>
+  </mat-autocomplete>
 </form>

@@ -1,218 +1,60 @@
-<!-- <md-toolbar color="primary">
-  <nb-action class="control-item">
-    <a (click)="toggleSidebar()" href="#" class="navigation"><i class="nb-menu"></i></a>
-  </nb-action>
-
-  <img class="logo" src="./assets/atlas-logo.png" alt="logo">
-
-
-
-
-
-  <ng-container *ngIf="state$ | async as state">
-    <ng-container *ngIf="state.isLoggedIn">
-
-      <nb-user [menu]="userMenu" [name]="('dashboard.hello' | translate:{value: state.user.nameDisplay + '!'})" picture="../../../../assets/steve.jpg"
-        (menuClick)="menuClick($event)"></nb-user>
-
-      <span class="spacer"></span>
-      <ng-container *ngIf="state.country">
-        <button md-button *ngFor="let view of VIEW" (click)="switchView(view)">{{ ('dashboard.' + view) | translate | uppercase }}
-          </button>
-      </ng-container>
-
-      <ng-container *ngIf="state.notifications.length > 0">
-        <td-notification-count [notifications]="state.notifications.length" [mdMenuTriggerFor]="notificationsMenu">
-          <md-icon mdTooltip="{{ state.notifications.length }} Notifications">notifications
-          </md-icon>
-        </td-notification-count>
-
-        <md-menu #notificationsMenu="mdMenu" [overlapTrigger]="false">
-          <td-menu>
-            <div td-menu-header class="md-subhead">Notifications</div>
-            <md-nav-list dense>
-              <ng-container *ngFor="let notification of state.notifications; let last=last">
-                <a md-list-item>
-                  <md-icon mdListAvatar>today</md-icon>
-                  <h4 mdLine><span class="text-wrap">{{ notification.message }}</span></h4>
-                </a>
-                <md-divider *ngIf="!last"></md-divider>
-              </ng-container>
-            </md-nav-list>
-            <button md-button color="accent" td-menu-footer>
-        See All Notifications
-      </button>
-            <button md-button color="accent" td-menu-footer (click)="clearNotifications()">
-        Delete All Notifications
-      </button>
-          </td-menu>
-        </md-menu>
-      </ng-container>
-
-
-
-
-      <nb-actions size="medium" class="header-container right medium">
-        <nb-action class="control-item" disabled icon="nb-notifications"></nb-action>
-        <nb-action class="control-item" icon="nb-email"></nb-action>
-        <nb-action class="control-item">
-          <nb-search type="rotate-layout"></nb-search>
-        </nb-action>
-        <nb-action>
-          <button md-button (click)="logOut()">
-            {{ 'dashboard.logout' | translate | uppercase }}
-          </button>
-        </nb-action>
-        <nb-action icon="nb-grid-b" class="toggle-layout" (click)="toggleSettings()"></nb-action>
-      </nb-actions>
-
-
-
-    </ng-container>
-  </ng-container>
-</md-toolbar> -->
-
-
-      <!-- <button md-icon-button>
-        <md-icon [mdMenuTriggerFor]="appMenu">menu</md-icon>
-      </button> -->
-<!-- <md-menu #appMenu="mdMenu">
-  <button md-menu-item [mdMenuTriggerFor]="countryMenu">Country</button>
-  <button md-menu-item [mdMenuTriggerFor]="themeMenu">Theme</button>
-  <button md-menu-item><md-icon>settings</md-icon>Settings</button>
-  <button md-menu-item><md-icon>help</md-icon>Help</button>
-</md-menu>
-
-
-<md-menu #countryMenu="mdMenu">
-  <button *ngFor="let country of COUNTRY" md-menu-item (click)="switchCountry(country)">{{ country | uppercase }}</button>
-</md-menu>
-
-
-<md-menu #themeMenu="mdMenu">
-  <button *ngFor="let theme of DASHBOARD_THEME" md-menu-item (click)="switchTheme(theme)">{{ theme | uppercase }}</button>
-</md-menu> -->
-
-
-<!-- <nav class="flex" *ngIf="(state$ | async).isLoggedIn">
-  <atlas-tcode></atlas-tcode>
-  <atlas-path></atlas-path>
-</nav> -->
-
-
-
-
-
-
-
-<!-- <md-toolbar color="accent">
-  <button md-icon-button>
-        <md-icon>menu</md-icon>
-      </button>
-  <span>Toolbar</span>
-  <td-search-box placeholder="Search" [alwaysVisible]="false" flex></td-search-box>
-  <td-notification-count color="primary" positionX="before" [notifications]="true">
-    <md-icon>person</md-icon>
-  </td-notification-count>
-  <td-notification-count color="primary" [notifications]="false">
-    <md-icon>messages</md-icon>
-  </td-notification-count>
-  <button class="overflow-visible" md-icon-button [mdMenuTriggerFor]="notificationsMenu">
-        <td-notification-count [notifications]="(notifications$ | async).length">
-          <md-icon>notifications</md-icon>
-        </td-notification-count>
-      </button>
-  <md-menu #notificationsMenu="mdMenu" [overlapTrigger]="false">
-    <td-menu>
-      <div td-menu-header class="md-subhead">Notifications</div>
-      <md-nav-list dense>
-        <ng-template let-last="last" ngFor [ngForOf]="notifications$ | async">
-          <a md-list-item>
-            <md-icon mdListAvatar>today</md-icon>
-            <h4 mdLine><span class="text-wrap"> notification.message </span></h4>
-            <p mdLine>22 minutes ago</p>
-          </a>
-          <md-divider *ngIf="!last"></md-divider>
-        </ng-template>
-      </md-nav-list>
-      <button md-button color="accent" td-menu-footer>
-            See All Notifications
-          </button>
-    </td-menu>
-  </md-menu>
-  <button md-icon-button [mdMenuTriggerFor]="toolbarMenu1"><md-icon>more_vert</md-icon></button>
-  <md-menu #toolbarMenu1="mdMenu">
-    <button md-menu-item>
-          <md-icon>settings</md-icon>
-          <span>Settings</span>
-        </button>
-    <button md-menu-item>
-          <md-icon>exit_to_app</md-icon>
-          <span>Sign out</span>
-        </button>
-  </md-menu>
-</md-toolbar> -->
-
-
-
-
 <!-- <h1>Single Expansion Panel</h1>
 
-<md-expansion-panel class="md-expansion-demo-width" #myPanel>
-  <md-expansion-panel-header [expandedHeight]="expandedHeight" [collapsedHeight]="collapsedHeight">
+<mat-expansion-panel class="mat-expansion-demo-width" #myPanel>
+  <mat-expansion-panel-header [expandedHeight]="expandedHeight" [collapsedHeight]="collapsedHeight">
     <mat-panel-description>This is a panel description.</mat-panel-description>
     <mat-panel-title>Panel Title</mat-panel-title>
-  </md-expansion-panel-header>
+  </mat-expansion-panel-header>
     This is the content text that makes sense here.
-</md-expansion-panel>
+</mat-expansion-panel>
 
 <br>
-<md-form-field>
+<mat-form-field>
   <input mdInput [(ngModel)]="collapsedHeight" placeholder="Collapsed height">
-</md-form-field>
+</mat-form-field>
 
-<md-form-field>
+<mat-form-field>
   <input mdInput [(ngModel)]="expandedHeight" placeholder="Expanded height">
-</md-form-field>
+</mat-form-field>
 <br>
 
 <h1>Accordion</h1>
 <div>
   <p>Accordion Options</p>
   <div>
-    <md-slide-toggle [(ngModel)]="multi">Allow Multi Expansion</md-slide-toggle>
-    <md-slide-toggle [(ngModel)]="hideToggle">Hide Indicators</md-slide-toggle>
-    <md-slide-toggle [(ngModel)]="disabled">Disable Panel 2</md-slide-toggle>
-    <md-slide-toggle [(ngModel)]="showPanel3">Show Panel 3</md-slide-toggle>
+    <mat-slide-toggle [(ngModel)]="multi">Allow Multi Expansion</mat-slide-toggle>
+    <mat-slide-toggle [(ngModel)]="hideToggle">Hide Indicators</mat-slide-toggle>
+    <mat-slide-toggle [(ngModel)]="disabled">Disable Panel 2</mat-slide-toggle>
+    <mat-slide-toggle [(ngModel)]="showPanel3">Show Panel 3</mat-slide-toggle>
   </div>
   <p>Accordion Style</p>
-  <md-radio-group [(ngModel)]="displayMode">
-    <md-radio-button value="default">Default</md-radio-button>
-    <md-radio-button value="flat">Flat</md-radio-button>
-  </md-radio-group>
+  <mat-radio-group [(ngModel)]="displayMode">
+    <mat-radio-button value="default">Default</mat-radio-button>
+    <mat-radio-button value="flat">Flat</mat-radio-button>
+  </mat-radio-group>
   <p>Accordion Panel(s)</p>
   <div>
-    <md-checkbox [(ngModel)]="panel1.expanded">Panel 1</md-checkbox>
-    <md-checkbox [(ngModel)]="panel2.expanded">Panel 2</md-checkbox>
+    <mat-checkbox [(ngModel)]="panel1.expanded">Panel 1</mat-checkbox>
+    <mat-checkbox [(ngModel)]="panel2.expanded">Panel 2</mat-checkbox>
   </div>
 </div>
 <br>
-<md-accordion [displayMode]="displayMode" [multi]="multi"
-              class="md-expansion-demo-width">
-  <md-expansion-panel #panel1  [hideToggle]="hideToggle">
-    <md-expansion-panel-header>Section 1</md-expansion-panel-header>
+<mat-accordion [displayMode]="displayMode" [multi]="multi"
+              class="mat-expansion-demo-width">
+  <mat-expansion-panel #panel1  [hideToggle]="hideToggle">
+    <mat-expansion-panel-header>Section 1</mat-expansion-panel-header>
     <p>This is the content text that makes sense here.</p>
-  </md-expansion-panel>
-  <md-expansion-panel #panel2 [hideToggle]="hideToggle" [disabled]="disabled">
-    <md-expansion-panel-header>Section 2</md-expansion-panel-header>
+  </mat-expansion-panel>
+  <mat-expansion-panel #panel2 [hideToggle]="hideToggle" [disabled]="disabled">
+    <mat-expansion-panel-header>Section 2</mat-expansion-panel-header>
     <p>This is the content text that makes sense here.</p>
-  </md-expansion-panel>
-  <md-expansion-panel #panel3 *ngIf="showPanel3" [hideToggle]="hideToggle">
-    <md-expansion-panel-header>Section 3</md-expansion-panel-header>
-    <md-checkbox #showButtons>Reveal Buttons Below</md-checkbox>
-    <md-action-row *ngIf="showButtons.checked">
-      <button md-button (click)="panel2.expanded = true">OPEN SECTION 2</button>
-      <button md-button (click)="panel3.expanded = false">CLOSE</button>
-    </md-action-row>
-  </md-expansion-panel>
-</md-accordion> -->
+  </mat-expansion-panel>
+  <mat-expansion-panel #panel3 *ngIf="showPanel3" [hideToggle]="hideToggle">
+    <mat-expansion-panel-header>Section 3</mat-expansion-panel-header>
+    <mat-checkbox #showButtons>Reveal Buttons Below</mat-checkbox>
+    <mat-action-row *ngIf="showButtons.checked">
+      <button mat-button (click)="panel2.expanded = true">OPEN SECTION 2</button>
+      <button mat-button (click)="panel3.expanded = false">CLOSE</button>
+    </mat-action-row>
+  </mat-expansion-panel>
+</mat-accordion> -->

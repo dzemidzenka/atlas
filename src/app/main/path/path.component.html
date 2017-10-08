@@ -1,45 +1,45 @@
 <main *ngIf="path$ | async as path">
-  <md-chip-list>
+  <mat-chip-list>
     <ng-container *ngFor="let param of path.urlParams; let index = index; let first = first; let last = last">
       <ng-container *ngIf="first else notFirst">
-        <md-chip [mdMenuTriggerFor]="languageMenu">
-          <md-icon>language</md-icon>
-          <span>&nbsp; Language: {{path.language | uppercase}}</span>
-        </md-chip>
+        <mat-chip [matMenuTriggerFor]="languageMenu">
+          <mat-icon>language</mat-icon>
+          <span>&nbsp; {{path.language | uppercase}}</span>
+        </mat-chip>
 
-        <md-chip [mdMenuTriggerFor]="appMenu">
-          <md-icon>home</md-icon>
-          <span>&nbsp; Country: {{param | uppercase }}</span>
-        </md-chip>
+        <mat-chip [matMenuTriggerFor]="appMenu">
+          <mat-icon>home</mat-icon>
+          <span>&nbsp; {{param | uppercase }}</span>
+        </mat-chip>
       </ng-container>
 
 
       <ng-template #notFirst>
-        <md-chip (click)="onClick(param, index + 1)">
+        <mat-chip (click)="onClick(param, index + 1)">
           <ng-container *ngIf="path && (!last || last && !path.isComponent) else isComponent">
-            <md-icon>folder</md-icon>
-            <span>&nbsp; Folder: {{param | uppercase}}</span>
+            <mat-icon>folder</mat-icon>
+            <span>&nbsp; {{param | uppercase}}</span>
           </ng-container>
           <ng-template #isComponent>
-            <md-icon>extension</md-icon>
-            <span>&nbsp; Tcode: {{param | uppercase}}</span>
+            <mat-icon>extension</mat-icon>
+            <span>&nbsp; {{param | uppercase}}</span>
           </ng-template>
-        </md-chip>
+        </mat-chip>
       </ng-template>
     </ng-container>
-  </md-chip-list>
+  </mat-chip-list>
 </main>
 
 
-<md-menu #appMenu="mdMenu">
-  <button *ngFor="let country of COUNTRY" md-menu-item (click)="switchCountry(country)">{{ country | uppercase }}</button>
-</md-menu>
+<mat-menu #appMenu="matMenu">
+  <button *ngFor="let country of COUNTRY" mat-menu-item (click)="switchCountry(country)">{{ country | uppercase }}</button>
+</mat-menu>
 
 
 
-<md-menu #languageMenu="mdMenu">
-  <button *ngFor="let language of LANGUAGE" md-menu-item (click)="switchLanguage(language)">{{language | uppercase}}</button>
-</md-menu>
+<mat-menu #languageMenu="matMenu">
+  <button *ngFor="let language of LANGUAGE" mat-menu-item (click)="switchLanguage(language)">{{language | uppercase}}</button>
+</mat-menu>
 
 
 
@@ -50,19 +50,19 @@
 
 
 <!-- <main *ngIf="path$ | async as path">
-    <md-chip-list>
-      <md-chip *ngFor="let param of path.urlParams; let index = index; let last = last" (click)="onClick(param, index + 1)" [mdMenuTriggerFor]="appMenu">
+    <mat-chip-list>
+      <mat-chip *ngFor="let param of path.urlParams; let index = index; let last = last" (click)="onClick(param, index + 1)" [mdMenuTriggerFor]="appMenu">
         <ng-container *ngTemplateOutlet="template; context: param"></ng-container>
-      </md-chip>
+      </mat-chip>
 
       <ng-template #template>
-        <md-icon *ngIf="path && (!last || last && !path.isComponent) else isComponent">folder</md-icon>
-        <md-icon *ngIf="!path.isComponent else isComponent">folder</md-icon>
+        <mat-icon *ngIf="path && (!last || last && !path.isComponent) else isComponent">folder</mat-icon>
+        <mat-icon *ngIf="!path.isComponent else isComponent">folder</mat-icon>
         <ng-template #isComponent>
-          <md-icon>extension</md-icon>
+          <mat-icon>extension</mat-icon>
         </ng-template>
         <span>&nbsp; {{param}}</span>
       </ng-template>
 
-    </md-chip-list>
+    </mat-chip-list>
   </main> -->

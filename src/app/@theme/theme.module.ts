@@ -1,8 +1,7 @@
 import { ModuleWithProviders, NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ThemeSwitcherComponent } from './components';
 
-import { RouterModule, Routes } from '@angular/router';
 
 import {
   NbActionsModule,
@@ -18,19 +17,14 @@ import {
   NbCheckboxModule,
 } from '@nebular/theme';
 
-import {
-  ThemeSwitcherComponent,
-} from './components';
 
-
-const BASE_MODULES = [CommonModule, FormsModule, ReactiveFormsModule];
+const BASE_MODULES = [
+  CommonModule
+];
 
 const NB_MODULES = [
-  RouterModule,
   NbCardModule,
   NbLayoutModule,
-  // NbTabsetModule,
-  // NbRouteTabsetModule,
   NbMenuModule,
   NbUserModule,
   NbActionsModule,
@@ -56,7 +50,7 @@ const NB_THEME_PROVIDERS = [
 ];
 
 @NgModule({
-  imports: [...BASE_MODULES, ...NB_MODULES,],
+  imports: [...BASE_MODULES, ...NB_MODULES],
   exports: [...BASE_MODULES, ...NB_MODULES, ...COMPONENTS],
   declarations: [...COMPONENTS],
   schemas: [

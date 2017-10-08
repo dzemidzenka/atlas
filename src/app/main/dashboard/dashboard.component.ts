@@ -4,6 +4,8 @@ import { ReduxService } from '../../providers/redux.service';
 import { DASHBOARD_THEME, VIEW, IMenuModel } from '../../models/models';
 
 
+
+
 @Component({
   selector: 'atlas-dashboard',
   templateUrl: './dashboard.component.html',

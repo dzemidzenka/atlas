@@ -1,0 +1,24 @@
+<ng-container *ngIf="state$ | async as state">
+  <div *ngIf="state.isLoggedIn else notLoggedIn" class="app">
+    <atlas-headerMd></atlas-headerMd>
+    <mat-sidenav-container>
+      <mat-sidenav #sidenav mode="over">
+        <p>sidebar content</p>
+      </mat-sidenav>
+
+      <main (click)="sidenav.toggle()">
+        <atlas-path></atlas-path>
+        <router-outlet></router-outlet>
+      </main>
+    </mat-sidenav-container>
+  </div>
+</ng-container>
+
+
+<ng-template #notLoggedIn>
+  <nb-layout [center]="true" windowMode>
+    <nb-layout-column class="main-content">
+      <atlas-login></atlas-login>
+    </nb-layout-column>
+  </nb-layout>
+</ng-template>

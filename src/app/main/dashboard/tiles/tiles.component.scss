@@ -1,9 +1,10 @@
 md-card, nb-card {
     width: 250px;
-    height: 250px;
+    height: 200px;
     margin: 10px;
     box-sizing: border-box;
     border-top: 2px solid transparent;
+    font-size: 0.8rem;
     &:hover{
       border-top: 2px solid #00f9a6;
     }

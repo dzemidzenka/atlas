@@ -18,7 +18,7 @@ export class SettingsComponent implements OnInit {
 
   onClick() {
     this._reduxService.actionNotify([{
-      message: 'New notification' + Math.random(),
+      message: 'New notification ' + Date.now(),
       date: Date.now(),
     }]);
   }

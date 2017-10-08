@@ -1,6 +1,8 @@
 import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { IMenuModel } from '../../../models/models';
 
+
+
 @Component({
   selector: 'atlas-tiles',
   templateUrl: './tiles.component.html',

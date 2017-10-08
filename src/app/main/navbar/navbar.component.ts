@@ -68,7 +68,7 @@ export class NavbarComponent {
 
 
   toggleSidebar(): boolean {
-    this.sidebarService.toggle(true, 'menu-sidebar');
+    this.sidebarService.toggle(false, 'menu-sidebar');
     return false;
   }
   toggleSettings(): boolean {
