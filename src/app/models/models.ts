@@ -3,10 +3,11 @@ export enum ACTION {
   LOGOUT = 'LOGOUT',
   ROUTE = 'ROUTE',
   LANGUAGE = 'LANGUAGE',
+  COUNTRY = 'COUNTRY',
   FAVORITE_TOGGLE = 'FAVORITE_TOGGLE',
   NOTIFICATION = 'NOTIFICATION',
   NOTIFICATION_CLEAR = 'NOTIFICATION_CLEAR',
-  DASHBOARD_THEME = 'DASHBOARD_THEME'
+  DASHBOARD_THEME = 'DASHBOARD_THEME',
 }
 
 
@@ -88,7 +89,7 @@ export interface IUserModel {
   nameDisplay: string;
   countryDefault: COUNTRY;
   allowedCountries: Array<string>;
-  defaultLanguage: LANGUAGE;
+  languageDefault: LANGUAGE;
 }
 
 
@@ -102,4 +103,5 @@ export interface IMenuModel {
   routerPath: string;
   urlParams: Array<string>;
   tcode: string;
+  iFrameUrl: string;
 }

@@ -2,12 +2,13 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { SharedModule } from '../../shared/shared.module';
+
 import { SettingsComponent } from './settings.component';
+
 
 const ROUTES: Routes = [
   { path: '', component: SettingsComponent }
 ];
-
 
 
 @NgModule({

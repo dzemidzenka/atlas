@@ -1,7 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { Router } from '@angular/router';
 import { ReduxService } from '../../providers/redux.service';
-import { ACTION, COUNTRY, LANGUAGE } from '../../models/models';
+import { ACTION, VIEW } from '../../models/models';
 
 
 @Component({
@@ -11,9 +10,12 @@ import { ACTION, COUNTRY, LANGUAGE } from '../../models/models';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PathComponent {
+  constructor(
+    private _reduxService: ReduxService,
+  ) { }
 
   path$ = this._reduxService.state$
-    .filter(state => state.action.op === ACTION.ROUTE || state.action.op === ACTION.LANGUAGE)
+    // .filter(state => state.action.op === ACTION.ROUTE)
     .map(state => Object.assign({
       'urlParams': state.urlParams,
       'isComponent': state.isComponent,
@@ -21,31 +23,16 @@ export class PathComponent {
       'language': state.language
     }));
 
-  COUNTRY = Object.values(COUNTRY);
-  LANGUAGE = Object.values(LANGUAGE);
-  private _LANGUAGE = Object.keys(LANGUAGE);
+  VIEW = Object.values(VIEW);
 
 
-  constructor(
-    private _router: Router,
-    private _reduxService: ReduxService,
-  ) { }
 
+  switchView(view: VIEW) {
+    this._reduxService.actionDashboard(view);
+  }
 
   onClick(event: string, index: number) {
-    const urlParams = this._reduxService.getCurrentState().urlParams.slice(0, index);
-    this._router.navigate([urlParams.join('/')]);
-  }
-
-
-  switchCountry(country: string) {
-    const params = [...this._reduxService.getCurrentState().urlParams];
-    params[0] = country;
-    this._router.navigate([params.join('/')]);
-  }
-
-
-  switchLanguage(language: string) {
-    this._reduxService.actionLanguage(language as LANGUAGE);
+    const urlParams = this._reduxService.getCurrentState().urlParams;
+    this._reduxService.actionMenu(urlParams.slice(0, index + 1));
   }
 }

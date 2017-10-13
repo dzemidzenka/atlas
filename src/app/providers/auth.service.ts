@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Router, ActivatedRoute } from '@angular/router';
 import { ReduxService } from './redux.service';
 import { COUNTRY, LANGUAGE, IUserModel, INotificationModel } from '../models/models';
 
@@ -8,28 +7,26 @@ import { COUNTRY, LANGUAGE, IUserModel, INotificationModel } from '../models/mod
 @Injectable()
 export class AuthService {
   constructor(
-    private _router: Router,
-    private _route: ActivatedRoute,
     private _reduxService: ReduxService,
     private _http: HttpClient,
   ) {
-    this._isLoggedIn = true;
-    this._reduxService.actionLogIn(Object.assign({
-      email: 'test@company.com',
-      nameFirst: 'Steve',
-      nameLast: 'Dz',
-      nameDisplay: 'Steve D',
-      countryDefault: COUNTRY.US,
-      allowedCountries: [...Object.values(COUNTRY)],
-      defaultLanguage: LANGUAGE.EN,
-    }),
-      [Object.assign(
-        {
-          message: 'Steve D logged in. Hello!',
-          date: Date.now(),
-        }
-      )]
-    );
+    // this._isLoggedIn = true;
+    // this._reduxService.actionLogIn(Object.assign({
+    //   email: 'test@company.com',
+    //   nameFirst: 'Steve',
+    //   nameLast: 'Dz',
+    //   nameDisplay: 'Steve D',
+    //   countryDefault: COUNTRY.US,
+    //   allowedCountries: [...Object.values(COUNTRY)],
+    //   defaultLanguage: LANGUAGE.EN,
+    // }),
+    //   [Object.assign(
+    //     {
+    //       message: 'Steve D logged in. Hello!',
+    //       date: Date.now(),
+    //     }
+    //   )]
+    // );
   }
 
   private _isLoggedIn = false;
@@ -49,14 +46,21 @@ export class AuthService {
     xhr.withCredentials = true;
 
     xhr.addEventListener('readystatechange', function (e) {
-      console.log(e);
       if (this.readyState === 4) {
         console.log(this.responseText);
       }
     });
 
-    xhr.open('POST', 'http://atlasglobal-dev.nuvasive.com/api/token');
-    xhr.send(data);
+
+
+    xhr.open('POST', '/api/token');
+    xhr.setRequestHeader('Accept', 'application/json');
+    xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
+    xhr.setRequestHeader('Access-Control-Allow-Methods', 'POST');
+    xhr.setRequestHeader('Access-Control-Allow-Methods', 'OPTIONS');
+    // xhr.setRequestHeader('Access-Control-Allow-Headers', 'Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With');
+
+    // xhr.send(data);
 
 
     // return this._http.post('/api/authenticate', JSON.stringify({ username: username, password: password }))
@@ -76,6 +80,7 @@ export class AuthService {
 
 
   logIn(email: string, password: string) {
+    this._logIn(email, password);
     this._isLoggedIn = true;
     const user: IUserModel = {
       id: 1,
@@ -85,7 +90,7 @@ export class AuthService {
       nameDisplay: 'Steve D',
       countryDefault: COUNTRY.US,
       allowedCountries: [...Object.values(COUNTRY)],
-      defaultLanguage: LANGUAGE.EN,
+      languageDefault: LANGUAGE.EN,
     };
 
 
@@ -94,36 +99,13 @@ export class AuthService {
       date: Date.now(),
     };
     this._reduxService.actionLogIn(user, [notification]);
-
-    const queryParams = this._route.snapshot.queryParams;
-    const returnUrl = this._route.snapshot.queryParams['returnUrl'];
-    const view = this._route.snapshot.queryParams['view'];
-
-    if (returnUrl) {
-      this._router.navigate([returnUrl], { queryParams: { view: view } });
-    } else {
-      this._router.navigate(['']);
-    }
   }
 
 
   logOut() {
     this._isLoggedIn = false;
     this._reduxService.actionLogOut();
-
-    const country = this._reduxService.getCurrentState().country;
-    const urlParams = this._reduxService.getCurrentState().urlParams;
-    const queryParams = this._reduxService.getCurrentState().queryParams;
-
-    if (urlParams.length > 0) {
-      this._router.navigate(
-        [`/${country}/login`],
-        { queryParams: { returnUrl: urlParams.join('/'), ...queryParams } });
-    } else {
-      this._router.navigate([`/${country}/login`]);
-    }
   }
-
 
   passwordReset(email: string) {
   }

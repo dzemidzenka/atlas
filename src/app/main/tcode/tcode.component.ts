@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteTrigger } from '@angular/material';
 
-import { Router } from '@angular/router';
 import { ReduxService } from '../../providers/redux.service';
 import { Observable } from 'rxjs/Observable';
 import { IMenuModel } from '../../models/models';
@@ -17,7 +16,6 @@ import { IMenuModel } from '../../models/models';
 export class TcodeComponent implements OnInit {
 
   constructor(
-    private _router: Router,
     private _reduxService: ReduxService,
   ) { }
 
@@ -58,8 +56,8 @@ export class TcodeComponent implements OnInit {
       .filter(menu => menu.hasOwnProperty('tcode'))
       .filter(menu => menu.tcode.trim().toLowerCase() === tcode.toLowerCase())[0].urlParams;
 
-    urlParams[0] = this._reduxService.getCurrentState().country;
-    this._router.navigate([urlParams.join('/')]);
+    this._reduxService.actionMenu(urlParams);
+
     this.menuCtrl.setValue(null);
     this.trigger.closePanel();
   }

@@ -20,10 +20,7 @@
       "testTsconfig": "tsconfig.spec.json",
       "prefix": "atlas",
       "styles": [
-        "styles.scss",
-        "../node_modules/bootstrap/dist/css/bootstrap.css",
-        "../node_modules/nebular-icons/scss/nebular-icons.scss",
-        "./app/@theme/styles/styles.scss"
+        "styles.scss"
       ],
       "scripts": [],
       "environmentSource": "environments/environment.ts",

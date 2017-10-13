@@ -1,6 +1,8 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ToasterConfig, ToasterService } from 'angular2-toaster';
+import { ReduxService } from '../providers/redux.service';
+import { MatDrawer } from '@angular/material/sidenav';
 
 
 @Component({
@@ -12,6 +14,7 @@ import { ToasterConfig, ToasterService } from 'angular2-toaster';
 export class AppComponent implements OnInit {
   constructor(
     private _titleService: Title,
+    private _reduxService: ReduxService,
   ) { }
 
   readonly title = 'Atlas';
@@ -26,6 +29,21 @@ export class AppComponent implements OnInit {
     limit: 5,
     showCloseButton: true
   });
+
+
+  @ViewChild('sidenav') sidenav: MatDrawer;
+
+  state$ = this._reduxService.state$.map(state => Object.assign({
+    country: state.country,
+    isLoggedIn: state.isLoggedIn,
+    user: state.user,
+    notifications: state.notifications
+  }));
+
+
+  onSidebarToggle() {
+    this.sidenav.toggle();
+  }
 
   ngOnInit() {
     this._titleService.setTitle(this.title);

@@ -1,4 +1,18 @@
 <toaster-container [toasterconfig]="toasterConfig"></toaster-container>
 
-<!-- <atlas-shellMd></atlas-shellMd> -->
-<atlas-shell></atlas-shell>
+
+<div *ngIf="state$ | async as state" class="page">
+  <ng-container *ngIf="state.isLoggedIn">
+    <atlas-header (sidebarToggle)="onSidebarToggle()"></atlas-header>
+    <atlas-path></atlas-path>
+  </ng-container>
+
+  <mat-sidenav-container>
+    <mat-sidenav #sidenav mode="over">
+      <atlas-sidebar></atlas-sidebar>
+    </mat-sidenav>
+
+    <router-outlet *ngIf="state.isLoggedIn" (click)="sidenav.toggle()"></router-outlet>
+    <atlas-login *ngIf="!state.isLoggedIn"></atlas-login>
+  </mat-sidenav-container>
+</div>

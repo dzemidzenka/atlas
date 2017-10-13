@@ -1,18 +1,42 @@
-md-card, nb-card {
-    width: 250px;
-    height: 200px;
-    margin: 10px;
-    box-sizing: border-box;
-    border-top: 2px solid transparent;
-    font-size: 0.8rem;
-    &:hover{
-      border-top: 2px solid #00f9a6;
-    }
-}
-
 nav {
     display: flex;
     justify-content: start;
+    align-content: start;
     flex-wrap: wrap;
+    height: 100%;
+    width: 100%;
+    overflow: auto;
+    overflow-y: overlay; //Chrome only
 }
 
+.card {
+    width: 200px;
+    height: 200px;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-bottom: 10px;
+    border-top: 2px solid transparent;
+    border-radius: 10px;
+    font-size: 1em;
+    position: relative;
+    background-color: var(--tile-bg-color);
+    &:hover {
+        border-top: 2px solid var(--tile-active);
+    }
+}
+
+.card * {
+    color: var(--font-color);
+}
+
+.folder {
+    position: absolute;
+    top: 30%;
+    left: 10px;
+}
+
+.folder-icon {
+    font-size: 8em;
+}
+
+.component-icon {}

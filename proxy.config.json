@@ -1,0 +1,7 @@
+{
+  "/api/*": {
+    "target": "http://atlasglobal-dev.nuvasive.com",
+    "secure": false,
+    "logLevel": "debug"
+  }
+}

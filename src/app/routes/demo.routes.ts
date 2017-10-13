@@ -1,21 +1,24 @@
 import { Routes } from '@angular/router';
+import { DashboardComponent } from '../main/dashboard/dashboard.component';
 
 
 export const DEMO_ROUTES: Routes = [
+  // FOLDER
   {
-    path: ':country/forminputs',
-    loadChildren: '../lazyModules/form-inputs/form-inputs.module#FormInputsModule',
+    path: 'demo',
+    component: DashboardComponent,
     data: {
-      isComponent: true,
-      description: 'Form Inputs',
-    },
+      description: 'demo',
+    }
   },
+
+  // COMPONENTS
   {
-    path: ':country/formlayouts',
-    loadChildren: '../lazyModules/form-layouts/form-layouts.module#FormLayoutsModule',
+    path: 'demo/demo1',
+    loadChildren: '../lazyModules/demo/demo1/demo1.module#Demo1Module',
     data: {
       isComponent: true,
-      description: 'Form Layouts',
+      description: 'Demo1',
     },
   },
 ];

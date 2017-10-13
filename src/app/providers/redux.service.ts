@@ -1,10 +1,9 @@
 import { Injectable, Inject } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
-// import { MdSnackBar } from '@angular/material';
 import { TranslateService } from '@ngx-translate/core';
-import { ToasterService, ToasterConfig, Toast, BodyOutputType } from 'angular2-toaster';
+import { ToasterService, Toast, BodyOutputType } from 'angular2-toaster';
 
 import * as models from '../models/models';
 import * as tokens from '../providers/tokens';
@@ -13,6 +12,7 @@ import sortBy from 'lodash-es/sortBy';
 import sortedUniq from 'lodash-es/sortedUniq';
 import cloneDeep from 'lodash-es/cloneDeep';
 import isEmpty from 'lodash-es/isEmpty';
+import omit from 'lodash-es/omit';
 
 
 
@@ -20,9 +20,9 @@ import isEmpty from 'lodash-es/isEmpty';
 @Injectable()
 export class ReduxService {
   constructor(
-    // @Optional() @Inject(models.LOCAL_STORAGE_NAME_PROVIDER) private _localStorageName,
+    // @Optional() @Inject(tokens.LOCAL_STORAGE_NAME_PROVIDER) private _localStorageName,
     private _router: Router,
-    // public _snackBar: MdSnackBar,
+    private _route: ActivatedRoute,
     private _toasterService: ToasterService,
     private _translate: TranslateService,
   ) {
@@ -38,12 +38,9 @@ export class ReduxService {
     //   .map((menu: models.IMenuModel, i) => { menu.id = i + 1; return menu; });        // assign menu item ID
 
 
-    this._translate.setDefaultLang('en');
-    this._translate.use('en');
     // this._translate.get('HOME.HELLO', { value: 'world' }).subscribe((res: string) => {
     //   console.log(res);
     // });
-
 
     // SUBSCRIBE TO REDUX STATE - nessesary to maintain at least one subscription active while the app is running
     this.state$.subscribe(state => {
@@ -110,29 +107,55 @@ export class ReduxService {
 
   // REDUCERS
   private _initReducers() {
+
     this._reducers[models.ACTION.LOGIN] = (state: models.IStateModel, action: models.IActionModel) => {
       state.user = action.user;
       state.isLoggedIn = true;
-      state.language = action.user.defaultLanguage;
-      this._translate.use(action.user.defaultLanguage);
       state.notifications = [...action.notifications];
-      // action.notifications.forEach(notification => this.sendToasterNotification(notification.message));
-      // notification => this._snackBar.open(notification.message, '', { duration: models.TOASTER_DURATION })
+      const queryParams = omit(this._route.snapshot.queryParams, 'returnUrl');
+      const returnUrl = this._route.snapshot.queryParams['returnUrl'];
+
+      state.language = queryParams['language'] ? queryParams['language'] : state.user.languageDefault;
+      this._translate.setDefaultLang(state.language);
+      this._translate.use(state.language);
+
+      state.country = queryParams['country'] ? queryParams['country'] : state.user.countryDefault;
+      state.view = queryParams['view'];
+
+      let returnUrlParams;
+      if (returnUrl) {
+        returnUrlParams = returnUrl.split('/').filter(param => param !== '').map(param => param.split('?')[0]);
+      }
+      this._router.navigate(returnUrl ? [returnUrlParams.join('/')] : [state.url.split('?')[0]], { queryParams: { ...queryParams } });
     };
 
 
     this._reducers[models.ACTION.LOGOUT] = (state: models.IStateModel, action: models.IActionModel) => {
-      // this._snackBar.open(`${state.user.nameDisplay} logged out. Goodbye!`, '', { duration: models.TOASTER_DURATION });
       this.sendToasterNotification(`${state.user.nameDisplay} logged out. Goodbye!`);
       state.user = {} as models.IUserModel;
       state.isLoggedIn = false;
+
+      const queryParams = {
+        country: state.country,
+        language: state.language,
+        view: state.view
+      };
+      if (state.urlParams.length > 0) {
+        queryParams['returnUrl'] = state.urlParams.join('/');
+      }
+      this._router.navigate([''], { queryParams: { ...queryParams } });
     };
 
 
-    this._reducers[models.ACTION.LANGUAGE] = (state: models.IStateModel, action: models.IActionModel) => {
-      state.language = action.language;
-      this._translate.use(state.language);
-    };
+    // this._reducers[models.ACTION.LANGUAGE] = (state: models.IStateModel, action: models.IActionModel) => {
+    //   state.language = action.language;
+    //   this._translate.use(action.language);
+    // };
+
+
+    // this._reducers[models.ACTION.COUNTRY] = (state: models.IStateModel, action: models.IActionModel) => {
+    //   state.country = action.country;
+    // };
 
 
     this._reducers[models.ACTION.NOTIFICATION] = (state: models.IStateModel, action: models.IActionModel) => {
@@ -140,7 +163,6 @@ export class ReduxService {
         notification => {
           state.notifications.push(notification);
           this.sendToasterNotification(notification.message);
-          // this._snackBar.open(notification.message, '', { duration: models.TOASTER_DURATION });
         }
       );
     };
@@ -165,7 +187,6 @@ export class ReduxService {
     };
 
 
-
     this._reducers[models.ACTION.ROUTE] = (state: models.IStateModel, action: models.IActionModel) => {
       if (!state.menu) {
         state.menu = this._router.config
@@ -175,24 +196,30 @@ export class ReduxService {
           .map((menu: models.IMenuModel, i) => { menu.id = i + 1; return menu; });        // assign menu item ID
       }
 
-
-
       state.url = action.url;
       state.urlParams = action.urlParams.filter(param => param.length > 0).map(param => param.toLowerCase());
+      // if a user goes back to login screen while already logged in, redirect
+      if (state.isLoggedIn) {
+        if (state.urlParams[0] === 'login') {
+          state.isLoggedIn = false;
+        }
+      }
+
       state.queryParams = action.queryParams;
-      state.view = state.queryParams['view'];
-      state.country = state.urlParams[0];
-      if (state.country === 'undefined') {
-        state.country = undefined;
+      if (state.queryParams['language']) {
+        state.language = state.queryParams['language'];
+      }
+      if (state.queryParams['country']) {
+        state.country = state.queryParams['country'];
+      }
+      if (state.queryParams['view']) {
+        state.view = state.queryParams['view'];
       }
       if (!state.menuRecent) {
         state.menuRecent = [];
       }
 
       const _urlParams = [...state.urlParams];
-      if (_urlParams.length > 1) {
-        _urlParams[0] = ':country';
-      }
       const _routerPath = _urlParams.join('/');
       state.menuItemCurrent = state.menu.find(item => item.routerPath === _routerPath);
       state.isComponent = false;
@@ -222,10 +249,6 @@ export class ReduxService {
     this._actionSubject$.next(Object.assign({ op: models.ACTION.LOGOUT }));
   }
 
-  actionLanguage(language: models.LANGUAGE) {
-    this._actionSubject$.next(Object.assign({ op: models.ACTION.LANGUAGE, language: language }));
-  }
-
   actionFavoriteToggle(menuItem: models.IMenuModel) {
     this._actionSubject$.next(Object.assign({ op: models.ACTION.FAVORITE_TOGGLE, menuItem: menuItem }));
   }
@@ -242,22 +265,40 @@ export class ReduxService {
     this._actionSubject$.next(Object.assign({ op: models.ACTION.NOTIFICATION_CLEAR }));
   }
 
+  actionLanguage(language: models.LANGUAGE) {
+    // this._actionSubject$.next(Object.assign({ op: models.ACTION.LANGUAGE, language: language }));
+    this._translate.use(language);
+    const urlParams = this._currentState.urlParams;
+    const queryParams = this._currentState.queryParams;
+    this._router.navigate([urlParams.join('/')], { queryParams: { ...queryParams, language: language } });
+  }
+
+  actionCountry(country: models.COUNTRY) {
+    // this._actionSubject$.next(Object.assign({ op: models.ACTION.COUNTRY, country: country }));
+    const urlParams = this._currentState.urlParams;
+    const queryParams = this._currentState.queryParams;
+    this._router.navigate([urlParams.join('/')], { queryParams: { ...queryParams, country: country } });
+  }
+
+  actionDashboard(view: models.VIEW) {
+    const queryParams = this._route.snapshot.queryParams;
+    this._router.navigate([''], { queryParams: { ...queryParams, view: view } });
+  }
+
+  actionMenu(urlParams: Array<string>) {
+    const queryParams = omit(this._route.snapshot.queryParams, 'view');
+    this._router.navigate([urlParams.join('/')], { queryParams: { ...queryParams } });
+  }
+
+
+
   // current state getter to prevent direct state update
   getCurrentState(): models.IStateModel {
     return this._currentState;
   }
 
 
-  navigateToDashboard(view: models.VIEW){
-    const country = this._currentState.country;
-    if (country) {
-      this._router.navigate([`/${country}/`], { queryParams: { view: view } });
-    } else {
-      this._router.navigate(['']);
-    }
-  }
-
-
+  // private
   private sendToasterNotification(message: string) {
     const toast1: Toast = {
       type: 'default',
@@ -311,9 +352,7 @@ function getActiveMenu(state: models.IStateModel) {
         return item;
       }
 
-      // e.g. if URL is /, then menus for /:country/ are allowed
-      // e.g. if URL is /:country, then menus for /:country/xxx are allowed
-      // e.g. if URL is /:country/xxx, then menus for /:country/xxx/yyy are allowed
+      // e.g. if URL is /xxx, then menus for /xxx/yyy are allowed
       if (item.urlParams.length === state.urlParams.length + 1) {
         item.active = true;
       } else {
@@ -322,17 +361,13 @@ function getActiveMenu(state: models.IStateModel) {
       }
 
       // match URL params and menu params
-      if (state.country) {
-        item.urlParams[0] = state.country;
-
-        let i = 0;
-        for (const param of state.urlParams) {
-          if (item.urlParams[i] !== state.urlParams[i]) {
-            item.active = false;
-            break;
-          }
-          i++;
+      let i = 0;
+      for (const param of state.urlParams) {
+        if (item.urlParams[i] !== state.urlParams[i]) {
+          item.active = false;
+          break;
         }
+        i++;
       }
       return item;
     });

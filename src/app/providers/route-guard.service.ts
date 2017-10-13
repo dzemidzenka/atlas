@@ -9,7 +9,6 @@ export class RouteGuardService implements CanActivate {
     private _authService: AuthService,
   ) { }
 
-
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
@@ -17,11 +16,13 @@ export class RouteGuardService implements CanActivate {
     if (this._authService.isLoggedIn()) {
       return true;
     }
-    if (state.url.length > 1) {
-      this._router.navigate([`/${route.params.country}/signin`], { queryParams: { returnUrl: state.url } });
-    } else {
-      this._router.navigate([`/${route.params.country}/signin`]);
-    }
+
+    const urlTree = this._router.parseUrl(state.url);
+    const urlParams = state.url.split('/').filter(param => param !== '').map(param => param.split('?')[0]);
+    const queryParams = urlTree.queryParams;
+    queryParams.returnUrl = urlParams.join('/');
+
+    this._router.navigate(['login'], { queryParams: { ...queryParams } });
     return false;
   }
 }

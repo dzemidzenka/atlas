@@ -1,1 +1,53 @@
+// :host {
+//     --main-bg-color: #2f296b;
+//     --header-bg-color: #3d3780;
+//     --tile-bg-color: #3d3780;
+//     --font-color: #a1a1e5;
+//     --tcode-bg-color: #a1a1e5;
+//     --tcode-placeholder-color: #2f296b;
+// }
+:host {
+    --main-bg-color: #3d3780;
+    --header-bg-color: #2f296b;
+    --tile-bg-color: #2f296b;
+    --tile-active: #00f9a6;
+    --font-color: #a1a1e5;
+    --tcode-bg-color: #a1a1e5;
+    --tcode-placeholder-color: #2f296b;
+}
 
+
+.page {
+    width: 100vw;
+    height: 100vh;
+    display: grid;
+    position: fixed;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto 1fr;
+    grid-template-areas: "header" "path" "content";
+    background-color: var(--main-bg-color);
+}
+
+atlas-header {
+    grid-area: header;
+}
+
+atlas-path {
+    grid-area: path;
+}
+
+router-outlet,
+atlas-login {
+    grid-area: content;
+}
+
+mat-sidenav-container,
+mat-sidenav,
+router-outlet {
+    background-color: inherit;
+}
+
+mat-sidenav {
+    background-color: inherit;
+    width: 200px;
+}

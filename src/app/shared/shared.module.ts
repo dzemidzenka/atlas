@@ -2,31 +2,46 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
+
+// RxJs operators
+import 'rxjs/add/operator/startWith';
+import 'rxjs/add/operator/scan';
+import 'rxjs/add/operator/publishBehavior';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/do';
+
+
+
 import {
-  MatAutocompleteModule,  //
-  MatButtonModule,  //
-  MatButtonToggleModule,
-  MatCardModule,
-  MatCheckboxModule,
-  MatChipsModule,
-  MatDatepickerModule,
-  MatDialogModule,
-  MatExpansionModule,
-  MatFormFieldModule,  //
-  MatIconModule,   //
-  MatInputModule,
-  MatListModule,
-  MatMenuModule,  //
-  MatProgressBarModule,
-  MatRadioModule,
-  MatSelectModule,
+  MatAutocompleteModule,
+  MatButtonModule,
+  // MatButtonToggleModule,
+  // MatCardModule,
+  // MatCheckboxModule,
+  // MatChipsModule,
+  // MatDatepickerModule,
+  // MatDialogModule,
+  // MatExpansionModule,
+  // MatFormFieldModule,
+  MatIconModule,
+  // MatInputModule,
+  // MatListModule,
+  MatMenuModule,
+  // MatProgressBarModule,
+  // MatRadioModule,
+  // MatSelectModule,
   MatSidenavModule,
-  MatSliderModule,
-  MatSlideToggleModule,
-  MatToolbarModule,   //
+  // MatSliderModule,
+  // MatSlideToggleModule,
+  MatToolbarModule,
   MatTooltipModule,
 } from '@angular/material';
+// import { MegaMenuModule } from 'primeng/primeng';
+
 import { NotificationCountComponent } from './notification/notification.component';
+
+
 
 
 const MODULES = [
@@ -34,36 +49,41 @@ const MODULES = [
   FormsModule,
   ReactiveFormsModule,
 
-  MatAutocompleteModule,  //
-  MatButtonModule,  //
-  MatButtonToggleModule,
-  MatCardModule,
-  MatCheckboxModule,
-  MatChipsModule,
-  MatDatepickerModule,
-  MatDialogModule,
-  MatExpansionModule,
-  MatFormFieldModule,  //
-  MatIconModule,   //
-  MatInputModule,
-  MatListModule,
-  MatMenuModule,  //
-  MatProgressBarModule,
-  MatRadioModule,
-  MatSelectModule,
+  // MegaMenuModule,
+
+  MatAutocompleteModule,
+  MatButtonModule,
+  // MatButtonToggleModule,
+  // MatCardModule,
+  // MatCheckboxModule,
+  // MatChipsModule,
+  // MatDatepickerModule,
+  // MatDialogModule,
+  // MatExpansionModule,
+  // MatFormFieldModule,
+  MatIconModule,
+  // MatInputModule,
+  // MatListModule,
+  MatMenuModule,
+  // MatProgressBarModule,
+  // MatRadioModule,
+  // MatSelectModule,
   MatSidenavModule,
-  MatSliderModule,
-  MatSlideToggleModule,
-  MatToolbarModule,   //
+  // MatSliderModule,
+  // MatSlideToggleModule,
+  MatToolbarModule,
   MatTooltipModule,
 ];
 
 
+const COMPONENTS = [
+  NotificationCountComponent,
+];
 
 
 @NgModule({
   imports: [...MODULES],
-  exports: [...MODULES, NotificationCountComponent],
-  declarations: [NotificationCountComponent]
+  exports: [...MODULES, ...COMPONENTS],
+  declarations: [...COMPONENTS]
 })
 export class SharedModule { }

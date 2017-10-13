@@ -1,32 +1,36 @@
-<!-- <nav>
-  <mat-card *ngFor="let item of menu" (click)="onNavigate(item.urlParams)">
-    <mat-card-header>
-      <mat-card-subtitle *ngIf="item.isComponent">TCODE: {{ item.tcode }}</mat-card-subtitle>
-      <mat-card-subtitle *ngIf="!item.isComponent">FOLDER</mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-content>{{ item.description | uppercase }}</mat-card-content>
-
-    <mat-card-actions *ngIf="item.isComponent">
-      <mat-icon *ngIf="item.isFavorite else notFavorite" (click)="onFavoriteToggle(item)">favorite</mat-icon>
-      <ng-template #notFavorite>
-        <mat-icon (click)="onFavoriteToggle(item)">favorite_border</mat-icon>
-      </ng-template>
-    </mat-card-actions>
-  </mat-card>
-</nav> -->
-
-
 <nav>
+  <div class="card" *ngFor="let item of menu" (click)="onNavigate(item.urlParams)">
+    <header>
+      {{ item.description | uppercase }}
+    </header>
+
+    <div *ngIf="item.isComponent" class="component">
+      <mat-icon *ngIf="item.isFavorite else notFavorite" (click)="onFavoriteToggle(item)" class="component-icon">favorite</mat-icon>
+      <ng-template #notFavorite>
+        <mat-icon (click)="onFavoriteToggle(item)" class="component-icon">favorite_border</mat-icon>
+      </ng-template>
+    </div>
+
+    <div *ngIf="!item.isComponent" class="folder">
+      <mat-icon class="folder-icon">folder</mat-icon>
+    </div>
+  </div>
+</nav>
+
+
+
+<!-- <nav>
   <nb-card *ngFor="let item of menu" (click)="onNavigate(item.urlParams)">
     <nb-card-header>
-      <nb-card-subtitle *ngIf="item.isComponent">TCODE</nb-card-subtitle>
-      <nb-card-subtitle *ngIf="!item.isComponent">FOLDER</nb-card-subtitle>
+      <nb-card-content>{{ item.description | uppercase }}</nb-card-content>
     </nb-card-header>
     <nb-card-body>
-      <nb-card-content>{{ item.description | uppercase }}</nb-card-content>
+      <div *ngIf="!item.isComponent">
+        <mat-icon class="folder">folder</mat-icon>
+      </div>
     </nb-card-body>
-    <nb-card-footer>
-      <nb-card-actions *ngIf="item.isComponent">
+    <nb-card-footer *ngIf="item.isComponent">
+      <nb-card-actions>
         <mat-icon *ngIf="item.isFavorite else notFavorite" (click)="onFavoriteToggle(item)">favorite</mat-icon>
         <ng-template #notFavorite>
           <mat-icon (click)="onFavoriteToggle(item)">favorite_border</mat-icon>
@@ -34,4 +38,4 @@
       </nb-card-actions>
     </nb-card-footer>
   </nb-card>
-</nav>
+</nav> -->

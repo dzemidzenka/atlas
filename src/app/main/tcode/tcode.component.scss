@@ -1,31 +1,27 @@
 :host {
-    min-width: 20em;
     margin-left: 1em;
     margin-right: 2em;
 }
 
 input {
-    // width: 50rem;
+    width: 500px;
+    max-width: 90vw;
     height: 2.5rem;
     font-size: 1rem;
     box-sizing: border-box;
     padding-left: 0.5rem;
     outline: none;
-    border-radius: 0.5rem;
-    background-color: lightyellow; // font-family: 'FontAwesome';
-    color: black;
+    border: 1px solid #a1a1e5;
+    background-color: lightyellow;
+    background-color: var(--tcode-bg-color);
+
+    // font-family: 'FontAwesome';
+    color: white;
     &:focus {
-        border: 2px solid #00f9a6;
-        transform: scale(1.01, 1.01);
         background-color: lightyellow;
         font-size: 1.5rem;
     }
     &::placeholder {
-        color: red;
+        color: var(--tcode-placeholder-color);
     }
-}
-
-
-md-form-field {
-    width: 100%;
 }

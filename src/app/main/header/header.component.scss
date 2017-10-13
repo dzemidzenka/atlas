@@ -1,110 +1,72 @@
-@import '../../@theme/styles/themes';
-@import '~bootstrap/scss/mixins/breakpoints';
-@import '~@nebular/theme/styles/global/bootstrap/breakpoints';
-@include nb-install-component() {
+.logo-img {
+    height: 50px;
+    pointer-events: none;
+}
+
+.tcode {
     display: flex;
-    justify-content: space-between;
-    width: 100%;
-    .left {
-        display: flex;
-        width: 100%;
-        order: 0;
-        flex-direction: row;
+    align-items: center;
+}
+
+.text {
+    color: nb-theme(color-fg);
+}
+
+// p-megaMenu::ng-deep div.ui-megamenu {
+//     margin-left: 3rem;
+// }
+// p-megaMenu::ng-deep .ui-menuitem-text {
+//     a {
+//         color: #a1a1e5;
+//     }
+// }
+// p-megaMenu::ng-deep div.ui-megamenu-panel {
+//     background-color: rgba(30, 31, 29, 1);
+// }
+// p-megaMenu::ng-deep .ui-widget-header {
+//     h3 {
+//         color: #00f9a6;
+//     }
+// }
+// p-megaMenu::ng-deep .ui-menu-list .ui-menuitem-link {
+//     span {
+//         display: block;
+//         width: 50px;
+//         color: white;
+//     }
+// }
+// p-megaMenu::ng-deep div.ui-megamenu-panel .ui-menu-list .ui-menuitem-link {
+//     span {
+//         display: block;
+//         width: 50px;
+//         color: white;
+//         &:hover {
+//             color: red;
+//         }
+//     }
+// }
+.spacer {
+    flex: 1 1 auto;
+}
+
+.menuIcon {
+    font-size: 2rem;
+}
+
+.logo {
+    margin-left: 2rem;
+    margin-right: 2rem;
+    @media (max-width: 650px) {
+        display: none;
     }
-    .right {
-        order: 1;
-        flex-direction: row-reverse;
-    }
-    .logo-containter {
-        display: flex;
-        align-items: center;
-    }
-    .control-item {
-        display: block;
-    }
-    .header-container {
-        display: flex;
-        align-items: center;
-        width: 100%;
-        .navigation {
-            padding-right: nb-theme(padding);
-            font-size: 2.5rem;
-            text-decoration: none;
-            i {
-                display: block;
-            }
-        }
-        .logo {
-            padding: 0 nb-theme(padding);
-            font-size: 1.75rem;
-            font-weight: nb-theme(font-weight-bolder);
-            border-left: 1px solid nb-theme(separator);
-            white-space: nowrap;
-            span {
-                font-weight: nb-theme(font-weight-normal);
-            }
-        }
-    }
-    .toggle-layout /deep/ a {
-        display: block;
-        text-decoration: none;
-        line-height: 1;
-        i {
-            // color: nb-theme(color-fg-highlight);
-            font-size: 2.25rem;
-        }
-    }
-    .toggle-sidebar /deep/ a {
-        display: block;
-        text-decoration: none;
-        line-height: 1;
-        i {
-            color: nb-theme(color-fg);
-            font-size: 3.25rem;
-        }
-    }
-    @include media-breakpoint-down(md) {
-        nb-action:not(.toggle-layout) {
-            border: none;
-        }
-        .control-item {
-            display: none;
-        }
-        .toggle-layout {
-            padding: 0;
-        }
-    }
-    @include media-breakpoint-down(sm) {
-        nb-user /deep/ .user-name {
-            display: none;
-        }
-    }
-    @include media-breakpoint-down(is) {
-        .header-container {
-            .logo {
-                font-size: 1.25rem;
-            }
-        }
-        .toggle-layout {
-            display: none;
-        }
-        nb-action:not(.toggle-layout) {
-            padding: 0;
-        }
-    }
-    @include media-breakpoint-down(xs) {
-        .right /deep/ {
-            display: none;
-        }
-    }
-    .logo-img {
-        height: 50px;
-    }
-    .tcode {
-        display: flex;
-        align-items: center;
-    }
-    .text{
-      color: nb-theme(color-fg);
-    }
+}
+
+mat-toolbar img {
+    height: 80%;
+}
+
+mat-toolbar {
+    background-color: var(--header-bg-color);
+    color: var(--font-color);
+    justify-content: center;
 }

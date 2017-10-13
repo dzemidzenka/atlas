@@ -1,0 +1,13 @@
+div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 3rem;
+    &:hover {
+        cursor: pointer;
+    }
+}
+
+.rightBorder {
+    border-right: 2px solid var(--main-bg-color);
+}

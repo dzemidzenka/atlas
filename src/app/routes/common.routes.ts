@@ -10,11 +10,11 @@ export const COMMON_ROUTES: Routes = [
     component: DashboardComponent,
   },
   {
-    path: ':country/login',
+    path: 'login',
     component: LoginComponent,
   },
-  {
-    path: ':country/page-not-found',
-    loadChildren: '../lazyModules/page-not-found/page-not-found.module#PageNotFoundModule',
-  },
+  // {
+  //   path: 'page-not-found',
+  //   loadChildren: '../lazyModules/page-not-found/page-not-found.module#PageNotFoundModule',
+  // },
 ];

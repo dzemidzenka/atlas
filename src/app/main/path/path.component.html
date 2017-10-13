@@ -1,68 +1,23 @@
 <main *ngIf="path$ | async as path">
-  <mat-chip-list>
-    <ng-container *ngFor="let param of path.urlParams; let index = index; let first = first; let last = last">
-      <ng-container *ngIf="first else notFirst">
-        <mat-chip [matMenuTriggerFor]="languageMenu">
-          <mat-icon>language</mat-icon>
-          <span>&nbsp; {{path.language | uppercase}}</span>
-        </mat-chip>
+    <button mat-button *ngFor="let view of VIEW; let first = first" (click)="switchView(view)">
+      <mat-icon *ngIf="first">home</mat-icon>
+      <!-- <mat-icon *ngIf="!first">favorite</mat-icon> -->
+      <span>&nbsp; {{ ('dashboard.' + view) | translate | uppercase }}</span>
+    </button>
 
-        <mat-chip [matMenuTriggerFor]="appMenu">
-          <mat-icon>home</mat-icon>
-          <span>&nbsp; {{param | uppercase }}</span>
-        </mat-chip>
-      </ng-container>
-
-
-      <ng-template #notFirst>
-        <mat-chip (click)="onClick(param, index + 1)">
-          <ng-container *ngIf="path && (!last || last && !path.isComponent) else isComponent">
-            <mat-icon>folder</mat-icon>
-            <span>&nbsp; {{param | uppercase}}</span>
-          </ng-container>
-          <ng-template #isComponent>
-            <mat-icon>extension</mat-icon>
-            <span>&nbsp; {{param | uppercase}}</span>
-          </ng-template>
-        </mat-chip>
-      </ng-template>
+    <ng-container *ngFor="let param of path.urlParams; let index = index; let last = last">
+      <button mat-button (click)="onClick(param, index)" class="cdk-focused">
+        <ng-container *ngIf="path && (!last || last && !path.isComponent) else isComponent">
+          <mat-icon>folder</mat-icon>
+          <span>&nbsp; {{param | uppercase}}</span>
+        </ng-container>
+        <ng-template #isComponent>
+          <mat-icon>extension</mat-icon>
+          <span>&nbsp; {{param | uppercase}}</span>
+        </ng-template>
+      </button>
     </ng-container>
-  </mat-chip-list>
+  <atlas-tcode></atlas-tcode>
 </main>
 
 
-<mat-menu #appMenu="matMenu">
-  <button *ngFor="let country of COUNTRY" mat-menu-item (click)="switchCountry(country)">{{ country | uppercase }}</button>
-</mat-menu>
-
-
-
-<mat-menu #languageMenu="matMenu">
-  <button *ngFor="let language of LANGUAGE" mat-menu-item (click)="switchLanguage(language)">{{language | uppercase}}</button>
-</mat-menu>
-
-
-
-
-
-
-
-
-
-<!-- <main *ngIf="path$ | async as path">
-    <mat-chip-list>
-      <mat-chip *ngFor="let param of path.urlParams; let index = index; let last = last" (click)="onClick(param, index + 1)" [mdMenuTriggerFor]="appMenu">
-        <ng-container *ngTemplateOutlet="template; context: param"></ng-container>
-      </mat-chip>
-
-      <ng-template #template>
-        <mat-icon *ngIf="path && (!last || last && !path.isComponent) else isComponent">folder</mat-icon>
-        <mat-icon *ngIf="!path.isComponent else isComponent">folder</mat-icon>
-        <ng-template #isComponent>
-          <mat-icon>extension</mat-icon>
-        </ng-template>
-        <span>&nbsp; {{param}}</span>
-      </ng-template>
-
-    </mat-chip-list>
-  </main> -->

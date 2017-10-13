@@ -26,7 +26,7 @@
     minimist "^1.2.0"
     rxjs "^5.4.2"
 
-"@angular/animations@^5.0.0-beta.7":
+"@angular/animations@^5.0.0-rc.1":
   version "5.0.0-rc.1"
   resolved "https://registry.yarnpkg.com/@angular/animations/-/animations-5.0.0-rc.1.tgz#7ee374e95c3b8879c17c6e6bf86d21bb5d4dd95f"
   dependencies:
@@ -98,13 +98,13 @@
   optionalDependencies:
     node-sass "^4.3.0"
 
-"@angular/common@^5.0.0-beta.7":
+"@angular/common@^5.0.0-rc.1":
   version "5.0.0-rc.1"
   resolved "https://registry.yarnpkg.com/@angular/common/-/common-5.0.0-rc.1.tgz#4671314f241af980fb1ff5e01043ff78509e5583"
   dependencies:
     tslib "^1.7.1"
 
-"@angular/compiler-cli@^5.0.0-beta.7":
+"@angular/compiler-cli@^5.0.0-rc.1":
   version "5.0.0-rc.1"
   resolved "https://registry.yarnpkg.com/@angular/compiler-cli/-/compiler-cli-5.0.0-rc.1.tgz#5b8ef68c3489ea25d2bc7f164c03bc0b0531ce6b"
   dependencies:
@@ -113,25 +113,25 @@
     reflect-metadata "^0.1.2"
     tsickle "^0.24.0"
 
-"@angular/compiler@^5.0.0-beta.7":
+"@angular/compiler@^5.0.0-rc.1":
   version "5.0.0-rc.1"
   resolved "https://registry.yarnpkg.com/@angular/compiler/-/compiler-5.0.0-rc.1.tgz#6277ed5dc2cde7ba5b82f7c1958694e846d29de8"
   dependencies:
     tslib "^1.7.1"
 
-"@angular/core@^5.0.0-beta.7":
+"@angular/core@^5.0.0-rc.1":
   version "5.0.0-rc.1"
   resolved "https://registry.yarnpkg.com/@angular/core/-/core-5.0.0-rc.1.tgz#b07bef86c6d579fef30689a03b3f8b71119cf49c"
   dependencies:
     tslib "^1.7.1"
 
-"@angular/forms@^5.0.0-beta.7":
+"@angular/forms@^5.0.0-rc.1":
   version "5.0.0-rc.1"
   resolved "https://registry.yarnpkg.com/@angular/forms/-/forms-5.0.0-rc.1.tgz#147ee448e4d5ffa896827c6c06921c43ab5a56ec"
   dependencies:
     tslib "^1.7.1"
 
-"@angular/http@^5.0.0-beta.7":
+"@angular/http@^5.0.0-rc.1":
   version "5.0.0-rc.1"
   resolved "https://registry.yarnpkg.com/@angular/http/-/http-5.0.0-rc.1.tgz#5a5b7bac4d0d999fd932355cd80ecbca3374da7c"
   dependencies:
@@ -147,27 +147,21 @@
   dependencies:
     tslib "^1.7.1"
 
-"@angular/platform-browser-dynamic@^5.0.0-beta.7":
+"@angular/platform-browser-dynamic@^5.0.0-rc.1":
   version "5.0.0-rc.1"
   resolved "https://registry.yarnpkg.com/@angular/platform-browser-dynamic/-/platform-browser-dynamic-5.0.0-rc.1.tgz#e7914adade2570a9bb7cc3069f0b78342026b413"
   dependencies:
     tslib "^1.7.1"
 
-"@angular/platform-browser@^5.0.0-beta.7":
+"@angular/platform-browser@^5.0.0-rc.1":
   version "5.0.0-rc.1"
   resolved "https://registry.yarnpkg.com/@angular/platform-browser/-/platform-browser-5.0.0-rc.1.tgz#bff3ac2a9f597238c490d02f6a3943a4c49fa20a"
   dependencies:
     tslib "^1.7.1"
 
-"@angular/router@^5.0.0-beta.7":
+"@angular/router@^5.0.0-rc.1":
   version "5.0.0-rc.1"
   resolved "https://registry.yarnpkg.com/@angular/router/-/router-5.0.0-rc.1.tgz#3c8796f61cfee3e6061055d220d9083dce9b7364"
-  dependencies:
-    tslib "^1.7.1"
-
-"@covalent/core@^1.0.0-beta.8-1":
-  version "1.0.0-beta.8-1"
-  resolved "https://registry.yarnpkg.com/@covalent/core/-/core-1.0.0-beta.8-1.tgz#18bf09f912cc02f39c1e578255cc42728da10426"
   dependencies:
     tslib "^1.7.1"
 
@@ -241,10 +235,6 @@
     stream-events "^1.0.1"
     string-format-obj "^1.0.0"
     through2 "^2.0.0"
-
-"@nebular/theme@^2.0.0-rc.2":
-  version "2.0.0-rc.2"
-  resolved "https://registry.yarnpkg.com/@nebular/theme/-/theme-2.0.0-rc.2.tgz#745d86c3cc61014841ea00f20fdc99c712d4c141"
 
 "@ngtools/json-schema@1.1.0", "@ngtools/json-schema@^1.1.0":
   version "1.1.0"
@@ -4716,10 +4706,6 @@ ncp@1.0.x:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/ncp/-/ncp-1.0.1.tgz#d15367e5cb87432ba117d2bf80fdf45aecfb4246"
 
-nebular-icons@^1.0.6:
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/nebular-icons/-/nebular-icons-1.0.6.tgz#6a944d3102e318fdb1e071c1aad18cbc1c069e51"
-
 negotiator@0.6.1:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/negotiator/-/negotiator-0.6.1.tgz#2b327184e8992101177b28563fb5e7102acd0ca9"
@@ -5592,6 +5578,10 @@ pretty-error@^2.0.2:
     renderkid "^2.0.1"
     utila "~0.4"
 
+primeng@^4.2.2:
+  version "4.2.2"
+  resolved "https://registry.yarnpkg.com/primeng/-/primeng-4.2.2.tgz#b76116c24505ddcad7f52a4bba76b584d8e7c527"
+
 process-nextick-args@~1.0.6:
   version "1.0.7"
   resolved "https://registry.yarnpkg.com/process-nextick-args/-/process-nextick-args-1.0.7.tgz#150e20b756590ad3f91093f25a4f2ad8bff30ba3"
@@ -6152,7 +6142,7 @@ rx-lite@^3.1.2:
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/rx-lite/-/rx-lite-3.1.2.tgz#19ce502ca572665f3b647b10939f97fd1615f102"
 
-rxjs@^5.4.2:
+rxjs@^5.4.0, rxjs@^5.4.2:
   version "5.4.3"
   resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-5.4.3.tgz#0758cddee6033d68e0fd53676f0f3596ce3d483f"
   dependencies:
@@ -7087,7 +7077,7 @@ typedarray@^0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
 
-"typescript@>=2.0.0 <2.6.0", typescript@^2.3.3:
+"typescript@>=2.0.0 <2.6.0", typescript@^2.3.3, typescript@^2.5.0:
   version "2.5.3"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.5.3.tgz#df3dcdc38f3beb800d4bc322646b04a3f6ca7f0d"
 

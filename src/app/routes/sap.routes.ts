@@ -5,9 +5,9 @@ import { DashboardComponent } from '../main/dashboard/dashboard.component';
 
 
 export const SAP_ROUTES: Routes = [
-  // FOLDERS
+  // FOLDER
   {
-    path: ':country/sap',
+    path: 'sap',
     component: DashboardComponent,
     data: {
       description: 'sap',
@@ -16,17 +16,29 @@ export const SAP_ROUTES: Routes = [
 
   // COMPONENTS
   {
-    path: ':country/sap/app1',
-    loadChildren: '../lazyModules/settings/settings.module#SettingsModule',
+    path: 'sap/sap-gui',
+    loadChildren: '../lazyModules/iframe/iframe.module#IFrameModule',
     canActivate: [RouteGuardService],
     resolve: { RouteResolverService },
     data: {
       isComponent: true,
-      description: 'App1',
+      description: 'SAPGUI',
+      iFrameUrl: 'http://sdsaped2.nuvasive.com:8020/sap/bc/gui/sap/its/webgui?sap-client=300&~transaction=SE80',
     },
   },
   {
-    path: ':country/sap/app2',
+    path: 'sap/sap-zsetinfo',
+    loadChildren: '../lazyModules/iframe/iframe.module#IFrameModule',
+    canActivate: [RouteGuardService],
+    resolve: { RouteResolverService },
+    data: {
+      isComponent: true,
+      description: 'ZSETINFO',
+      iFrameUrl: 'http://sdsaped2.nuvasive.com:8020/sap/bc/gui/sap/its/webgui?sap-client=300&~transaction=ZSETINFO',
+    },
+  },
+  {
+    path: 'sap/sap-app2',
     loadChildren: '../lazyModules/settings/settings.module#SettingsModule',
     canActivate: [RouteGuardService],
     resolve: { RouteResolverService },
@@ -36,7 +48,7 @@ export const SAP_ROUTES: Routes = [
     },
   },
   {
-    path: ':country/sap/app3',
+    path: 'sap/sap-app3',
     loadChildren: '../lazyModules/settings/settings.module#SettingsModule',
     canActivate: [RouteGuardService],
     resolve: { RouteResolverService },
