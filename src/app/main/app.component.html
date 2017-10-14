@@ -2,8 +2,8 @@
 
 
 <div *ngIf="state$ | async as state" class="page">
+  <atlas-header (sidebarToggle)="onSidebarToggle()"></atlas-header>
   <ng-container *ngIf="state.isLoggedIn">
-    <atlas-header (sidebarToggle)="onSidebarToggle()"></atlas-header>
     <atlas-path></atlas-path>
   </ng-container>
 

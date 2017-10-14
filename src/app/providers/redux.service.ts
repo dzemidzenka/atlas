@@ -117,7 +117,7 @@ export class ReduxService {
 
       state.language = queryParams['language'] ? queryParams['language'] : state.user.languageDefault;
       this._translate.setDefaultLang(state.language);
-      this._translate.use(state.language);
+      // this._translate.use(state.language);
 
       state.country = queryParams['country'] ? queryParams['country'] : state.user.countryDefault;
       state.view = queryParams['view'];
@@ -173,12 +173,6 @@ export class ReduxService {
     };
 
 
-    this._reducers[models.ACTION.DASHBOARD_THEME] = (state: models.IStateModel, action: models.IActionModel) => {
-      state.theme = action.dashboard_theme;
-      getActiveMenu(state);
-    };
-
-
     this._reducers[models.ACTION.FAVORITE_TOGGLE] = (state: models.IStateModel, action: models.IActionModel) => {
       state.menu
         .filter(menu => menu.id === action.menuItem.id)
@@ -206,18 +200,28 @@ export class ReduxService {
       }
 
       state.queryParams = action.queryParams;
+
       if (state.queryParams['language']) {
         state.language = state.queryParams['language'];
+      } else {
+        state.language = models.LANGUAGE.EN;
       }
+
       if (state.queryParams['country']) {
         state.country = state.queryParams['country'];
+      } else {
+        state.country = models.COUNTRY.US;
       }
+
       if (state.queryParams['view']) {
         state.view = state.queryParams['view'];
       }
       if (!state.menuRecent) {
         state.menuRecent = [];
       }
+
+      // this._translate.setDefaultLang(state.language);
+      this._translate.use(state.language);
 
       const _urlParams = [...state.urlParams];
       const _routerPath = _urlParams.join('/');
@@ -251,10 +255,6 @@ export class ReduxService {
 
   actionFavoriteToggle(menuItem: models.IMenuModel) {
     this._actionSubject$.next(Object.assign({ op: models.ACTION.FAVORITE_TOGGLE, menuItem: menuItem }));
-  }
-
-  actionDashboardTheme(theme: string) {
-    this._actionSubject$.next(Object.assign({ op: models.ACTION.DASHBOARD_THEME, dashboard_theme: theme }));
   }
 
   actionNotify(notifications: Array<models.INotificationModel>) {

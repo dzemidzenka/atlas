@@ -1,4 +1,14 @@
-import { Component, Input, HostBinding, Output, EventEmitter, HostListener, ElementRef, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { AuthService } from '../../../providers/auth.service';
+
+interface UserMenuItem {
+  title: string;
+  link?: string;
+  url?: string;
+  target?: string;
+  icon?: string;
+}
+
 
 @Component({
   selector: 'atlas-user',
@@ -7,42 +17,38 @@ import { Component, Input, HostBinding, Output, EventEmitter, HostListener, Elem
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserComponent {
-  constructor(private el: ElementRef) { }
+  constructor(
+    private _authService: AuthService,
+  ) { }
 
   @Input() name;
   @Input() picture: string;
-  @Input() menu: UserMenuItem[] = [];
-  @Output() menuClick = new EventEmitter<UserMenuItem>();
-  @HostListener('document:click', ['$event'])
+
+  menu = [
+    {
+      title: 'Profile',
+      target: 'profile',
+      translationPath: 'dashboard.profile'
+    },
+    {
+      title: 'Logout',
+      target: 'logout',
+      translationPath: 'dashboard.logout'
+    }
+  ];
 
   isMenuShown = false;
 
-  itemClick(event: any, item: UserMenuItem): boolean {
-    this.menuClick.emit(item);
-    return false;
-  }
+
 
   toggleMenu() {
     this.isMenuShown = !this.isMenuShown;
   }
 
-  // hideMenu(event: any) {
-  //   if (!this.el.nativeElement.contains(event.target)) {
-  //     this.isMenuShown = false;
-  //   }
-  // }
 
-  hasMenu(): boolean {
-    return this.menu && this.menu.length > 0;
+  menuClick(target) {
+    if (target === 'logout') {
+      this._authService.logOut();
+    }
   }
-}
-
-
-
-interface UserMenuItem {
-  title: string;
-  link?: string;
-  url?: string;
-  target?: string;
-  icon?: string;
 }

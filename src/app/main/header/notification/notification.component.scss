@@ -4,11 +4,11 @@ $td-notification-content-size: 40px !default;
     position: relative;
     display: block;
     text-align: center;
-    min-width: $td-notification-content-size;
+    min-width: $td-notification-size;
     height: $td-notification-content-size;
 }
 
-.td-notification-count {
+.notification-count {
     line-height: $td-notification-size + 1;
     width: $td-notification-size;
     height: $td-notification-size;
@@ -19,11 +19,11 @@ $td-notification-content-size: 40px !default;
     border-radius: 50%;
     z-index: 1;
     background-color: red;
-    top: 0px;
-    right: 0px;
+    top: 0;
+    right: -7px;
 }
 
-.td-notification-content {
+.notification-content {
     &,
     /deep/>* {
         line-height: $td-notification-content-size;

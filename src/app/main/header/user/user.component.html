@@ -1,18 +1,8 @@
-<div class="user-container" (click)="toggleMenu()" [ngClass]="{'with-menu' : hasMenu()}">
-  <div *ngIf="picture" class="user-picture image" style.background-image="url({{picture}})"></div>
-  <div *ngIf="name" class="info-container">
-    <div class="user-name">{{ name }}</div>
+<atlas-action [menu]="menu" [rightBorder]="false" (menuClick)="menuClick($event)">
+  <div class="user-container" (click)="toggleMenu()">
+    <div *ngIf="picture" class="user-picture image" style.background-image="url({{picture}})"></div>
+    <div *ngIf="name" class="info-container">
+      <div class="user-name">{{ name }}</div>
+    </div>
   </div>
-
-  <div *ngIf="hasMenu()" [ngStyle]="{display: isMenuShown ? 'block' : 'none'}" class="user-context-menu">
-    <ul>
-      <li class="arrow"></li>
-      <li *ngFor="let item of menu">
-        <span *ngIf="item.icon" class="item-icon {{ item.icon  }}"></span>
-        <a *ngIf="item.link && !item.url" [routerLink]="item.link" [attr.target]="item.target">{{ item.title }}</a>
-        <a *ngIf="item.url && !item.link" [attr.href]="item.url" [attr.target]="item.target">{{ item.title }}</a>
-        <a *ngIf="!item.link && !item.url" href="#" [attr.target]="item.target" (click)="itemClick($event, item)">{{ item.title }}</a>
-      </li>
-    </ul>
-  </div>
-</div>
+</atlas-action>

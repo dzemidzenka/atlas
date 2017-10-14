@@ -45,28 +45,36 @@
 //         }
 //     }
 // }
+header {
+    --height: 60px;
+    display: flex;
+    height: var(--height);
+    min-height: var(--height);
+    max-height: var(--height);
+    background-color: var(--header-bg-color);
+    color: var(--font-color);
+    justify-content: center;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.menuIcon{
+  font-size: 2rem;
+}
+
 .spacer {
     flex: 1 1 auto;
 }
 
-.menuIcon {
-    font-size: 2rem;
-}
-
 .logo {
-    margin-left: 2rem;
+    margin-left: 1rem;
     margin-right: 2rem;
     @media (max-width: 650px) {
         display: none;
     }
 }
 
-mat-toolbar img {
-    height: 80%;
-}
 
-mat-toolbar {
-    background-color: var(--header-bg-color);
-    color: var(--font-color);
-    justify-content: center;
+.rightMarginWhenNotLoggedIn{
+  margin-right: 1em;
 }

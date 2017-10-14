@@ -1,12 +1,35 @@
 {
+  "country": {
+    "us": "USA",
+    "de": "Deutschland",
+    "ru": "Russland",
+    "fr": "Frankreich",
+    "it": "Italien",
+    "gb": "Großbritannien",
+    "jp": "Japan"
+  },
+  "language": {
+    "en": "Englisch",
+    "de": "Deutsche",
+    "ru": "Russisch",
+    "fr": "Französisch",
+    "it": "Italienisch",
+    "jp": "Japanisch"
+  },
   "order": {
     "hello": "Hallo"
   },
   "dashboard": {
+    "login": "Anmeldung",
+    "logout": "Ausloggen",
+    "username": "Nutzername",
+    "password": "Passwort",
+    "usernameRequired": "Benutzername wird benötigt",
+    "passwordRequired": "Passwort wird benötigt",
+    "profile": "Profil",
     "hello": "Hallo {{value}}",
     "dashboard": "instrumententafel",
     "favorites": "favoriten",
-    "recent": "kürzlich",
-    "logout": "ausloggen"
+    "recent": "kürzlich"
   }
 }

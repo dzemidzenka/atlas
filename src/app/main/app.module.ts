@@ -27,6 +27,7 @@ import { TilesComponent } from './dashboard/tiles/tiles.component';
 import { LoginComponent } from './login/login.component';
 import { HeaderComponent } from './header/header.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
+import { NotificationCountComponent } from './header/notification/notification.component';
 
 
 
@@ -46,6 +47,8 @@ import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { UserComponent } from './header/user/user.component';
 import { ActionComponent } from './header/action/action.component';
+import { CountryComponent } from './header/country/country.component';
+import { LanguageComponent } from './header/language/language.component';
 // AoT requires an exported function for factories
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -66,6 +69,9 @@ export function createTranslateLoader(http: HttpClient) {
     SidebarComponent,
     UserComponent,
     ActionComponent,
+    CountryComponent,
+    LanguageComponent,
+    NotificationCountComponent,
   ],
   imports: [
     SharedModule,

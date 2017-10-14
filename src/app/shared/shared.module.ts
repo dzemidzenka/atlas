@@ -34,12 +34,11 @@ import {
   MatSidenavModule,
   // MatSliderModule,
   // MatSlideToggleModule,
-  MatToolbarModule,
+  // MatToolbarModule,
   MatTooltipModule,
 } from '@angular/material';
 // import { MegaMenuModule } from 'primeng/primeng';
 
-import { NotificationCountComponent } from './notification/notification.component';
 
 
 
@@ -71,13 +70,12 @@ const MODULES = [
   MatSidenavModule,
   // MatSliderModule,
   // MatSlideToggleModule,
-  MatToolbarModule,
+  // MatToolbarModule,
   MatTooltipModule,
 ];
 
 
 const COMPONENTS = [
-  NotificationCountComponent,
 ];
 
 

@@ -1,7 +1,6 @@
 import { Component, ChangeDetectionStrategy, Output, EventEmitter } from '@angular/core';
-import { AuthService } from '../../providers/auth.service';
 import { ReduxService } from '../../providers/redux.service';
-import { ACTION, VIEW, DASHBOARD_THEME, COUNTRY, IUserModel } from '../../models/models';
+import { ACTION, IUserModel } from '../../models/models';
 
 
 @Component({
@@ -12,21 +11,11 @@ import { ACTION, VIEW, DASHBOARD_THEME, COUNTRY, IUserModel } from '../../models
 })
 export class HeaderComponent {
   constructor(
-    private _authService: AuthService,
     private _reduxService: ReduxService,
   ) { }
 
-  VIEW = Object.values(VIEW);
-  COUNTRY = Object.values(COUNTRY);
-
   @Output() sidebarToggle = new EventEmitter<void>();
 
-
-  user: any;
-  userMenu = [
-    { title: 'Profile' },
-    { title: 'Logout', target: 'logout' }
-  ];
 
 
   items = [
@@ -110,21 +99,6 @@ export class HeaderComponent {
 
   clearNotifications() {
     this._reduxService.actionClearNotifications();
-  }
-
-  switchView(view: VIEW) {
-    this._reduxService.actionDashboard(view);
-  }
-
-  logOut() {
-    this._authService.logOut();
-  }
-
-
-  menuClick(event) {
-    if (event.target === 'logout') {
-      this._authService.logOut();
-    }
   }
 
   onSidebarToggle() {

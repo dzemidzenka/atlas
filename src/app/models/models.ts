@@ -7,14 +7,17 @@ export enum ACTION {
   FAVORITE_TOGGLE = 'FAVORITE_TOGGLE',
   NOTIFICATION = 'NOTIFICATION',
   NOTIFICATION_CLEAR = 'NOTIFICATION_CLEAR',
-  DASHBOARD_THEME = 'DASHBOARD_THEME',
 }
 
-
+// valid 2char country codes at https://www.iso.org/obp/ui/#search
 export enum COUNTRY {
   US = 'us',
   DE = 'de',
   RU = 'ru',
+  FR = 'fr',
+  IT = 'it',
+  GB = 'gb',
+  JP = 'jp'
 }
 
 
@@ -30,15 +33,11 @@ export enum VIEW {
   RECENT = 'recent',
 }
 
-export enum DASHBOARD_THEME {
-  TILES = 'TILES',
-  STICKY_NOTES = 'STICKY_NOTES',
-}
-
 
 
 export const TOASTER_DURATION = 2000;
 export const MAX_OF_FAVORITES = 5;
+
 
 
 
@@ -48,10 +47,9 @@ export interface IActionModel {
   url?: string;
   urlParams?: Array<string>;
   queryParams?: Array<string>;
-  country?: string;
+  country?: COUNTRY;
   language?: LANGUAGE;
   menuItem?: IMenuModel;
-  dashboard_theme?: DASHBOARD_THEME;
   notifications?: Array<INotificationModel>;
 }
 
@@ -64,10 +62,9 @@ export interface IStateModel {
   isComponent: boolean;
   isLoggedIn: boolean;
   user: IUserModel;
-  country: string;
+  country: COUNTRY;
   language: LANGUAGE;
   view: VIEW;
-  theme: DASHBOARD_THEME;
   menu: Array<IMenuModel>;
   menuItemCurrent: IMenuModel;
   menuRecent: Array<IMenuModel>;

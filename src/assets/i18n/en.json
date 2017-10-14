@@ -1,12 +1,35 @@
 {
+  "country": {
+    "us": "USA",
+    "de": "Germany",
+    "ru": "Russia",
+    "fr": "France",
+    "it": "Italy",
+    "gb": "United Kingdom",
+    "jp": "Japan"
+  },
+  "language": {
+    "en": "English",
+    "de": "German",
+    "ru": "Russian",
+    "fr": "French",
+    "it": "Italian",
+    "jp": "Japanese"
+  },
   "order": {
     "hello": "Hello"
   },
   "dashboard": {
+    "login": "Login",
+    "logout": "Logout",
+    "username": "Username",
+    "password": "Password",
+    "usernameRequired": "Username is required",
+    "passwordRequired": "Password is required",
+    "profile": "Profile",
     "hello": "Hello {{value}}",
     "dashboard": "dashboard",
     "favorites": "favorites",
-    "recent": "recent",
-    "logout": "logout"
+    "recent": "recent"
   }
 }

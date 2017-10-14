@@ -1,0 +1,22 @@
+<!-- <ng-container *ngIf="state$ | async as state">
+  <ng-container *ngIf="state.isLoggedIn">
+    <button mat-button [matMenuTriggerFor]="languageMenu">
+      <span>Language&nbsp;{{state.language | uppercase}}</span>
+    </button>
+  </ng-container>
+</ng-container>
+
+
+
+<mat-menu #languageMenu="matMenu">
+  <button *ngFor="let language of LANGUAGE" mat-menu-item (click)="switchLanguage(language)">{{language | uppercase}}</button>
+</mat-menu> -->
+
+
+<ng-container *ngIf="state$ | async as state">
+  <!-- <ng-container *ngIf="state.isLoggedIn"> -->
+    <atlas-action [menu]="menu" (menuClick)="switchLanguage($event)" [rightBorder]="state.isLoggedIn">
+      <span>{{state.translationPath | translate }}</span>
+    </atlas-action>
+  <!-- </ng-container> -->
+</ng-container>

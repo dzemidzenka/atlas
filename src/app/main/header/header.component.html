@@ -1,27 +1,26 @@
-<mat-toolbar>
-  <atlas-action>
-    <mat-icon (click)="onSidebarToggle()" class="menuIcon">menu</mat-icon>
-  </atlas-action>
-  <atlas-action [rightBorder]="false">
-    <img class="logo" src="../../../../assets/atlas-logo.png" alt="logo">
-  </atlas-action>
+<ng-container *ngIf="state$ | async as state">
+  <header>
+    <atlas-action *ngIf="state.isLoggedIn">
+      <mat-icon (click)="onSidebarToggle()" class="menuIcon">menu</mat-icon>
+    </atlas-action>
+    <atlas-action [rightBorder]="false">
+      <img class="logo" src="../../../../assets/atlas-logo.png" alt="logo">
+    </atlas-action>
+    <span class="spacer"></span>
 
-  <ng-container *ngIf="state$ | async as state">
+    <atlas-country></atlas-country>
+    <atlas-language></atlas-language>
+    <span *ngIf="!state.isLoggedIn" class="rightMarginWhenNotLoggedIn"></span>
+
+
     <ng-container *ngIf="state.isLoggedIn">
-      <span class="spacer"></span>
-
       <atlas-action *ngIf="state.notifications.length > 0">
-        <atlas-notification-count [notifications]="state.notifications.length" matTooltip="{{ state.notifications.length }} Notifications"
-          [matMenuTriggerFor]="notificationsMenu">
+        <atlas-notification-count [notifications]="state.notifications.length" [matMenuTriggerFor]="notificationsMenu">
           <mat-icon>notifications</mat-icon>
         </atlas-notification-count>
       </atlas-action>
 
-      <atlas-action [rightBorder]="false">
-        <atlas-user [menu]="userMenu" [name]="('dashboard.hello' | translate:{value: state.user.nameDisplay + '!'})" picture="../../../../../assets/steve.jpg"
-          (menuClick)="menuClick($event)">
-        </atlas-user>
-      </atlas-action>
+      <atlas-user [name]="('dashboard.hello' | translate:{value: state.user.nameDisplay + '!'})" picture="../../../../../assets/steve.jpg"></atlas-user>
 
 
       <mat-menu #notificationsMenu="matMenu" [overlapTrigger]="false">
@@ -48,5 +47,5 @@
       </mat-menu>
 
     </ng-container>
-  </ng-container>
-</mat-toolbar>
+  </header>
+</ng-container>
