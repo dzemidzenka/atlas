@@ -1,5 +1,4 @@
-<toaster-container [toasterconfig]="toasterConfig"></toaster-container>
-
+<simple-notifications [options]="options"></simple-notifications>
 
 <div *ngIf="state$ | async as state" class="page">
   <atlas-header (sidebarToggle)="onSidebarToggle()"></atlas-header>

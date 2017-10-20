@@ -10,7 +10,7 @@
   },
   "language": {
     "en": "Englisch",
-    "de": "Deutsche",
+    "de": "Deutsch",
     "ru": "Russisch",
     "fr": "Französisch",
     "it": "Italienisch",
@@ -19,17 +19,18 @@
   "order": {
     "hello": "Hallo"
   },
+  "Login": "Anmeldung",
+  "Username": "Nutzername",
+  "Password": "Passwort",
+  "Username Required": "Benutzername wird benötigt",
+  "Password Required": "Passwort wird benötigt",
   "dashboard": {
-    "login": "Anmeldung",
     "logout": "Ausloggen",
-    "username": "Nutzername",
-    "password": "Passwort",
-    "usernameRequired": "Benutzername wird benötigt",
-    "passwordRequired": "Passwort wird benötigt",
     "profile": "Profil",
     "hello": "Hallo {{value}}",
     "dashboard": "instrumententafel",
     "favorites": "favoriten",
-    "recent": "kürzlich"
+    "recent": "kürzlich",
+    "launchApp": "App Starten"
   }
 }

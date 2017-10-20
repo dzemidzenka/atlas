@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ReduxService } from '../../../providers/redux.service';
-import { LANGUAGE } from '../../../models/models';
+import { LANGUAGE } from '../../../shared/models';
 
 @Component({
   selector: 'atlas-language',

@@ -19,17 +19,18 @@
   "order": {
     "hello": "Здравствуйте"
   },
+  "Login": "Логин",
+  "Username": "Имя пользователя",
+  "Password": "Пароль",
+  "Username Required": "Требуется имя пользователя",
+  "Password Required": "Требуется пароль",
   "dashboard": {
-    "login": "Логин",
     "logout": "Выйти",
-    "username": "Имя пользователя",
-    "password": "Пароль",
-    "usernameRequired": "Требуется имя пользователя",
-    "passwordRequired": "Требуется пароль",
     "profile": "Профиль",
     "hello": "Здравствуйте {{value}}",
     "dashboard": "панель",
     "favorites": "избранное",
-    "recent": "недавний"
+    "recent": "недавний",
+    "launchApp": "Запустить Приложение"
   }
 }

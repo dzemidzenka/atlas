@@ -1,18 +1,5 @@
 import { Component, Input, HostBinding, ChangeDetectionStrategy, ViewChild, ElementRef } from '@angular/core';
 
-export enum TdNotificationCountPositionY {
-  Top = <any>'top',
-  Bottom = <any>'bottom',
-  Center = <any>'center',
-}
-
-export enum TdNotificationCountPositionX {
-  Before = <any>'before',
-  After = <any>'after',
-  Center = <any>'center',
-}
-
-
 
 @Component({
   selector: 'atlas-notification-count',
@@ -23,31 +10,15 @@ export enum TdNotificationCountPositionX {
 export class NotificationCountComponent {
 
   private _notifications: number | boolean = 0;
-  private _positionY: TdNotificationCountPositionY;
-  private _positionX: TdNotificationCountPositionX;
-
 
   @ViewChild('content') content: ElementRef;
 
 
-
-  @Input()
-  set positionX(positionX: TdNotificationCountPositionX) {
-    this._positionX = positionX;
-  }
-  get positionX(): TdNotificationCountPositionX {
-    return this._positionX;
-  }
-
-
-
-  @Input()
-  set notifications(notifications: number | boolean) {
+  @Input() set notifications(notifications: number | boolean) {
     this._notifications = notifications;
   }
 
-  @HostBinding('class.td-notification-hidden')
-  get hideHost(): boolean {
+  @HostBinding('class.notification-hidden') get hideHost(): boolean {
     return !this.show && !this._hasContent();
   }
 
@@ -56,10 +27,7 @@ export class NotificationCountComponent {
     return this._notifications === true;
   }
 
-  /**
-  * Notification display string when a count is available.
-  * Anything over 99 gets set as 99+
-  */
+
   get notificationsDisplay(): string {
     if (this._notifications > 99) {
       return '99+';
@@ -80,5 +48,4 @@ export class NotificationCountComponent {
     }
     return false;
   }
-
 }

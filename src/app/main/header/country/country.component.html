@@ -14,11 +14,7 @@
 
 
 
-<ng-container *ngIf="state$ | async as state">
-  <!-- <ng-container *ngIf="state.isLoggedIn"> -->
-    <atlas-action [menu]="menu" (menuClick)="switchCountry($event)">
-      <span class="flag-icon flag-icon-{{ state.country }}"></span>
-      <span>&nbsp;{{state.translationPath | translate }}</span>
-    </atlas-action>
-  <!-- </ng-container> -->
-</ng-container>
+<atlas-action *ngIf="state$ | async as state" [menu]="menu" (menuClick)="switchCountry($event)">
+  <span class="flag-icon flag-icon-{{ state.country }}"></span>
+  <span>&nbsp;{{state.translationPath | translate }}</span>
+</atlas-action>

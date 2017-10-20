@@ -1,51 +1,51 @@
-<ng-container *ngIf="state$ | async as state">
-  <header>
-    <atlas-action *ngIf="state.isLoggedIn">
-      <mat-icon (click)="onSidebarToggle()" class="menuIcon">menu</mat-icon>
+<header *ngIf="state$ | async as state">
+  <atlas-action *ngIf="state.isLoggedIn">
+    <mat-icon (click)="onSidebarToggle()" class="menuIcon">menu</mat-icon>
+  </atlas-action>
+  <atlas-action [rightBorder]="false">
+    <img class="logo" src="../../../../assets/atlas-logo.png" alt="logo">
+  </atlas-action>
+  <span class="spacer"></span>
+
+  <atlas-country></atlas-country>
+  <atlas-language></atlas-language>
+  <span *ngIf="!state.isLoggedIn" class="rightMarginWhenNotLoggedIn"></span>
+
+
+  <ng-container *ngIf="state.isLoggedIn">
+    <atlas-apps-selector></atlas-apps-selector>
+
+    <atlas-action *ngIf="state.notifications.length > 0">
+      <atlas-notification-count [notifications]="state.notifications.length" [matMenuTriggerFor]="notificationsMenu">
+        <mat-icon>notifications</mat-icon>
+      </atlas-notification-count>
     </atlas-action>
-    <atlas-action [rightBorder]="false">
-      <img class="logo" src="../../../../assets/atlas-logo.png" alt="logo">
-    </atlas-action>
-    <span class="spacer"></span>
 
-    <atlas-country></atlas-country>
-    <atlas-language></atlas-language>
-    <span *ngIf="!state.isLoggedIn" class="rightMarginWhenNotLoggedIn"></span>
+    <atlas-user [name]="('dashboard.hello' | translate:{value: state.user.nameDisplay + '!'})" picture="../../../../../assets/steve.jpg"></atlas-user>
 
 
-    <ng-container *ngIf="state.isLoggedIn">
-      <atlas-action *ngIf="state.notifications.length > 0">
-        <atlas-notification-count [notifications]="state.notifications.length" [matMenuTriggerFor]="notificationsMenu">
-          <mat-icon>notifications</mat-icon>
-        </atlas-notification-count>
-      </atlas-action>
+    <mat-menu #notificationsMenu="matMenu" [overlapTrigger]="false">
+      <td-menu>
+        <div td-menu-header class="mat-subhead">Notifications</div>
+        <mat-nav-list dense>
+          <ng-container *ngFor="let notification of state.notifications; let last=last">
+            <a mat-list-item>
+              <mat-icon matListAvatar>today</mat-icon>
+              <h4 matLine>
+                <span class="text-wrap">{{ notification.message }}</span>
+              </h4>
+            </a>
+            <mat-divider *ngIf="!last"></mat-divider>
+          </ng-container>
+        </mat-nav-list>
+        <button mat-button color="accent" td-menu-footer>
+          See All Notifications
+        </button>
+        <button mat-button color="accent" td-menu-footer (click)="clearNotifications()">
+          Delete All Notifications
+        </button>
+      </td-menu>
+    </mat-menu>
 
-      <atlas-user [name]="('dashboard.hello' | translate:{value: state.user.nameDisplay + '!'})" picture="../../../../../assets/steve.jpg"></atlas-user>
-
-
-      <mat-menu #notificationsMenu="matMenu" [overlapTrigger]="false">
-        <td-menu>
-          <div td-menu-header class="mat-subhead">Notifications</div>
-          <mat-nav-list dense>
-            <ng-container *ngFor="let notification of state.notifications; let last=last">
-              <a mat-list-item>
-                <mat-icon matListAvatar>today</mat-icon>
-                <h4 matLine>
-                  <span class="text-wrap">{{ notification.message }}</span>
-                </h4>
-              </a>
-              <mat-divider *ngIf="!last"></mat-divider>
-            </ng-container>
-          </mat-nav-list>
-          <button mat-button color="accent" td-menu-footer>
-            See All Notifications
-          </button>
-          <button mat-button color="accent" td-menu-footer (click)="clearNotifications()">
-            Delete All Notifications
-          </button>
-        </td-menu>
-      </mat-menu>
-
-    </ng-container>
-  </header>
-</ng-container>
+  </ng-container>
+</header>

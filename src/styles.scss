@@ -4,26 +4,25 @@
 @import url(https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css);
 // @import url('https://fonts.googleapis.com/css?family=Roboto');
 @import "~@angular/material/prebuilt-themes/purple-green.css";
+// @import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
 
 
 // @import "~ng2-tree/styles.css";
-@import "~angular2-toaster/toaster.css";
 @import "~flag-icon-css/css/flag-icon.min.css";
 
 
 
-// // needed for covalent
+
 // @import '~@angular/material/theming';
-// @import '~@covalent/core/theming/all-theme';
-
 // @include mat-core();
-
-// $primary: mat-palette($mat-orange, 800);
+// $primary: mat-palette($mat-blue, 800);
 // $accent:  mat-palette($mat-light-blue, 600, A100, A400);
 // $warn:    mat-palette($mat-red, 600);
 // $theme: mat-dark-theme($primary, $accent, $warn);
-
 // @include angular-material-theme($theme);
+
+
+// @import '~@covalent/core/theming/all-theme';
 // @include covalent-theme($theme);
 
 

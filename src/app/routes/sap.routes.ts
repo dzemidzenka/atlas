@@ -3,14 +3,13 @@ import { RouteGuardService } from '../providers/route-guard.service';
 import { RouteResolverService } from '../providers/route-resolver.service';
 import { DashboardComponent } from '../main/dashboard/dashboard.component';
 
-
 export const SAP_ROUTES: Routes = [
   // FOLDER
   {
     path: 'sap',
     component: DashboardComponent,
     data: {
-      description: 'sap',
+      description: 'sap'
     }
   },
 
@@ -23,8 +22,9 @@ export const SAP_ROUTES: Routes = [
     data: {
       isComponent: true,
       description: 'SAPGUI',
-      iFrameUrl: 'http://sdsaped2.nuvasive.com:8020/sap/bc/gui/sap/its/webgui?sap-client=300&~transaction=SE80',
-    },
+      iFrameUrl:
+        'http://sdsaped2.nuvasive.com:8020/sap/bc/gui/sap/its/webgui?sap-client=300&~transaction=SE80'
+    }
   },
   {
     path: 'sap/sap-zsetinfo',
@@ -34,8 +34,9 @@ export const SAP_ROUTES: Routes = [
     data: {
       isComponent: true,
       description: 'ZSETINFO',
-      iFrameUrl: 'http://sdsaped2.nuvasive.com:8020/sap/bc/gui/sap/its/webgui?sap-client=300&~transaction=ZSETINFO',
-    },
+      iFrameUrl:
+        'http://sdsaped2.nuvasive.com:8020/sap/bc/gui/sap/its/webgui?sap-client=300&~transaction=ZSETINFO'
+    }
   },
   {
     path: 'sap/sap-app2',
@@ -44,8 +45,8 @@ export const SAP_ROUTES: Routes = [
     resolve: { RouteResolverService },
     data: {
       isComponent: true,
-      description: 'App2',
-    },
+      description: 'App2'
+    }
   },
   {
     path: 'sap/sap-app3',
@@ -54,7 +55,18 @@ export const SAP_ROUTES: Routes = [
     resolve: { RouteResolverService },
     data: {
       isComponent: true,
-      description: 'App3',
-    },
+      description: 'App3'
+    }
   },
+  {
+    path: 'sap/configurator',
+    loadChildren: '../lazyModules/iframe/iframe.module#IFrameModule',
+    canActivate: [RouteGuardService],
+    resolve: { RouteResolverService },
+    data: {
+      isComponent: true,
+      description: 'Configurator',
+      iFrameUrl: 'https://configurator-61bec.firebaseapp.com/configurator'
+    }
+  }
 ];

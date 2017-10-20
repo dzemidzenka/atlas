@@ -1,10 +1,9 @@
-import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { HostBinding, Output, EventEmitter, HostListener, ElementRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
 
 interface UserMenuItem {
   title: string;
   target: string;
-  iconClass: object;
+  iconClass: string;
   translationPath: string;
 }
 
@@ -18,14 +17,11 @@ export class ActionComponent {
   constructor() { }
 
   @Input() rightBorder = true;
-
-
-
-
   @Input() menu: UserMenuItem[] = [];
   @Output() menuClick = new EventEmitter<string>();
 
   isMenuShown = false;
+
 
   itemClick(event: any, item: UserMenuItem): boolean {
     this.menuClick.emit(item.target);

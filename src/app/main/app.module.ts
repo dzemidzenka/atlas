@@ -2,18 +2,19 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 // import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { HttpClientModule, HttpClient, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { SharedModule } from '../shared/shared.module';
-import { ToasterModule } from 'angular2-toaster';
+import { SimpleNotificationsModule } from 'angular2-notifications';
 
 
 
 // providers
-import * as tokens from '../providers/tokens';
+import * as tokens from '../shared/constants';
 import { ReduxService } from '../providers/redux.service';
 import { AuthService } from '../providers/auth.service';
 import { RouteGuardService } from '../providers/route-guard.service';
 import { RouteResolverService } from '../providers/route-resolver.service';
+import { AuthInterceptor } from '../providers/http.interceptor.service';
 
 // routes
 import { ROUTES } from '../routes/app.routes';
@@ -23,7 +24,6 @@ import { AppComponent } from './app.component';
 import { TcodeComponent } from './tcode/tcode.component';
 import { PathComponent } from './path/path.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { TilesComponent } from './dashboard/tiles/tiles.component';
 import { LoginComponent } from './login/login.component';
 import { HeaderComponent } from './header/header.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
@@ -35,8 +35,8 @@ import { NotificationCountComponent } from './header/notification/notification.c
 //  INJECTION TOKENS
 const TOKEN_PROVIDERS = [
   {
-    provide: tokens.LOCAL_STORAGE_NAME_PROVIDER,
-    useValue: 'atlas_state'
+    provide: tokens.lsAUTH,
+    useValue: 'ls.IdentityData'
   }
 ];
 
@@ -49,6 +49,7 @@ import { UserComponent } from './header/user/user.component';
 import { ActionComponent } from './header/action/action.component';
 import { CountryComponent } from './header/country/country.component';
 import { LanguageComponent } from './header/language/language.component';
+import { AppsSelectorComponent } from './header/apps-selector/apps-selector.component';
 // AoT requires an exported function for factories
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -63,7 +64,6 @@ export function createTranslateLoader(http: HttpClient) {
     TcodeComponent,
     PathComponent,
     DashboardComponent,
-    TilesComponent,
     LoginComponent,
     HeaderComponent,
     SidebarComponent,
@@ -72,6 +72,7 @@ export function createTranslateLoader(http: HttpClient) {
     CountryComponent,
     LanguageComponent,
     NotificationCountComponent,
+    AppsSelectorComponent,
   ],
   imports: [
     SharedModule,
@@ -87,7 +88,7 @@ export function createTranslateLoader(http: HttpClient) {
         deps: [HttpClient]
       }
     }),
-    ToasterModule,
+    SimpleNotificationsModule.forRoot(),
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA
@@ -98,6 +99,7 @@ export function createTranslateLoader(http: HttpClient) {
     AuthService,
     RouteGuardService,
     RouteResolverService,
+    [ { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true } ]
   ],
   bootstrap: [AppComponent],
 })

@@ -1,5 +1,5 @@
 // import { NbMenuItem } from '@nebular/theme';
-import { VIEW } from '../../models/models';
+import { VIEW } from '../../shared/models';
 
 // export const MENU_ITEMS: NbMenuItem[] = [
   export const MENU_ITEMS = [

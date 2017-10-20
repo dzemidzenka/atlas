@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ReduxService } from '../../providers/redux.service';
-import { ACTION, VIEW } from '../../models/models';
+import { ACTION, VIEW } from '../../shared/models';
 
 
 @Component({
