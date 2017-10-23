@@ -1,23 +1,26 @@
-import { Component, OnInit, ChangeDetectionStrategy, ViewChild, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, Inject } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { ReduxService } from '../providers/redux.service';
-import { MatDrawer } from '@angular/material/sidenav';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import { ReduxService } from '../providers/redux.service';
+import { ACTION } from '../shared/models';
+import * as tokens from '../shared/constants';
+import * as constants from '../shared/constants';
 
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss'],
+    styleUrls: ['./app.component.scss']
     // changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent implements OnInit, OnDestroy {
-    constructor(private _titleService: Title, private _reduxService: ReduxService) {}
+    constructor(private _titleService: Title, private _reduxService: ReduxService, @Inject(tokens.lsAUTH) private _lsAuth: string) {}
 
-    readonly title = 'Atlas';
-    @ViewChild('sidenav') sidenav: MatDrawer;
     state$Subscription: Subscription;
     timeout$Subscription: Subscription;
+    localStorage$Subscription: Subscription;
+
+    readonly title = 'Atlas Portal';
 
     options = {
         position: ['top', 'right'],
@@ -25,23 +28,9 @@ export class AppComponent implements OnInit, OnDestroy {
         lastOnBottom: false,
         pauseOnHover: true,
         clickToClose: true,
-        maxLength: 5,
-        showProgressBar: true
+        showProgressBar: true,
+        animate: 'scale'
     };
-
-
-    state$ = this._reduxService.state$.map(state =>
-        Object.assign({
-            country: state.country,
-            isLoggedIn: state.isLoggedIn,
-            user: state.user,
-            notifications: state.notifications
-        })
-    );
-
-    onSidebarToggle() {
-        this.sidenav.toggle();
-    }
 
     ngOnInit() {
         this._titleService.setTitle(this.title);
@@ -51,8 +40,17 @@ export class AppComponent implements OnInit, OnDestroy {
             console.log('Redux state', state);
         });
 
+        // logout all sessions if any one logs out
+        this.localStorage$Subscription = Observable.fromEvent(window, 'storage')
+            .filter((event: StorageEvent) => event.key === this._lsAuth)
+            .filter((event: StorageEvent) => event.newValue === null)
+            .do(() => this._reduxService.actionLogOut())
+            .subscribe();
+
         // automatically logout after a period of inactivity
-        this.timeout$Subscription = Observable.interval(5 * 60 * 1000) // check every 5 minutes
+        this.timeout$Subscription = Observable.fromEvent(window, 'click')
+            .merge(this._reduxService.state$) // trigger upon redux action too
+            .auditTime(60 * 1000) // for performance reasons, react only to the last event within the time window
             .withLatestFrom(this._reduxService.state$)
             .map(array => array[1])
             .filter(state => state.isLoggedIn)
@@ -60,14 +58,34 @@ export class AppComponent implements OnInit, OnDestroy {
                 state =>
                     !(state.hasOwnProperty('menuItemCurrent') && state.menuItemCurrent && state.menuItemCurrent.hasOwnProperty('iFrameUrl'))
             )
-            .map(state => state.action.date)
-            .filter(date => Math.floor(Date.now() / 1000) > date) // in seconds
-            .do(() => this._reduxService.actionLogOut())
+            // period of inactivity. Must be greater than auditTime
+            .switchMap(state => Observable.of(state).delay(constants.MINUTES_OF_INACTIVITY * 60 * 1000))
+            .do(() => this._reduxService.actionLogOut('Logged out due to inactivity. Goodbye!'))
             .subscribe();
+
+        // this.timeout$Subscription = Observable.interval(5 * 60 * 1000) // check every 5 minutes
+        //     .withLatestFrom(this._reduxService.state$)
+        //     .map(array => array[1])
+        //     .filter(state => state.isLoggedIn)
+        //     .filter(
+        //         state =>
+        //             !(state.hasOwnProperty('menuItemCurrent') && state.menuItemCurrent && state.menuItemCurrent.hasOwnProperty('iFrameUrl'))
+        //     )
+        //     .map(state => state.action.date)
+        //     .filter(date => Math.floor(Date.now() / 1000) > date) // in seconds
+        //     .do(() => this._reduxService.actionLogOut())
+        //     .subscribe();
     }
 
     ngOnDestroy() {
-        this.state$Subscription.unsubscribe();
-        this.timeout$Subscription.unsubscribe();
+        if (this.state$Subscription) {
+            this.state$Subscription.unsubscribe();
+        }
+        if (this.localStorage$Subscription) {
+            this.localStorage$Subscription.unsubscribe();
+        }
+        if (this.timeout$Subscription) {
+            this.timeout$Subscription.unsubscribe();
+        }
     }
 }

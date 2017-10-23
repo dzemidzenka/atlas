@@ -2,6 +2,7 @@ import { Component, ChangeDetectionStrategy, ChangeDetectorRef, AfterViewInit } 
 import { DomSanitizer } from '@angular/platform-browser';
 import { ReduxService } from '../../providers/redux.service';
 import { ACTION } from '../../shared/models';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
     selector: 'atlas-iframe',
@@ -12,8 +13,10 @@ import { ACTION } from '../../shared/models';
 export class IFrameComponent implements AfterViewInit {
     constructor(private _reduxService: ReduxService, private _sanitizer: DomSanitizer, private _cdr: ChangeDetectorRef) {}
 
+    loading$ = Observable.of(true).delay(20 * 1000);
+
     iFrameUrl$ = this._reduxService.state$
-        .filter(state => state.action.op === ACTION.ROUTE || state.action.op === ACTION.LOGIN)
+        .filter(state => state.action.op === ACTION.ROUTE)
         .filter(state => state.hasOwnProperty('menuItemCurrent'))
         .filter(state => state.menuItemCurrent.hasOwnProperty('iFrameUrl'))
         .filter(state => (state.menuItemCurrent.iFrameUrl ? true : false))

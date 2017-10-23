@@ -44,7 +44,7 @@ export interface IActionModel {
     language?: LANGUAGE;
     menuItem?: IMenuModel;
     notifications?: Array<INotificationModel>;
-}
+  }
 
 export interface IStateModel {
     action: IActionModel;
@@ -65,8 +65,7 @@ export interface IStateModel {
 
 export interface INotificationModel {
     message: string;
-    date: number;
-    doNotKeep?: boolean;
+    date?: number;
 }
 
 export interface IUserModel {
@@ -76,6 +75,7 @@ export interface IUserModel {
     countryDefault: COUNTRY;
     allowedCountries: Array<string>;
     languageDefault: LANGUAGE;
+    expires: number;
     access_token: string;
 }
 

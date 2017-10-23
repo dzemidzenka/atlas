@@ -2,6 +2,8 @@ import { Routes } from '@angular/router';
 import { RouteGuardService } from '../providers/route-guard.service';
 import { RouteResolverService } from '../providers/route-resolver.service';
 import { DashboardComponent } from '../main/dashboard/dashboard.component';
+import { IFrameComponent } from '../shared/iframe/iframe.component';
+
 
 export const SAP_ROUTES: Routes = [
   // FOLDER
@@ -16,7 +18,7 @@ export const SAP_ROUTES: Routes = [
   // COMPONENTS
   {
     path: 'sap/sap-gui',
-    loadChildren: '../lazyModules/iframe/iframe.module#IFrameModule',
+    component: IFrameComponent,
     canActivate: [RouteGuardService],
     resolve: { RouteResolverService },
     data: {
@@ -28,7 +30,7 @@ export const SAP_ROUTES: Routes = [
   },
   {
     path: 'sap/sap-zsetinfo',
-    loadChildren: '../lazyModules/iframe/iframe.module#IFrameModule',
+    component: IFrameComponent,
     canActivate: [RouteGuardService],
     resolve: { RouteResolverService },
     data: {
@@ -60,7 +62,7 @@ export const SAP_ROUTES: Routes = [
   },
   {
     path: 'sap/configurator',
-    loadChildren: '../lazyModules/iframe/iframe.module#IFrameModule',
+    component: IFrameComponent,
     canActivate: [RouteGuardService],
     resolve: { RouteResolverService },
     data: {

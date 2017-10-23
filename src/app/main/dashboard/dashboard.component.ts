@@ -11,7 +11,7 @@ import { IMenuModel } from '../../shared/models';
 export class DashboardComponent {
     constructor(private _reduxService: ReduxService) {}
 
-    state$ = this._reduxService.state$.map(state =>
+    state$ = this._reduxService.state$.filter(state => state.hasOwnProperty('menu')).map(state =>
         Object.assign({
             view: state.view,
             menu: state.menu.filter(menu => menu.active)

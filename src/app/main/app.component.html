@@ -1,17 +1,3 @@
 <simple-notifications [options]="options"></simple-notifications>
 
-<div *ngIf="state$ | async as state" class="page">
-  <atlas-header (sidebarToggle)="onSidebarToggle()"></atlas-header>
-  <ng-container *ngIf="state.isLoggedIn">
-    <atlas-path></atlas-path>
-  </ng-container>
-
-  <mat-sidenav-container>
-    <mat-sidenav #sidenav mode="over">
-      <atlas-sidebar></atlas-sidebar>
-    </mat-sidenav>
-
-    <router-outlet *ngIf="state.isLoggedIn" (click)="sidenav.toggle()"></router-outlet>
-    <atlas-login *ngIf="!state.isLoggedIn"></atlas-login>
-  </mat-sidenav-container>
-</div>
+<atlas-shell></atlas-shell>

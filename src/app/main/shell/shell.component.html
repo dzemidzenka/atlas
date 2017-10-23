@@ -1,0 +1,18 @@
+<div *ngIf="state$ | async as state" class="page">
+  <atlas-header (sidebarToggle)="onSidebarToggle()"></atlas-header>
+  <ng-container *ngIf="state.isLoggedIn">
+    <atlas-path></atlas-path>
+  </ng-container>
+
+  <mat-sidenav-container>
+    <mat-sidenav #sidenav mode="over">
+      <atlas-sidebar></atlas-sidebar>
+    </mat-sidenav>
+
+    <atlas-login *ngIf="!state.isLoggedIn else loggedIn"></atlas-login>
+    <ng-template #loggedIn>
+      <router-outlet *ngIf="state.isComponent" (click)="sidenav.toggle()"></router-outlet>
+      <atlas-dashboard *ngIf="!state.isComponent"></atlas-dashboard>
+    </ng-template>
+  </mat-sidenav-container>
+</div>

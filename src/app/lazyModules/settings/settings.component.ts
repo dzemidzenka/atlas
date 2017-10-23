@@ -1,25 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ReduxService } from '../../providers/redux.service';
 
 @Component({
-  selector: 'atlas-settings',
-  templateUrl: './settings.component.html',
-  styleUrls: ['./settings.component.scss']
+    selector: 'atlas-settings',
+    templateUrl: './settings.component.html',
+    styleUrls: ['./settings.component.scss']
 })
-export class SettingsComponent implements OnInit {
+export class SettingsComponent {
+    constructor(private _reduxService: ReduxService) {}
 
-  constructor(
-    private _reduxService: ReduxService,
-  ) { }
-
-  ngOnInit() {
-  }
-
-
-  onClick() {
-    this._reduxService.actionNotify([{
-      message: 'New notification ' + Date.now(),
-      date: Date.now(),
-    }]);
-  }
+    onClick() {
+        this._reduxService.actionNotify([{ message: 'New notification ' + Date.now() }]);
+    }
 }

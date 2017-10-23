@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { RouteGuardService } from '../providers/route-guard.service';
 import { RouteResolverService } from '../providers/route-resolver.service';
 import { DashboardComponent } from '../main/dashboard/dashboard.component';
+import { IFrameComponent } from '../shared/iframe/iframe.component';
 
 
 export const INTL_INVENTORY_ROUTES: Routes = [
@@ -17,7 +18,7 @@ export const INTL_INVENTORY_ROUTES: Routes = [
   // COMPONENTS
   {
     path: 'intl/inventory/intl-constrained',
-    loadChildren: '../lazyModules/iframe/iframe.module#IFrameModule',
+    component: IFrameComponent,
     canActivate: [RouteGuardService],
     resolve: { RouteResolverService },
     data: {
@@ -28,7 +29,7 @@ export const INTL_INVENTORY_ROUTES: Routes = [
   },
   {
     path: 'intl/inventory/intl-set_inventory',
-    loadChildren: '../lazyModules/iframe/iframe.module#IFrameModule',
+    component: IFrameComponent,
     canActivate: [RouteGuardService],
     resolve: { RouteResolverService },
     data: {
@@ -39,7 +40,7 @@ export const INTL_INVENTORY_ROUTES: Routes = [
   },
   {
     path: 'intl/inventory/intl-shipping',
-    loadChildren: '../lazyModules/iframe/iframe.module#IFrameModule',
+    component: IFrameComponent,
     canActivate: [RouteGuardService],
     resolve: { RouteResolverService },
     data: {
@@ -50,7 +51,7 @@ export const INTL_INVENTORY_ROUTES: Routes = [
   },
   {
     path: 'intl/inventory/intl-billing',
-    loadChildren: '../lazyModules/iframe/iframe.module#IFrameModule',
+    component: IFrameComponent,
     canActivate: [RouteGuardService],
     resolve: { RouteResolverService },
     data: {
@@ -61,7 +62,7 @@ export const INTL_INVENTORY_ROUTES: Routes = [
   },
   {
     path: 'intl/inventory/intl-sub_to_sub',
-    loadChildren: '../lazyModules/iframe/iframe.module#IFrameModule',
+    component: IFrameComponent,
     canActivate: [RouteGuardService],
     resolve: { RouteResolverService },
     data: {

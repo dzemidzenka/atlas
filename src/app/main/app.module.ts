@@ -6,8 +6,6 @@ import { HttpClientModule, HttpClient, HTTP_INTERCEPTORS } from '@angular/common
 import { SharedModule } from '../shared/shared.module';
 import { SimpleNotificationsModule } from 'angular2-notifications';
 
-
-
 // providers
 import * as tokens from '../shared/constants';
 import { ReduxService } from '../providers/redux.service';
@@ -19,88 +17,80 @@ import { AuthInterceptor } from '../providers/http.interceptor.service';
 // routes
 import { ROUTES } from '../routes/app.routes';
 
-// components (non-lazy)
+// components
 import { AppComponent } from './app.component';
-import { TcodeComponent } from './tcode/tcode.component';
-import { PathComponent } from './path/path.component';
+import { ShellComponent } from './shell/shell.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { LoginComponent } from './login/login.component';
-import { HeaderComponent } from './header/header.component';
-import { SidebarComponent } from './sidebar/sidebar.component';
-import { NotificationCountComponent } from './header/notification/notification.component';
-
-
-
+import { SidebarComponent } from './shell/sidebar/sidebar.component';
+import { HeaderComponent } from './shell/header/header.component';
+import { TcodeComponent } from './shell/tcode/tcode.component';
+import { PathComponent } from './shell/path/path.component';
+import { NotificationCountComponent } from './shell/header/notification-count/notification-count.component';
+import { UserComponent } from './shell/header/user/user.component';
+import { ActionComponent } from './shell/header/action/action.component';
+import { CountrySelectorComponent } from './shell/header/country-selector/country-selector.component';
+import { LanguageSelectorComponent } from './shell/header/language-selector/language-selector.component';
+import { AppsSelectorComponent } from './shell/header/apps-selector/apps-selector.component';
 
 //  INJECTION TOKENS
 const TOKEN_PROVIDERS = [
-  {
-    provide: tokens.lsAUTH,
-    useValue: 'ls.IdentityData'
-  }
+    {
+        provide: tokens.lsAUTH,
+        useValue: 'ls.IdentityData'
+    }
 ];
-
-
 
 // translation
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { UserComponent } from './header/user/user.component';
-import { ActionComponent } from './header/action/action.component';
-import { CountryComponent } from './header/country/country.component';
-import { LanguageComponent } from './header/language/language.component';
-import { AppsSelectorComponent } from './header/apps-selector/apps-selector.component';
 // AoT requires an exported function for factories
 export function createTranslateLoader(http: HttpClient) {
-  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+    return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 
-
-
-
 @NgModule({
-  declarations: [
-    AppComponent,
-    TcodeComponent,
-    PathComponent,
-    DashboardComponent,
-    LoginComponent,
-    HeaderComponent,
-    SidebarComponent,
-    UserComponent,
-    ActionComponent,
-    CountryComponent,
-    LanguageComponent,
-    NotificationCountComponent,
-    AppsSelectorComponent,
-  ],
-  imports: [
-    SharedModule,
-    BrowserAnimationsModule,
-    // NoopAnimationsModule,
-    HttpClientModule,
-    RouterModule.forRoot(ROUTES),
-    // BrowserModule,
-    TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: (createTranslateLoader),
-        deps: [HttpClient]
-      }
-    }),
-    SimpleNotificationsModule.forRoot(),
-  ],
-  schemas: [
-    CUSTOM_ELEMENTS_SCHEMA
-  ],
-  providers: [
-    ...TOKEN_PROVIDERS,
-    ReduxService,
-    AuthService,
-    RouteGuardService,
-    RouteResolverService,
-    [ { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true } ]
-  ],
-  bootstrap: [AppComponent],
+    declarations: [
+        AppComponent,
+        TcodeComponent,
+        PathComponent,
+        DashboardComponent,
+        LoginComponent,
+        HeaderComponent,
+        SidebarComponent,
+        UserComponent,
+        ActionComponent,
+        CountrySelectorComponent,
+        LanguageSelectorComponent,
+        NotificationCountComponent,
+        AppsSelectorComponent,
+        ShellComponent
+    ],
+    imports: [
+        SharedModule,
+        BrowserAnimationsModule,
+        // NoopAnimationsModule,
+        HttpClientModule,
+        RouterModule.forRoot(ROUTES),
+        // BrowserModule,
+        TranslateModule.forRoot({
+            loader: {
+                provide: TranslateLoader,
+                useFactory: createTranslateLoader,
+                deps: [HttpClient]
+            }
+        }),
+        SimpleNotificationsModule.forRoot()
+    ],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    providers: [
+        ...TOKEN_PROVIDERS,
+        ReduxService,
+        AuthService,
+        RouteGuardService,
+        RouteResolverService,
+        [{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }]
+    ],
+    bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}

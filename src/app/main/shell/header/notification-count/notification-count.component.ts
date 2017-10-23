@@ -3,8 +3,8 @@ import { Component, Input, HostBinding, ChangeDetectionStrategy, ViewChild, Elem
 
 @Component({
   selector: 'atlas-notification-count',
-  templateUrl: './notification.component.html',
-  styleUrls: ['./notification.component.scss'],
+  templateUrl: './notification-count.component.html',
+  styleUrls: ['./notification-count.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NotificationCountComponent {

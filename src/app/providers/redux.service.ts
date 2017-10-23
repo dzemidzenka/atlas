@@ -3,7 +3,6 @@ import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { TranslateService } from '@ngx-translate/core';
-import { MatSnackBar, MatSnackBarVerticalPosition, MatSnackBarHorizontalPosition } from '@angular/material';
 import { NotificationsService } from 'angular2-notifications';
 
 import * as models from '../shared/models';
@@ -40,6 +39,14 @@ export class ReduxService {
     private _initialState: models.IStateModel = (() => {
         const state: models.IStateModel = {} as models.IStateModel;
         state.notifications = [];
+        state.menu = this._router.config
+            .filter(route => route.hasOwnProperty('data'))
+            .filter(route => route.data.hasOwnProperty('description'))
+            .map(menuItemFromRoute)
+            .map((menu: models.IMenuModel, i) => {
+                menu.id = i + 1;
+                return menu;
+            });
         return state;
     })();
 
@@ -60,7 +67,7 @@ export class ReduxService {
 
     // APPLICATION STATE STORE
     state$: Observable<models.IStateModel> = this._actionSubject$
-        .startWith(Object.assign({ op: models.ACTION.INIT, user: JSON.parse(localStorage.getItem(this._lsAuth)) }) as models.IActionModel)
+        .startWith(Object.assign({ op: models.ACTION.INIT, user: JSON.parse(localStorage.getItem(this._lsAuth)) }))
         .merge(this._routerEvents$)
         .scan((state: models.IStateModel, action: models.IActionModel) => this._reducer(state, action), this._initialState)
         .do(state => (this._currentState = state))
@@ -75,6 +82,10 @@ export class ReduxService {
             this._reducers[_action.op].call(this, _state, _action);
             _state.action = _action;
             _state.action.date = Math.floor(Date.now() / 1000);
+            // check if session has expired
+            if (_state.isLoggedIn) {
+                _state.isLoggedIn = _state.action.date < _state.user.expires;
+            }
         }
         return _state;
     }
@@ -125,6 +136,10 @@ export class ReduxService {
 
             let returnUrlParams;
             if (returnUrl) {
+                const menuItem = state.menu.find(menu => menu.routerPath === returnUrl);
+                if (menuItem) {
+                    state.isComponent = menuItem.isComponent; // to prevent screen blinking due to the delay of lazy loading network request
+                }
                 returnUrlParams = returnUrl
                     .split('/')
                     .filter(param => param !== '')
@@ -135,7 +150,15 @@ export class ReduxService {
 
         this._reducers[models.ACTION.LOGOUT] = (state: models.IStateModel, action: models.IActionModel) => {
             localStorage.removeItem(this._lsAuth);
-            this._notificationsService.info(`${state.user.nameDisplay} logged out. Goodbye!`);
+            if (action.notifications.length > 0) {
+                action.notifications.forEach(notification => this._notificationsService.info(notification.message, null, { timeOut: 0 }));
+            } else {
+                if (isEmpty(state.user)) {
+                    this._notificationsService.info('Logged out. Goodbye!');
+                } else {
+                    this._notificationsService.info(`${state.user.nameDisplay} logged out. Goodbye!`);
+                }
+            }
 
             state.user = {} as models.IUserModel;
             state.isLoggedIn = false;
@@ -152,10 +175,15 @@ export class ReduxService {
         };
 
         this._reducers[models.ACTION.NOTIFICATION] = (state: models.IStateModel, action: models.IActionModel) => {
-            action.notifications.forEach(notification => {
-                state.notifications.push(notification);
-                this._notificationsService.info(notification.message);
-            });
+            action.notifications
+                .map((notification: models.INotificationModel) => {
+                    notification.date = Date.now();
+                    return notification;
+                })
+                .forEach(notification => {
+                    state.notifications.push(notification);
+                    this._notificationsService.info(notification.message);
+                });
         };
 
         this._reducers[models.ACTION.NOTIFICATION_CLEAR] = (state: models.IStateModel, action: models.IActionModel) => {
@@ -168,26 +196,8 @@ export class ReduxService {
         };
 
         this._reducers[models.ACTION.ROUTE] = (state: models.IStateModel, action: models.IActionModel) => {
-            if (!state.menu) {
-                state.menu = this._router.config
-                    .filter(route => route.hasOwnProperty('data'))
-                    .filter(route => route.data.hasOwnProperty('description'))
-                    .map(menuItemFromRoute)
-                    .map((menu: models.IMenuModel, i) => {
-                        menu.id = i + 1;
-                        return menu;
-                    }); // assign menu item ID
-            }
-
             state.url = action.url;
             state.urlParams = action.urlParams.filter(param => param.length > 0).map(param => param.toLowerCase());
-            // if a user goes back to login screen while already logged in, redirect
-            // if (state.isLoggedIn) {
-            //     if (state.urlParams[0] === 'login') {
-            //         state.isLoggedIn = false;
-            //     }
-            // }
-
             state.queryParams = action.queryParams;
 
             if (state.queryParams['language']) {
@@ -212,7 +222,9 @@ export class ReduxService {
 
             const _urlParams = [...state.urlParams];
             const _routerPath = _urlParams.join('/');
-            state.menuItemCurrent = state.menu.find(item => item.routerPath === _routerPath);
+            if (state.menu) {
+                state.menuItemCurrent = state.menu.find(item => item.routerPath === _routerPath);
+            }
             state.isComponent = false;
             if (state.menuItemCurrent) {
                 state.isComponent = state.menuItemCurrent.isComponent;
@@ -234,8 +246,15 @@ export class ReduxService {
         this._actionSubject$.next(Object.assign({ op: models.ACTION.LOGIN, user: user }));
     }
 
-    actionLogOut() {
-        this._actionSubject$.next(Object.assign({ op: models.ACTION.LOGOUT }));
+    actionLogOut(message?: string) {
+        if (this._currentState.isLoggedIn) {
+            this._actionSubject$.next(
+                Object.assign({
+                    op: models.ACTION.LOGOUT,
+                    notifications: message ? [{ message: message }] : []
+                })
+            );
+        }
     }
 
     actionFavoriteToggle(menuItem: models.IMenuModel) {
@@ -251,7 +270,6 @@ export class ReduxService {
     }
 
     actionLanguage(language: models.LANGUAGE) {
-        // this._actionSubject$.next(Object.assign({ op: models.ACTION.LANGUAGE, language: language }));
         this._translate.use(language);
         const urlParams = this._currentState.urlParams;
         const queryParams = this._currentState.queryParams;
@@ -259,7 +277,6 @@ export class ReduxService {
     }
 
     actionCountry(country: models.COUNTRY) {
-        // this._actionSubject$.next(Object.assign({ op: models.ACTION.COUNTRY, country: country }));
         const urlParams = this._currentState.urlParams;
         const queryParams = this._currentState.queryParams;
         this._router.navigate([urlParams.join('/')], { queryParams: { ...queryParams, country: country } });
@@ -275,7 +292,7 @@ export class ReduxService {
         this._router.navigate([urlParams.join('/')], { queryParams: { ...queryParams, view: models.VIEW.DASHBOARD } });
     }
 
-    // current state getter to prevent direct state update
+    // current state getter to prevent direct state access
     getCurrentState(): models.IStateModel {
         return this._currentState;
     }
@@ -302,40 +319,40 @@ function menuItemFromRoute(route, i, routes) {
 
 // determine which menus are active per current URL params
 function getActiveMenu(state: models.IStateModel) {
-    // get active
-    state.menu.map(item => {
-        item.active = false;
-        if (state.view === models.VIEW.FAVORITE) {
-            item.active = item.isFavorite;
-            return item;
-        }
-        if (state.view === models.VIEW.RECENT) {
-            if (state.hasOwnProperty('menuRecent')) {
-                item.active = state.menuRecent.some(menuItem => menuItem.id === item.id);
-            }
-            return item;
-        }
-
-        // e.g. if URL is /xxx, then menus for /xxx/yyy are allowed
-        if (item.urlParams.length === state.urlParams.length + 1) {
-            item.active = true;
-        } else {
+    if (state.menu) {
+        state.menu.map(item => {
             item.active = false;
-            return item;
-        }
-
-        // match URL params and menu params
-        let i = 0;
-        for (const param of state.urlParams) {
-            if (item.urlParams[i] !== state.urlParams[i]) {
-                item.active = false;
-                break;
+            if (state.view === models.VIEW.FAVORITE) {
+                item.active = item.isFavorite;
+                return item;
             }
-            i++;
-        }
-        return item;
-    });
-    // console.log('ACTIVE_MENU', state.menu);
+            if (state.view === models.VIEW.RECENT) {
+                if (state.hasOwnProperty('menuRecent')) {
+                    item.active = state.menuRecent.some(menuItem => menuItem.id === item.id);
+                }
+                return item;
+            }
+
+            // e.g. if URL is /xxx, then menus for /xxx/yyy are allowed
+            if (item.urlParams.length === state.urlParams.length + 1) {
+                item.active = true;
+            } else {
+                item.active = false;
+                return item;
+            }
+
+            // match URL params and menu params
+            let i = 0;
+            for (const param of state.urlParams) {
+                if (item.urlParams[i] !== state.urlParams[i]) {
+                    item.active = false;
+                    break;
+                }
+                i++;
+            }
+            return item;
+        });
+    }
 }
 
 function generateAdditionalRoutes(routes) {

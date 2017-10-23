@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { ReduxService } from '../../../providers/redux.service';
+import { ReduxService } from '../../../../providers/redux.service';
+import { VIEW } from '../../../../shared/models';
 
 @Component({
     selector: 'atlas-apps-selector',
@@ -17,6 +18,16 @@ export class AppsSelectorComponent {
     );
 
     menu = [
+        {
+            title: 'Favorites',
+            target: VIEW.FAVORITE,
+            view: true
+        },
+        {
+            title: 'Recent',
+            target: VIEW.RECENT,
+            view: true
+        },
         {
             title: 'INTL',
             target: 'intl'
@@ -36,6 +47,10 @@ export class AppsSelectorComponent {
     ];
 
     switchApp(app: string) {
-        this._reduxService.actionMenu([app]);
+        if (Object.values(VIEW).includes(app)) {
+            this._reduxService.actionDashboard(app as VIEW);
+        } else {
+            this._reduxService.actionMenu([app]);
+        }
     }
 }

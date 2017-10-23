@@ -5,17 +5,23 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 // RxJs operators
 import 'rxjs/add/operator/startWith';
 import 'rxjs/add/operator/scan';
+import 'rxjs/add/operator/merge';
 import 'rxjs/add/operator/publishBehavior';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/withLatestFrom';
+import 'rxjs/add/operator/delay';
 import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/operator/auditTime';
 
 import 'rxjs/add/observable/of';
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/observable/interval';
+import 'rxjs/add/observable/fromEvent';
+
+
 
 import {
     MatAutocompleteModule,
@@ -33,6 +39,7 @@ import {
     // MatListModule,
     MatMenuModule,
     // MatProgressBarModule,
+    MatProgressSpinnerModule,
     // MatRadioModule,
     // MatSelectModule,
     MatSidenavModule,
@@ -40,16 +47,15 @@ import {
     // MatSliderModule,
     // MatSlideToggleModule,
     // MatToolbarModule,
-    MatTooltipModule
+    // MatTooltipModule
 } from '@angular/material';
 // import { MegaMenuModule } from 'primeng/primeng';
-
+import { IFrameComponent } from './iframe/iframe.component';
 
 const MODULES = [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-
     // MegaMenuModule,
 
     MatAutocompleteModule,
@@ -67,6 +73,7 @@ const MODULES = [
     // MatListModule,
     MatMenuModule,
     // MatProgressBarModule,
+    MatProgressSpinnerModule,
     // MatRadioModule,
     // MatSelectModule,
     MatSidenavModule,
@@ -74,14 +81,14 @@ const MODULES = [
     // MatSliderModule,
     // MatSlideToggleModule,
     // MatToolbarModule,
-    MatTooltipModule
+    // MatTooltipModule
 ];
 
-const COMPONENTS = [];
+const COMPONENTS = [IFrameComponent];
 
 @NgModule({
+    declarations: [...COMPONENTS],
     imports: [...MODULES],
-    exports: [...MODULES, ...COMPONENTS],
-    declarations: [...COMPONENTS]
+    exports: [...MODULES, ...COMPONENTS]
 })
 export class SharedModule {}

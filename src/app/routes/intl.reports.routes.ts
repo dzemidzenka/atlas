@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { RouteGuardService } from '../providers/route-guard.service';
 import { RouteResolverService } from '../providers/route-resolver.service';
 import { DashboardComponent } from '../main/dashboard/dashboard.component';
+import { IFrameComponent } from '../shared/iframe/iframe.component';
 
 
 export const INTL_REPORTS_ROUTES: Routes = [
@@ -17,7 +18,7 @@ export const INTL_REPORTS_ROUTES: Routes = [
   // COMPONENTS
   {
     path: 'intl/reports/intl-orders_report',
-    loadChildren: '../lazyModules/iframe/iframe.module#IFrameModule',
+    component: IFrameComponent,
     canActivate: [RouteGuardService],
     resolve: { RouteResolverService },
     data: {
@@ -28,7 +29,7 @@ export const INTL_REPORTS_ROUTES: Routes = [
   },
   {
     path: 'intl/reports/intl-inventory_report',
-    loadChildren: '../lazyModules/iframe/iframe.module#IFrameModule',
+    component: IFrameComponent,
     canActivate: [RouteGuardService],
     resolve: { RouteResolverService },
     data: {
@@ -39,7 +40,7 @@ export const INTL_REPORTS_ROUTES: Routes = [
   },
   {
     path: 'intl/reports/intl-customer_relationships_report',
-    loadChildren: '../lazyModules/iframe/iframe.module#IFrameModule',
+    component: IFrameComponent,
     canActivate: [RouteGuardService],
     resolve: { RouteResolverService },
     data: {

@@ -1,5 +1,5 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
-import { AuthService } from '../../../providers/auth.service';
+import { AuthService } from '../../../../providers/auth.service';
 
 interface UserMenuItem {
   title: string;

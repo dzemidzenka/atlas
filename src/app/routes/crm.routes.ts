@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { RouteGuardService } from '../providers/route-guard.service';
 import { RouteResolverService } from '../providers/route-resolver.service';
 import { DashboardComponent } from '../main/dashboard/dashboard.component';
+import { IFrameComponent } from '../shared/iframe/iframe.component';
 
 
 export const CRM_ROUTES: Routes = [
@@ -17,7 +18,7 @@ export const CRM_ROUTES: Routes = [
   // COMPONENTS
   {
     path: 'crm/crm-contacts',
-    loadChildren: '../lazyModules/iframe/iframe.module#IFrameModule',
+    component: IFrameComponent,
     canActivate: [RouteGuardService],
     resolve: { RouteResolverService },
     data: {
@@ -28,7 +29,7 @@ export const CRM_ROUTES: Routes = [
   },
   {
     path: 'crm/crm-accounts',
-    loadChildren: '../lazyModules/iframe/iframe.module#IFrameModule',
+    component: IFrameComponent,
     canActivate: [RouteGuardService],
     resolve: { RouteResolverService },
     data: {
@@ -39,7 +40,7 @@ export const CRM_ROUTES: Routes = [
   },
   {
     path: 'crm/crm-salesreps',
-    loadChildren: '../lazyModules/iframe/iframe.module#IFrameModule',
+    component: IFrameComponent,
     canActivate: [RouteGuardService],
     resolve: { RouteResolverService },
     data: {
@@ -50,7 +51,7 @@ export const CRM_ROUTES: Routes = [
   },
   {
     path: 'crm/crm-apperian',
-    loadChildren: '../lazyModules/iframe/iframe.module#IFrameModule',
+    component: IFrameComponent,
     canActivate: [RouteGuardService],
     resolve: { RouteResolverService },
     data: {
@@ -61,7 +62,7 @@ export const CRM_ROUTES: Routes = [
   },
   {
     path: 'crm/crm-pricing_requests',
-    loadChildren: '../lazyModules/iframe/iframe.module#IFrameModule',
+    component: IFrameComponent,
     canActivate: [RouteGuardService],
     resolve: { RouteResolverService },
     data: {
@@ -72,7 +73,7 @@ export const CRM_ROUTES: Routes = [
   },
   {
     path: 'crm/crm-event_requests',
-    loadChildren: '../lazyModules/iframe/iframe.module#IFrameModule',
+    component: IFrameComponent,
     canActivate: [RouteGuardService],
     resolve: { RouteResolverService },
     data: {
@@ -83,7 +84,7 @@ export const CRM_ROUTES: Routes = [
   },
   {
     path: 'crm/crm-intl_event_requests',
-    loadChildren: '../lazyModules/iframe/iframe.module#IFrameModule',
+    component: IFrameComponent,
     canActivate: [RouteGuardService],
     resolve: { RouteResolverService },
     data: {
@@ -94,7 +95,7 @@ export const CRM_ROUTES: Routes = [
   },
   {
     path: 'crm/crm-permissions',
-    loadChildren: '../lazyModules/iframe/iframe.module#IFrameModule',
+    component: IFrameComponent,
     canActivate: [RouteGuardService],
     resolve: { RouteResolverService },
     data: {
@@ -105,7 +106,7 @@ export const CRM_ROUTES: Routes = [
   },
   {
     path: 'crm/crm-configurations',
-    loadChildren: '../lazyModules/iframe/iframe.module#IFrameModule',
+    component: IFrameComponent,
     canActivate: [RouteGuardService],
     resolve: { RouteResolverService },
     data: {

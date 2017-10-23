@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { RouteGuardService } from '../providers/route-guard.service';
 import { RouteResolverService } from '../providers/route-resolver.service';
 import { DashboardComponent } from '../main/dashboard/dashboard.component';
+import { IFrameComponent } from '../shared/iframe/iframe.component';
 
 
 export const INTL_MANAGE_ROUTES: Routes = [
@@ -17,7 +18,7 @@ export const INTL_MANAGE_ROUTES: Routes = [
   // COMPONENTS
   {
     path: 'intl/manage/intl-customer_relationships',
-    loadChildren: '../lazyModules/iframe/iframe.module#IFrameModule',
+    component: IFrameComponent,
     canActivate: [RouteGuardService],
     resolve: { RouteResolverService },
     data: {
@@ -28,7 +29,7 @@ export const INTL_MANAGE_ROUTES: Routes = [
   },
   {
     path: 'intl/manage/intl-product_configuration',
-    loadChildren: '../lazyModules/iframe/iframe.module#IFrameModule',
+    component: IFrameComponent,
     canActivate: [RouteGuardService],
     resolve: { RouteResolverService },
     data: {
@@ -39,7 +40,7 @@ export const INTL_MANAGE_ROUTES: Routes = [
   },
   {
     path: 'intl/manage/intl-shipping',
-    loadChildren: '../lazyModules/iframe/iframe.module#IFrameModule',
+    component: IFrameComponent,
     canActivate: [RouteGuardService],
     resolve: { RouteResolverService },
     data: {
@@ -50,7 +51,7 @@ export const INTL_MANAGE_ROUTES: Routes = [
   },
   {
     path: 'intl/manage/intl-warehouse_picking_order',
-    loadChildren: '../lazyModules/iframe/iframe.module#IFrameModule',
+    component: IFrameComponent,
     canActivate: [RouteGuardService],
     resolve: { RouteResolverService },
     data: {
@@ -61,7 +62,7 @@ export const INTL_MANAGE_ROUTES: Routes = [
   },
   {
     path: 'intl/manage/intl-users',
-    loadChildren: '../lazyModules/iframe/iframe.module#IFrameModule',
+    component: IFrameComponent,
     canActivate: [RouteGuardService],
     resolve: { RouteResolverService },
     data: {
@@ -72,7 +73,7 @@ export const INTL_MANAGE_ROUTES: Routes = [
   },
   {
     path: 'intl/manage/intl-localization',
-    loadChildren: '../lazyModules/iframe/iframe.module#IFrameModule',
+    component: IFrameComponent,
     canActivate: [RouteGuardService],
     resolve: { RouteResolverService },
     data: {
@@ -83,7 +84,7 @@ export const INTL_MANAGE_ROUTES: Routes = [
   },
   {
     path: 'intl/manage/intl-subscriptions',
-    loadChildren: '../lazyModules/iframe/iframe.module#IFrameModule',
+    component: IFrameComponent,
     canActivate: [RouteGuardService],
     resolve: { RouteResolverService },
     data: {

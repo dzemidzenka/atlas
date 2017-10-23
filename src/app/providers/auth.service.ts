@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { ReduxService } from './redux.service';
 import { COUNTRY, LANGUAGE, IUserModel } from '../shared/models';
 import { Observable } from 'rxjs/Observable';
@@ -23,7 +23,13 @@ export class AuthService {
                 // })
                 .map(this._userFromAuthResponse)
                 .do(user => this._reduxService.actionLogIn(user))
-                .catch(response => Observable.throw(JSON.parse(response['error'])['error_description']))
+                .catch((errorResponse: HttpErrorResponse) => {
+                    if (errorResponse.ok) {
+                        return Observable.throw(JSON.parse(errorResponse['error'])['error_description']);
+                    } else {
+                        return Observable.throw(errorResponse.message);
+                    }
+                })
         );
     }
 
@@ -36,7 +42,12 @@ export class AuthService {
     }
 
     private _userFromAuthResponse(response: Response): IUserModel {
-        const allowedCountries = response['as:tenantContextHosts'].split(', ').map(country => country.trim().slice(0, 2).toLowerCase());
+        const allowedCountries = response['as:tenantContextHosts'].split(', ').map(country =>
+            country
+                .trim()
+                .slice(0, 2)
+                .toLowerCase()
+        );
 
         const user: IUserModel = {
             userName: response['userName'],
@@ -45,6 +56,7 @@ export class AuthService {
             countryDefault: response['as:claim:http://schemas.xmlsoap.org/ws/2005/05/identity/claims/country'].toLowerCase(),
             allowedCountries: [...allowedCountries],
             languageDefault: LANGUAGE.EN,
+            expires: Math.floor(Date.now() / 1000) + response['expires_in'],
             access_token: response['access_token']
         };
         return user;

@@ -15,7 +15,7 @@
     <ul>
       <li class="arrow"></li>
       <li *ngFor="let item of menu">
-        <a href="#" [attr.target]="item.target" (click)="itemClick($event, item)">
+        <a (click)="itemClick($event, item)">
           <span [ngClass]="item.iconClass"></span>
           <span *ngIf="item.iconClass"> &nbsp; </span>
           <span *ngIf="item.translationPath">{{ item.translationPath | translate }}</span>

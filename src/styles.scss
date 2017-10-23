@@ -8,9 +8,9 @@
 
 
 // @import "~ng2-tree/styles.css";
-@import "~flag-icon-css/css/flag-icon.min.css";
+// @import "~flag-icon-css/css/flag-icon.min.css";
 
-
+@import url(https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/2.8.0/css/flag-icon.min.css);
 
 
 // @import '~@angular/material/theming';
@@ -54,4 +54,16 @@
   direction: ltr;
   -webkit-font-feature-settings: 'liga';
   -webkit-font-smoothing: antialiased;
+}
+
+
+
+
+.spinner-container {
+  width: 100%;
+  height: 70%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
 }

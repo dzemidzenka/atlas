@@ -11,15 +11,17 @@ export class RouteGuardService implements CanActivate {
             return true;
         }
 
-        const urlTree = this._router.parseUrl(state.url);
-        const urlParams = state.url
-            .split('/')
-            .filter(param => param !== '')
-            .map(param => param.split('?')[0]);
-        const queryParams = urlTree.queryParams;
-        queryParams.returnUrl = urlParams.join('/');
+        // const urlTree = this._router.parseUrl(state.url);
+        // const urlParams = state.url
+        //     .split('/')
+        //     .filter(param => param !== '')
+        //     .map(param => param.split('?')[0]);
+        // const queryParams = urlTree.queryParams;
+        // queryParams.returnUrl = urlParams.join('/');
 
-        this._router.navigate(['login'], { queryParams: { ...queryParams } });
+        // this._router.navigate(['login'], { queryParams: { ...queryParams } });
+
+        this._authService.logOut();
         return false;
     }
 }

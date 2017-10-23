@@ -1,14 +1,14 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { ReduxService } from '../../../providers/redux.service';
-import { COUNTRY } from '../../../shared/models';
+import { ReduxService } from '../../../../providers/redux.service';
+import { COUNTRY } from '../../../../shared/models';
 
 @Component({
-    selector: 'atlas-country',
-    templateUrl: './country.component.html',
-    styleUrls: ['./country.component.scss'],
+    selector: 'atlas-country-selector',
+    templateUrl: './country-selector.component.html',
+    styleUrls: ['./country-selector.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CountryComponent {
+export class CountrySelectorComponent {
     constructor(private _reduxService: ReduxService) {}
 
     menu = [];

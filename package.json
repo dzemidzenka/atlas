@@ -4,7 +4,7 @@
   "license": "Nuvasive",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --open --watch --proxy-config proxy.config.json",
+    "start": "ng serve --aot --open --watch --proxy-config proxy.config.json",
     "build": "ng build --aot --prod --stats-json --build-optimizer --vendor-chunk --extract-css=false --named-chunks=true",
     "test": "ng test --browser ChromeHeadless --single-run",
     "watch": "ng test --browser ChromeHeadless",
@@ -12,8 +12,7 @@
     "e2e": "ng e2e",
     "release": "standard-version && git push --follow-tags origin master",
     "deploy": "./node_modules/.bin/firebase deploy",
-    "bundle-report": "webpack-bundle-analyzer dist/stats.json",
-    "i18n": "ng-xi18n"
+    "bundle-report": "webpack-bundle-analyzer dist/stats.json"
   },
   "private": true,
   "dependencies": {
