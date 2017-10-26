@@ -1,27 +1,7 @@
-<!-- <div class="container" [ngClass]="{ 'rightBorder': rightBorder }" (click)="toggleMenu(); $event.preventDefault()">
+<main [ngClass]="{ 'rightBorder': rightBorder }">
   <ng-content></ng-content>
-
-  <div [ngStyle]="{display: isMenuShown ? 'block' : 'none'}" class="user-context-menu">
+  <div *ngIf="componentRef" class="user-context-menu">
     <div class="arrow"></div>
-    <ng-content select="atlas-action-menu"> </ng-content>
-  </div>
-</div> -->
-
-
-<main class="container" [ngClass]="{ 'rightBorder': rightBorder }" (click)="toggleMenu(); $event.preventDefault()">
-  <ng-content></ng-content>
-
-  <div *ngIf="hasMenu()" [ngStyle]="{display: isMenuShown ? 'block' : 'none'}" class="user-context-menu">
-    <ul>
-      <li class="arrow"></li>
-      <li *ngFor="let item of menu">
-        <a (click)="itemClick($event, item)">
-          <span [ngClass]="item.iconClass"></span>
-          <span *ngIf="item.iconClass"> &nbsp; </span>
-          <span *ngIf="item.translationPath">{{ item.translationPath | translate }}</span>
-          <span *ngIf="!item.translationPath">{{ item.title }}</span>
-        </a>
-      </li>
-    </ul>
+    <ng-container *ngComponentOutlet="componentRef"></ng-container>
   </div>
 </main>

@@ -1,18 +1,19 @@
-  <nav *ngIf="state$ | async as state">
-    <div class="card" *ngFor="let item of state.menu" (click)="onNavigate(item.urlParams)">
-      <header>
-        {{ item.description | uppercase }}
-      </header>
-
-      <div *ngIf="item.isComponent" class="component">
-        <mat-icon *ngIf="item.isFavorite else notFavorite" (click)="onFavoriteToggle(item)" class="component-icon">favorite</mat-icon>
-        <ng-template #notFavorite>
-          <mat-icon (click)="onFavoriteToggle(item)" class="component-icon">favorite_border</mat-icon>
-        </ng-template>
+<nav *ngIf="state$ | async as state">
+  <section class="card" *ngFor="let item of state.menu" (click)="onNavigate(item.urlParams)">
+    <ng-container *ngIf="item.isComponent">
+      <header> {{ item.description | titlecase }} </header>
+      <div class="component_footer">
+        <mat-icon *ngIf="item.isFavorite" (click)="onFavoriteToggle(item)">favorite</mat-icon>
+        <mat-icon *ngIf="!item.isFavorite" (click)="onFavoriteToggle(item)">favorite_border</mat-icon>
+        <mat-icon *ngIf="item.help" [matTooltip]="item.help">help</mat-icon>
       </div>
+    </ng-container>
 
-      <div *ngIf="!item.isComponent" class="folder">
-        <mat-icon class="folder-icon">folder</mat-icon>
+    <ng-container *ngIf="!item.isComponent">
+      <header class="folder-header">{{ item.description }}</header>
+      <div class="folder-footer">
+        <mat-icon>folder</mat-icon>
       </div>
-    </div>
-  </nav>
+    </ng-container>
+  </section>
+</nav>

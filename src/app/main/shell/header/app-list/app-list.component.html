@@ -1,0 +1,23 @@
+<ul class="header-action-menu">
+  <li (click)="switchApp(view.FAVORITE)">
+    <mat-icon>favorite</mat-icon>
+    <span>{{ view.FAVORITE | titlecase }}</span>
+  </li>
+  <li (click)="switchApp(view.RECENT)">
+    <mat-icon>history</mat-icon>
+    <span>{{ view.RECENT | titlecase }}</span>
+  </li>
+  <div class="header-action-separator"></div>
+  <li (click)="switchApp('intl')">
+    <span>INTL</span>
+  </li>
+  <li (click)="switchApp('domestic')">
+    <span>Domestic</span>
+  </li>
+  <li (click)="switchApp('crm')">
+    <span>CRM</span>
+  </li>
+  <li (click)="switchApp('sap')">
+    <span>SAP</span>
+  </li>
+</ul>

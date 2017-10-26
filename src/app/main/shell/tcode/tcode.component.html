@@ -1,8 +1,8 @@
-<form *ngIf="state$ | async">
-  <input #tcode [placeholder]="'dashboard.launchApp' | translate" aria-label="tcode" [matAutocomplete]="auto" [formControl]="menuCtrl" (keyup.enter)="onSelect(tcode.value)">
-  <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSelect($event.option.value);">
-    <mat-option *ngFor="let menu of filteredMenu | async" [value]="menu.tcode">
-      <span>{{ menu.tcode | uppercase}} ({{menu.description}})</span>
-    </mat-option>
-  </mat-autocomplete>
-</form>
+<input #tcode [placeholder]="'dashboard.launchApp' | translate" aria-label="tcode" [matAutocomplete]="auto" [formControl]="menuCtrl"
+  (keyup.enter)="onSelect(tcode.value)">
+
+<mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSelect($event.option.value);">
+  <mat-option *ngFor="let menu of filteredMenu | async" [value]="menu.tcode">
+    <span>{{ menu.tcode | uppercase}} ({{menu.description}})</span>
+  </mat-option>
+</mat-autocomplete>

@@ -1,20 +1,4 @@
-<!-- <ng-container *ngIf="state$ | async as state">
-  <ng-container *ngIf="state.isLoggedIn">
-    <button mat-button [matMenuTriggerFor]="countryMenu">
-      <span>Country:&nbsp;{{state.country | uppercase }}</span>
-    </button>
-  </ng-container>
-</ng-container>
-
-
-
-<mat-menu #countryMenu="matMenu">
-  <button *ngFor="let country of COUNTRY" mat-menu-item (click)="switchCountry(country)">{{ country | uppercase }}</button>
-</mat-menu> -->
-
-
-
-<atlas-action *ngIf="state$ | async as state" [menu]="menu" (menuClick)="switchCountry($event)">
-  <span class="flag-icon flag-icon-{{ state.country }}"></span>
-  <span>&nbsp;{{state.translationPath | translate }}</span>
+<atlas-action *ngIf="country$ | async as country" [componentRef]="componentRef">
+  <span class="flag-icon flag-icon-{{ country }}"></span>
+  <span>{{ ('country.' + country) | translate }}</span>
 </atlas-action>

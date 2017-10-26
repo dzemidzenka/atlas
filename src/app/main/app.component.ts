@@ -3,6 +3,7 @@ import { Title } from '@angular/platform-browser';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { ReduxService } from '../providers/redux.service';
+import { LoadingService } from '../providers/loading.service';
 import { ACTION } from '../shared/models';
 import * as tokens from '../shared/constants';
 import * as constants from '../shared/constants';
@@ -14,13 +15,18 @@ import * as constants from '../shared/constants';
     // changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent implements OnInit, OnDestroy {
-    constructor(private _titleService: Title, private _reduxService: ReduxService, @Inject(tokens.lsAUTH) private _lsAuth: string) {}
+    constructor(
+        private _titleService: Title,
+        private _reduxService: ReduxService,
+        private _loadingService: LoadingService,
+        @Inject(tokens.lsAUTH) private _lsAuth: string
+    ) {}
 
+    readonly title = 'Atlas Portal';
+    isLoading$ = this._loadingService.isLoading$;
     state$Subscription: Subscription;
     timeout$Subscription: Subscription;
     localStorage$Subscription: Subscription;
-
-    readonly title = 'Atlas Portal';
 
     options = {
         position: ['top', 'right'],
@@ -58,7 +64,7 @@ export class AppComponent implements OnInit, OnDestroy {
                 state =>
                     !(state.hasOwnProperty('menuItemCurrent') && state.menuItemCurrent && state.menuItemCurrent.hasOwnProperty('iFrameUrl'))
             )
-            // period of inactivity. Must be greater than auditTime
+            // period of inactivity must be greater than auditTime
             .switchMap(state => Observable.of(state).delay(constants.MINUTES_OF_INACTIVITY * 60 * 1000))
             .do(() => this._reduxService.actionLogOut('Logged out due to inactivity. Goodbye!'))
             .subscribe();

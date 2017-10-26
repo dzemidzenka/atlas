@@ -17,10 +17,7 @@ export class TcodeComponent implements OnInit {
 
     menuCtrl: FormControl;
     filteredMenu: Observable<Array<IMenuModel>>;
-    @ViewChild(MatAutocompleteTrigger) trigger;
-
-    state$ = this._reduxService.state$.map(state => state.country);
-
+    @ViewChild(MatAutocompleteTrigger) private _trigger;
 
     ngOnInit() {
         this.menuCtrl = new FormControl();
@@ -51,6 +48,6 @@ export class TcodeComponent implements OnInit {
         this._reduxService.actionMenu(urlParams);
 
         this.menuCtrl.setValue(null);
-        this.trigger.closePanel();
-    }
+        // this._trigger.closePanel();
+      }
 }

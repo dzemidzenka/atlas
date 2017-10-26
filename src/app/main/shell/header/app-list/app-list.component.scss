@@ -1,0 +1,13 @@
+mat-icon {
+    display: none;
+}
+
+:host-context(atlas-action) {
+    li {
+        display: inline-block;
+        text-align: center;
+    }
+    mat-icon {
+        display: block;
+    }
+}

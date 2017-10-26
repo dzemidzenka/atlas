@@ -1,3 +1,7 @@
 <simple-notifications [options]="options"></simple-notifications>
 
+<div *ngIf="isLoading$ | async" class="spinner-container">
+  <mat-spinner ProgressSpinnerMode="Indeterminate"></mat-spinner>
+</div>
+
 <atlas-shell></atlas-shell>

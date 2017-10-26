@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { AuthService } from '../../providers/auth.service';
 import { ReduxService } from '../../providers/redux.service';
+import { LoadingService } from '../../providers/loading.service';
 import { Subscription } from 'rxjs/Subscription';
 import { INotificationModel } from '../../shared/models';
 
@@ -11,23 +12,22 @@ import { INotificationModel } from '../../shared/models';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoginComponent implements OnDestroy {
-    loading = { on: false };
+    constructor(private _authService: AuthService, private _reduxService: ReduxService, private _loadingService: LoadingService) {}
     model = {
         username: '',
         password: ''
     };
+    isLoading$ = this._loadingService.isLoading$;
     auth$Subscription: Subscription;
 
-    constructor(private _authService: AuthService, private _reduxService: ReduxService) {}
-
     logIn() {
-        this.loading = { on: true };
+        this._loadingService.on();
         this.auth$Subscription = this._authService.logIn(this.model.username, this.model.password).subscribe(
             response => {
-                this.loading = { on: false };
+                this._loadingService.off();
             },
             error => {
-                this.loading = { on: false };
+                this._loadingService.off();
                 const notification: INotificationModel = {
                     message: error,
                     date: Date.now()

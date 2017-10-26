@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import { RouteGuardService } from '../providers/route-guard.service';
 import { RouteResolverService } from '../providers/route-resolver.service';
 import { DashboardComponent } from '../main/dashboard/dashboard.component';
-import { IFrameComponent } from '../shared/iframe/iframe.component';
+import { IFrameComponent } from '../shared/components/iframe/iframe.component';
 
 
 export const INTL_ROUTES: Routes = [
@@ -25,7 +25,7 @@ export const INTL_ROUTES: Routes = [
       isComponent: true,
       isFavorite: true,
       description: 'International Home',
-      iFrameUrl: 'http://de.atlasglobal-dev.nuvasive.com/dashboard',
+      iFrameUrl: 'http://{{country}}.atlasglobal-dev.nuvasive.com/dashboard',
     },
   },
   {
@@ -38,7 +38,7 @@ export const INTL_ROUTES: Routes = [
       isFavorite: true,
       description: 'Place an order',
       help: 'Place an order for sets to meet the requirements of the surgery you want to schedule',
-      iFrameUrl: 'http://de.atlasglobal-dev.nuvasive.com/order/dashboard',
+      iFrameUrl: 'http://{{country}}.atlasglobal-dev.nuvasive.com/order/dashboard',
     },
   },
 ];

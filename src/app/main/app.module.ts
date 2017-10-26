@@ -10,12 +10,29 @@ import { SimpleNotificationsModule } from 'angular2-notifications';
 import * as tokens from '../shared/constants';
 import { ReduxService } from '../providers/redux.service';
 import { AuthService } from '../providers/auth.service';
+import { LoadingService } from '../providers/loading.service';
 import { RouteGuardService } from '../providers/route-guard.service';
 import { RouteResolverService } from '../providers/route-resolver.service';
 import { AuthInterceptor } from '../providers/http.interceptor.service';
 
+//  INJECTION TOKENS
+const TOKEN_PROVIDERS = [
+    {
+        provide: tokens.lsAUTH,
+        useValue: 'ls.IdentityData'
+    }
+];
+
 // routes
 import { ROUTES } from '../routes/app.routes';
+
+// translation
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+// AoT requires an exported function for factories
+export function createTranslateLoader(http: HttpClient) {
+    return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+}
 
 // components
 import { AppComponent } from './app.component';
@@ -31,23 +48,12 @@ import { UserComponent } from './shell/header/user/user.component';
 import { ActionComponent } from './shell/header/action/action.component';
 import { CountrySelectorComponent } from './shell/header/country-selector/country-selector.component';
 import { LanguageSelectorComponent } from './shell/header/language-selector/language-selector.component';
-import { AppsSelectorComponent } from './shell/header/apps-selector/apps-selector.component';
-
-//  INJECTION TOKENS
-const TOKEN_PROVIDERS = [
-    {
-        provide: tokens.lsAUTH,
-        useValue: 'ls.IdentityData'
-    }
-];
-
-// translation
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-// AoT requires an exported function for factories
-export function createTranslateLoader(http: HttpClient) {
-    return new TranslateHttpLoader(http, './assets/i18n/', '.json');
-}
+import { AppSelectorComponent } from './shell/header/app-selector/app-selector.component';
+import { CountryListComponent } from './shell/header/country-list/country-list.component';
+import { AppListComponent } from './shell/header/app-list/app-list.component';
+import { UserMenuComponent } from './shell/header/user-menu/user-menu.component';
+import { LanguageListComponent } from './shell/header/language-list/language-list.component';
+import { NotificationListComponent } from './shell/header/notification-list/notification-list.component';
 
 @NgModule({
     declarations: [
@@ -63,8 +69,13 @@ export function createTranslateLoader(http: HttpClient) {
         CountrySelectorComponent,
         LanguageSelectorComponent,
         NotificationCountComponent,
-        AppsSelectorComponent,
-        ShellComponent
+        AppSelectorComponent,
+        ShellComponent,
+        CountryListComponent,
+        AppListComponent,
+        UserMenuComponent,
+        LanguageListComponent,
+        NotificationListComponent
     ],
     imports: [
         SharedModule,
@@ -87,10 +98,12 @@ export function createTranslateLoader(http: HttpClient) {
         ...TOKEN_PROVIDERS,
         ReduxService,
         AuthService,
+        LoadingService,
         RouteGuardService,
         RouteResolverService,
         [{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }]
     ],
+    entryComponents: [CountryListComponent, AppListComponent, UserMenuComponent, LanguageListComponent, NotificationListComponent],
     bootstrap: [AppComponent]
 })
 export class AppModule {}

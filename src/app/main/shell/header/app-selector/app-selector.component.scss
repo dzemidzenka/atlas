@@ -1,0 +1,12 @@
+@import '../../../../shared/styles/media-breakpoints';
+:host {
+    // display: none;
+    // @include atMobile {
+    //     display: initial;
+    // }
+
+}
+
+span {
+    user-select: none;
+}

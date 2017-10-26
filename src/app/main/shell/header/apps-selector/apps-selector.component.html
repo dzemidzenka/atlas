@@ -1,7 +1,0 @@
-<ng-container *ngIf="state$ | async as state">
-  <ng-container *ngIf="state.isLoggedIn">
-    <atlas-action [menu]="menu" (menuClick)="switchApp($event)" [rightBorder]="state.isLoggedIn">
-      <span>Applications</span>
-    </atlas-action>
-  </ng-container>
-</ng-container>

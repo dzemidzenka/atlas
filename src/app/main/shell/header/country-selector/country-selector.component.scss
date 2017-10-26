@@ -1,0 +1,15 @@
+@import '../../../../shared/styles/media-breakpoints';
+:host {
+    display: none;
+    @include atTablet {
+        display: initial;
+    }
+}
+
+.flag-icon {
+    margin-right: 0.5rem;
+}
+
+span {
+  line-height: 1.5rem;
+}

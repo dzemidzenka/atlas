@@ -5,7 +5,7 @@ export enum ACTION {
     ROUTE = 'ROUTE',
     FAVORITE_TOGGLE = 'FAVORITE_TOGGLE',
     NOTIFICATION = 'NOTIFICATION',
-    NOTIFICATION_CLEAR = 'NOTIFICATION_CLEAR'
+    NOTIFICATION_CLEAR = 'NOTIFICATION_CLEAR',
 }
 
 // valid 2char country codes at https://www.iso.org/obp/ui/#search

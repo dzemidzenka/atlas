@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import { RouteGuardService } from '../providers/route-guard.service';
 import { RouteResolverService } from '../providers/route-resolver.service';
 import { DashboardComponent } from '../main/dashboard/dashboard.component';
-import { IFrameComponent } from '../shared/iframe/iframe.component';
+import { IFrameComponent } from '../shared/components/iframe/iframe.component';
 
 
 export const INTL_MANAGE_ROUTES: Routes = [
@@ -24,7 +24,7 @@ export const INTL_MANAGE_ROUTES: Routes = [
     data: {
       isComponent: true,
       description: 'Customer Relationships',
-      iFrameUrl: 'http://de.atlasglobal-dev.nuvasive.com/contact/customers/manage',
+      iFrameUrl: 'http://{{country}}.atlasglobal-dev.nuvasive.com/contact/customers/manage',
     },
   },
   {
@@ -35,7 +35,7 @@ export const INTL_MANAGE_ROUTES: Routes = [
     data: {
       isComponent: true,
       description: 'Product Configuration',
-      iFrameUrl: 'http://de.atlasglobal-dev.nuvasive.com/configurator',
+      iFrameUrl: 'http://{{country}}.atlasglobal-dev.nuvasive.com/configurator',
     },
   },
   {
@@ -46,7 +46,7 @@ export const INTL_MANAGE_ROUTES: Routes = [
     data: {
       isComponent: true,
       description: 'Shipping',
-      iFrameUrl: 'http://de.atlasglobal-dev.nuvasive.com/shippingzones',
+      iFrameUrl: 'http://{{country}}.atlasglobal-dev.nuvasive.com/shippingzones',
     },
   },
   {
@@ -57,7 +57,7 @@ export const INTL_MANAGE_ROUTES: Routes = [
     data: {
       isComponent: true,
       description: 'Warehouse Picking Order',
-      iFrameUrl: 'http://de.atlasglobal-dev.nuvasive.com/inventory/warehouse/pickorder/manage',
+      iFrameUrl: 'http://{{country}}.atlasglobal-dev.nuvasive.com/inventory/warehouse/pickorder/manage',
     },
   },
   {
@@ -68,7 +68,7 @@ export const INTL_MANAGE_ROUTES: Routes = [
     data: {
       isComponent: true,
       description: 'Users',
-      iFrameUrl: 'http://de.atlasglobal-dev.nuvasive.com/user/manage',
+      iFrameUrl: 'http://{{country}}.atlasglobal-dev.nuvasive.com/user/manage',
     },
   },
   {
@@ -79,7 +79,7 @@ export const INTL_MANAGE_ROUTES: Routes = [
     data: {
       isComponent: true,
       description: 'Localization',
-      iFrameUrl: 'http://de.atlasglobal-dev.nuvasive.com/translation/manage',
+      iFrameUrl: 'http://{{country}}.atlasglobal-dev.nuvasive.com/translation/manage',
     },
   },
   {
@@ -90,7 +90,7 @@ export const INTL_MANAGE_ROUTES: Routes = [
     data: {
       isComponent: true,
       description: 'subscriptions',
-      iFrameUrl: 'http://de.atlasglobal-dev.nuvasive.com/user/subscription',
+      iFrameUrl: 'http://{{country}}.atlasglobal-dev.nuvasive.com/user/subscription',
     },
   },
 ];

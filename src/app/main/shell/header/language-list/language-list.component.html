@@ -1,0 +1,5 @@
+<ul class="header-action-menu">
+  <li *ngFor="let language of languages" (click)="switchLanguage(language)">
+    <span>{{ ('language.' + language) | translate }}</span>
+  </li>
+</ul>

@@ -1,0 +1,7 @@
+<ul *ngIf="countries$ | async as countries" class="header-action-menu">
+  <li *ngFor="let country of countries" (click)="switchCountry(country)">
+    <span class="flag-icon flag-icon-{{ country }}"></span>
+    <span>{{ ('country.' + country) | translate }}</span>
+  </li>
+</ul>
+

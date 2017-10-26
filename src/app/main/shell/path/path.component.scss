@@ -1,8 +1,13 @@
-main{
-  display: flex;
-  flex-wrap: wrap;
-  background-color: var(--main-bg-color);
-  color: var(--font-color);
-  padding-top: 10px;
-  padding-bottom: 10px;
+@import '../../../shared/styles/media-breakpoints';
+:host {
+    display: none;
+    @include atDesktop {
+        display: initial;
+        background-color: var(--main-bg-color);
+        color: var(--font-color);
+    }
+}
+
+main {
+    display: flex;
 }

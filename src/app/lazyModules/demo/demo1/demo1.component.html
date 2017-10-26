@@ -1,1 +1,16 @@
-DEMO1 COMPONENT
+<button cdkOverlayOrigin #trigger="cdkOverlayOrigin" type="button" (click)="isOpen = !isOpen">Click</button>
+
+
+
+<ng-template cdkConnectedOverlay [cdkConnectedOverlayOrigin]="trigger" [cdkConnectedOverlayOpen]="isOpen">
+  <main></main>
+</ng-template>
+
+
+<div class="container">
+  <div #test class="test"></div>
+</div>
+
+
+<hr>
+<ng-container *ngComponentOutlet="componentOutlet"></ng-container>

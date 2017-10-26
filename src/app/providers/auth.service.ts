@@ -24,6 +24,7 @@ export class AuthService {
                 .map(this._userFromAuthResponse)
                 .do(user => this._reduxService.actionLogIn(user))
                 .catch((errorResponse: HttpErrorResponse) => {
+                    console.log('HTTP AUTH ERROR', errorResponse);
                     if (errorResponse.ok) {
                         return Observable.throw(JSON.parse(errorResponse['error'])['error_description']);
                     } else {

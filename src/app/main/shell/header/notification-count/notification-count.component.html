@@ -1,6 +1,8 @@
-<div #content class="notification-content">
-  <ng-content></ng-content>
-</div>
-<div *ngIf="show" class="notification-count">
-  {{notificationsDisplay}}
-</div>
+<atlas-action *ngIf="notifications > 0" [componentRef]="componentRef">
+  <div #content class="notification-content">
+    <mat-icon>notifications</mat-icon>
+  </div>
+  <div class="notification-count">
+    {{notificationsDisplay}}
+  </div>
+</atlas-action>

@@ -96,6 +96,7 @@ export class ReduxService {
             if (!isEmpty(action.user)) {
                 state.user = action.user;
                 state.isLoggedIn = true;
+
                 const url = window.location.pathname + window.location.search;
                 const urlTree = this._router.parseUrl(url);
                 const urlParams = url
@@ -189,6 +190,7 @@ export class ReduxService {
         this._reducers[models.ACTION.NOTIFICATION_CLEAR] = (state: models.IStateModel, action: models.IActionModel) => {
             state.notifications = [];
         };
+
 
         this._reducers[models.ACTION.FAVORITE_TOGGLE] = (state: models.IStateModel, action: models.IActionModel) => {
             state.menu.filter(menu => menu.id === action.menuItem.id).map(menu => (menu.isFavorite = !menu.isFavorite));

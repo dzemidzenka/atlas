@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import { RouteGuardService } from '../providers/route-guard.service';
 import { RouteResolverService } from '../providers/route-resolver.service';
 import { DashboardComponent } from '../main/dashboard/dashboard.component';
-import { IFrameComponent } from '../shared/iframe/iframe.component';
+import { IFrameComponent } from '../shared/components/iframe/iframe.component';
 
 
 export const INTL_REPORTS_ROUTES: Routes = [
@@ -24,7 +24,7 @@ export const INTL_REPORTS_ROUTES: Routes = [
     data: {
       isComponent: true,
       description: 'Orders Report',
-      iFrameUrl: 'http://de.atlasglobal-dev.nuvasive.com/report',
+      iFrameUrl: 'http://{{country}}.atlasglobal-dev.nuvasive.com/report',
     },
   },
   {
@@ -35,7 +35,7 @@ export const INTL_REPORTS_ROUTES: Routes = [
     data: {
       isComponent: true,
       description: 'Inventory Report',
-      iFrameUrl: 'http://de.atlasglobal-dev.nuvasive.com/Inventoryreport',
+      iFrameUrl: 'http://{{country}}.atlasglobal-dev.nuvasive.com/Inventoryreport',
     },
   },
   {
@@ -46,7 +46,7 @@ export const INTL_REPORTS_ROUTES: Routes = [
     data: {
       isComponent: true,
       description: 'Customer Relationships Report',
-      iFrameUrl: 'http://de.atlasglobal-dev.nuvasive.com/customerrelationshipsreport',
+      iFrameUrl: 'http://{{country}}.atlasglobal-dev.nuvasive.com/customerrelationshipsreport',
     },
   },
 ];

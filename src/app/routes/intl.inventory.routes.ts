@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import { RouteGuardService } from '../providers/route-guard.service';
 import { RouteResolverService } from '../providers/route-resolver.service';
 import { DashboardComponent } from '../main/dashboard/dashboard.component';
-import { IFrameComponent } from '../shared/iframe/iframe.component';
+import { IFrameComponent } from '../shared/components/iframe/iframe.component';
 
 
 export const INTL_INVENTORY_ROUTES: Routes = [
@@ -24,7 +24,7 @@ export const INTL_INVENTORY_ROUTES: Routes = [
     data: {
       isComponent: true,
       description: 'Constrained Materials',
-      iFrameUrl: 'http://de.atlasglobal-dev.nuvasive.com/inventory/constrained',
+      iFrameUrl: 'http://{{country}}.atlasglobal-dev.nuvasive.com/inventory/constrained',
     },
   },
   {
@@ -35,7 +35,7 @@ export const INTL_INVENTORY_ROUTES: Routes = [
     data: {
       isComponent: true,
       description: 'set inventory',
-      iFrameUrl: 'http://de.atlasglobal-dev.nuvasive.com/inventory/allocation/current',
+      iFrameUrl: 'http://{{country}}.atlasglobal-dev.nuvasive.com/inventory/allocation/current',
     },
   },
   {
@@ -46,7 +46,7 @@ export const INTL_INVENTORY_ROUTES: Routes = [
     data: {
       isComponent: true,
       description: 'Shipping',
-      iFrameUrl: 'http://de.atlasglobal-dev.nuvasive.com/inventory/shipping',
+      iFrameUrl: 'http://{{country}}.atlasglobal-dev.nuvasive.com/inventory/shipping',
     },
   },
   {
@@ -57,7 +57,7 @@ export const INTL_INVENTORY_ROUTES: Routes = [
     data: {
       isComponent: true,
       description: 'Billing/Extras',
-      iFrameUrl: 'http://de.atlasglobal-dev.nuvasive.com/inventory/history',
+      iFrameUrl: 'http://{{country}}.atlasglobal-dev.nuvasive.com/inventory/history',
     },
   },
   {
@@ -68,7 +68,7 @@ export const INTL_INVENTORY_ROUTES: Routes = [
     data: {
       isComponent: true,
       description: 'Sub To Sub',
-      iFrameUrl: 'http://de.atlasglobal-dev.nuvasive.com/inventory/transferRequest/dashboard',
+      iFrameUrl: 'http://{{country}}.atlasglobal-dev.nuvasive.com/inventory/transferRequest/dashboard',
     },
   },
 ];

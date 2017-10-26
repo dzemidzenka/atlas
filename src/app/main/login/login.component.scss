@@ -1,29 +1,43 @@
+@import '../../shared/styles/media-breakpoints';
 :host {
     width: 100vw;
     height: 70vh;
     display: flex;
     align-items: center;
     justify-content: center;
+    color: var(--login-font-color);
 }
 
-// .animated {
-//   animation-duration: 1s;
-//   animation-fill-mode: both;
-// }
+[mat-button] {
+    background-color: var(--header-bg-color);
+}
 
+main {
+    flex: 0 0 90%;
+    max-width: 500px;
+    @include atTablet {
+      flex: 0 0 500px;
+    }
+}
 
-// @keyframes zoomIn {
-//   from {
-//     opacity: 0;
-//     transform: scale3d(.3, .3, .3);
-//   }
+.form-control {
+    display: block;
+    width: 100%;
+    padding: .5rem .75rem;
+    font-size: 1rem;
+    line-height: 1.25;
+    background-clip: padding-box;
+    border: 1px solid rgba(0, 0, 0, .15);
+    border-radius: .25rem;
+    outline: none;
+    transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+}
 
-//   50% {
-//     opacity: 1;
-//   }
-// }
+.form-group {
+    margin-bottom: 1rem;
+}
 
-// .zoomIn {
-//   animation-name: zoomIn;
-// }
-
+label {
+    display: inline-block;
+    margin-bottom: .5rem;
+}

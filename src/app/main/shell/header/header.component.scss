@@ -1,3 +1,4 @@
+@import '../../../shared/styles/media-breakpoints';
 .logo-img {
     height: 50px;
     pointer-events: none;
@@ -53,13 +54,18 @@ header {
     max-height: var(--height);
     background-color: var(--header-bg-color);
     color: var(--font-color);
-    justify-content: center;
+    justify-content: start;
     padding-top: 5px;
     padding-bottom: 5px;
+    @include atMobile {
+        justify-content: center;
+    }
 }
 
-.menuIcon{
-  font-size: 2rem;
+.menu {
+    mat-icon {
+        font-size: 2rem;
+    }
 }
 
 .spacer {
@@ -69,12 +75,14 @@ header {
 .logo {
     margin-left: 1rem;
     margin-right: 2rem;
-    @media (max-width: 650px) {
-        display: none;
+    display: none;
+    @include atDesktop {
+        display: initial;
     }
 }
 
-
-.rightMarginWhenNotLoggedIn{
-  margin-right: 1em;
+.rightMarginWhenNotLoggedIn {
+    margin-right: 1em;
 }
+
+

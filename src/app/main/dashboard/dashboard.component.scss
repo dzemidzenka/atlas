@@ -1,42 +1,60 @@
+@import '../../shared/styles/media-breakpoints';
 nav {
-  display: flex;
-  justify-content: start;
-  align-content: start;
-  flex-wrap: wrap;
-  height: 100%;
-  width: 100%;
-  overflow: auto;
-  overflow-y: overlay; //Chrome only
+    display: flex;
+    justify-content: start;
+    align-content: start;
+    flex-wrap: wrap;
+    height: 100%;
+    width: 100%;
+    overflow: auto;
+    overflow-y: overlay; //Chrome only
 }
 
 .card {
-  width: 170px;
-  height: 170px;
-  margin-left: 5px;
-  margin-right: 5px;
-  margin-bottom: 10px;
-  border-top: 2px solid transparent;
-  border-radius: 10px;
-  font-size: 1em;
-  position: relative;
-  background-color: var(--tile-bg-color);
-  &:hover {
-      border-top: 2px solid var(--tile-active);
-  }
+    width: 170px;
+    height: 170px;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-bottom: 10px;
+    border-top: 2px solid transparent;
+    border-radius: 10px;
+    font-size: 1em;
+    position: relative;
+    background-color: var(--tile-bg-color);
+    &:hover {
+        border-top: 2px solid var(--tile-active);
+    }
+    * {
+        color: var(--font-color);
+    }
 }
 
-.card * {
-  color: var(--font-color);
+header {
+    padding: 10px;
 }
 
-.folder {
-  position: absolute;
-  top: 30%;
-  // left: 10px;
+.folder-header {
+    border-bottom: 1px solid var(--tile-footer-border);
+    text-transform: uppercase;
 }
 
-.folder-icon {
-  font-size: 8em;
+.folder-footer {
+    position: absolute;
+    top: 30%;
+    mat-icon {
+        font-size: 8em;
+    }
 }
 
-.component-icon {}
+.component_footer {
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    padding: 10px;
+    border-top: 1px solid var(--tile-footer-border);
+}
+
+mat-icon {
+    cursor: pointer;
+    padding-right: 30px;
+}

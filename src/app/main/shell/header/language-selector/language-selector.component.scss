@@ -1,0 +1,7 @@
+@import '../../../../shared/styles/media-breakpoints';
+:host {
+    display: none;
+    @include atTablet {
+        display: initial;
+    }
+}

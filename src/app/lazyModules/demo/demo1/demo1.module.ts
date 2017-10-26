@@ -5,6 +5,8 @@ import { SharedModule } from '../../../shared/shared.module';
 
 import { Demo1Component } from './demo1.component';
 
+import { TestComponent } from './test/test.component';
+
 
 const ROUTES: Routes = [
   {
@@ -21,7 +23,9 @@ const ROUTES: Routes = [
     RouterModule.forChild(ROUTES),
     TranslateModule.forChild(),
   ],
-  declarations: [Demo1Component],
-
+  declarations: [Demo1Component, TestComponent],
+  entryComponents: [
+    TestComponent
+  ]
 })
 export class Demo1Module { }

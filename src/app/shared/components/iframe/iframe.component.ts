@@ -1,7 +1,7 @@
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef, AfterViewInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { ReduxService } from '../../providers/redux.service';
-import { ACTION } from '../../shared/models';
+import { ReduxService } from '../../../providers/redux.service';
+import { ACTION } from '../../../shared/models';
 import { Observable } from 'rxjs/Observable';
 
 @Component({
@@ -10,21 +10,18 @@ import { Observable } from 'rxjs/Observable';
     styleUrls: ['./iframe.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class IFrameComponent implements AfterViewInit {
-    constructor(private _reduxService: ReduxService, private _sanitizer: DomSanitizer, private _cdr: ChangeDetectorRef) {}
+export class IFrameComponent {
+    constructor(private _reduxService: ReduxService, private _sanitizer: DomSanitizer) {}
 
-    loading$ = Observable.of(true).delay(20 * 1000);
+    // loading$ = Observable.of(true).delay(20 * 1000);
 
     iFrameUrl$ = this._reduxService.state$
         .filter(state => state.action.op === ACTION.ROUTE)
         .filter(state => state.hasOwnProperty('menuItemCurrent'))
         .filter(state => state.menuItemCurrent.hasOwnProperty('iFrameUrl'))
         .filter(state => (state.menuItemCurrent.iFrameUrl ? true : false))
-        .map(state => this._sanitizer.bypassSecurityTrustResourceUrl(state.menuItemCurrent.iFrameUrl));
-
-    ngAfterViewInit() {
-        // this._cdr.detach();
-    }
+        .map(state => state.menuItemCurrent.iFrameUrl.replace('{{country}}', state.country))
+        .map(iFrameUrl => this._sanitizer.bypassSecurityTrustResourceUrl(iFrameUrl));
 
     onLoad() {
         const iframe = document.getElementById('iframe1');

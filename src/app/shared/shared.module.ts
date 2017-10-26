@@ -47,16 +47,18 @@ import {
     // MatSliderModule,
     // MatSlideToggleModule,
     // MatToolbarModule,
-    // MatTooltipModule
+    MatTooltipModule
 } from '@angular/material';
-// import { MegaMenuModule } from 'primeng/primeng';
-import { IFrameComponent } from './iframe/iframe.component';
+
+import { OverlayModule } from '@angular/cdk/overlay';
+
+import { IFrameComponent } from './components/iframe/iframe.component';
 
 const MODULES = [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    // MegaMenuModule,
+    OverlayModule,
 
     MatAutocompleteModule,
     MatButtonModule,
@@ -81,7 +83,7 @@ const MODULES = [
     // MatSliderModule,
     // MatSlideToggleModule,
     // MatToolbarModule,
-    // MatTooltipModule
+    MatTooltipModule
 ];
 
 const COMPONENTS = [IFrameComponent];

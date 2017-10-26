@@ -1,34 +1,46 @@
+@import '../../shared/styles/media-breakpoints';
 .page {
-  width: 100vw;
-  height: 100vh;
-  display: grid;
-  position: fixed;
-  grid-template-columns: 1fr;
-  grid-template-rows: auto auto 1fr;
-  grid-template-areas: "header" "path" "content";
-  background-color: var(--main-bg-color);
+    width: 100vw;
+    height: 100vh;
+    display: grid;
+    position: fixed;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto 1fr;
+    grid-template-areas: "header" "path" "content";
+    background-color: var(--main-bg-color);
 }
 
 atlas-header {
-  grid-area: header;
+    grid-area: header;
 }
 
 atlas-path {
-  grid-area: path;
+    grid-area: path;
 }
 
 router-outlet,
 atlas-login {
-  grid-area: content;
+    grid-area: content;
 }
 
 mat-sidenav-container,
 mat-sidenav,
 router-outlet {
-  background-color: inherit;
+    background-color: inherit;
 }
 
 mat-sidenav {
-  background-color: inherit;
-  width: 200px;
+    background-color: inherit;
+    width: 200px;
+}
+
+.path_tcode {
+    display: flex;
+    align-items: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    justify-content: space-around;
+    @include atDesktop {
+        justify-content: initial;
+    }
 }

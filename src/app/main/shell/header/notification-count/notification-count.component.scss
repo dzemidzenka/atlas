@@ -1,3 +1,4 @@
+@import '../../../../shared/styles/media-breakpoints';
 $td-notification-size: 20px !default;
 $td-notification-content-size: 40px !default;
 :host {
@@ -6,6 +7,10 @@ $td-notification-content-size: 40px !default;
     text-align: center;
     min-width: $td-notification-size;
     height: $td-notification-content-size;
+    display: none;
+    @include atTablet {
+        display: initial;
+    }
 }
 
 .notification-count {
@@ -29,3 +34,12 @@ $td-notification-content-size: 40px !default;
         line-height: $td-notification-content-size;
     }
 }
+
+// :host::ng-deep atlas-notification-count-panel {
+//     display: none;
+// }
+
+// :host:hover::ng-deep atlas-notification-count-panel {
+//     display: block;
+//     position: absolute;
+// }

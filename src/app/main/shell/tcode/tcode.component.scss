@@ -1,22 +1,27 @@
+@import '../../../shared/styles/media-breakpoints';
 :host {
     margin-left: 1em;
     margin-right: 2em;
 }
 
 input {
-    width: 500px;
+    width: 90vw;
     max-width: 90vw;
     height: 2.5rem;
     font-size: 1rem;
+    color: var(--tcode-placeholder-color);
     box-sizing: border-box;
-    padding-left: 0.5rem;
     outline: none;
     border: 1px solid #a1a1e5;
     background-color: lightyellow;
-    background-color: var(--tcode-bg-color);
-
-    // font-family: 'FontAwesome';
-    color: white;
+    background-color: var(--tcode-bg-color); // font-family: 'FontAwesome';
+    @include atTablet {
+      max-width: 500px;
+    }
+    @include atDesktop {
+        padding-left: 0.5rem;
+        width: 500px;
+    }
     &:focus {
         background-color: lightyellow;
         font-size: 1.5rem;
