@@ -1,12 +1,12 @@
 <header *ngIf="state$ | async as state">
-  <atlas-action *ngIf="state.isLoggedIn" class="menu">
-    <mat-icon (click)="onSidebarToggle()">menu</mat-icon>
+  <atlas-action>
+    <i (click)="onSidebarToggle()" class="material-icons" style="font-size: 200%">menu</i>
   </atlas-action>
+
   <atlas-action [rightBorder]="false">
-    <img class="logo" src="../../../../assets/atlas-logo.png" alt="logo">
+    <img src="../../../../assets/atlas-logo.png" alt="logo">
   </atlas-action>
   <span class="spacer"></span>
-
 
 
   <atlas-country-selector></atlas-country-selector>
@@ -16,10 +16,7 @@
 
   <ng-container *ngIf="state.isLoggedIn">
     <atlas-app-selector></atlas-app-selector>
-
-    <atlas-notification-count [notifications]="state.notifications.length">
-    </atlas-notification-count>
-
+    <atlas-notification-count [notifications]="state.notifications.length"></atlas-notification-count>
     <atlas-user [name]="('dashboard.hello' | translate:{value: state.user.nameDisplay + '!'})" picture="../../../../../assets/steve.jpg"></atlas-user>
   </ng-container>
 </header>

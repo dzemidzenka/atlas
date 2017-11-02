@@ -5,7 +5,7 @@ export enum ACTION {
     ROUTE = 'ROUTE',
     FAVORITE_TOGGLE = 'FAVORITE_TOGGLE',
     NOTIFICATION = 'NOTIFICATION',
-    NOTIFICATION_CLEAR = 'NOTIFICATION_CLEAR',
+    NOTIFICATION_CLEAR = 'NOTIFICATION_CLEAR'
 }
 
 // valid 2char country codes at https://www.iso.org/obp/ui/#search
@@ -31,12 +31,11 @@ export enum VIEW {
     RECENT = 'recent'
 }
 
-
-
 export interface IActionModel {
-    op: ACTION;
+    type: ACTION;
     date?: number;
     user?: IUserModel;
+    rememberMe?: boolean;
     url?: string;
     urlParams?: Array<string>;
     queryParams?: Array<string>;
@@ -44,7 +43,7 @@ export interface IActionModel {
     language?: LANGUAGE;
     menuItem?: IMenuModel;
     notifications?: Array<INotificationModel>;
-  }
+}
 
 export interface IStateModel {
     action: IActionModel;

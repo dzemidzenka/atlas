@@ -1,18 +1,18 @@
 <nav *ngIf="state$ | async as state">
-  <section class="card" *ngFor="let item of state.menu" (click)="onNavigate(item.urlParams)">
+  <section class="card" *ngFor="let item of state.menu; trackBy: trackByItemId" (click)="onNavigate(item.urlParams)">
     <ng-container *ngIf="item.isComponent">
       <header> {{ item.description | titlecase }} </header>
       <div class="component_footer">
-        <mat-icon *ngIf="item.isFavorite" (click)="onFavoriteToggle(item)">favorite</mat-icon>
-        <mat-icon *ngIf="!item.isFavorite" (click)="onFavoriteToggle(item)">favorite_border</mat-icon>
-        <mat-icon *ngIf="item.help" [matTooltip]="item.help">help</mat-icon>
+        <i class="material-icons" *ngIf="item.isFavorite" (click)="onFavoriteToggle(item); $event.stopPropagation()">favorite</i>
+        <i class="material-icons" *ngIf="!item.isFavorite" (click)="onFavoriteToggle(item); $event.stopPropagation()">favorite_border</i>
+        <i class="material-icons" *ngIf="item.help" [matTooltip]="item.help">help</i>
       </div>
     </ng-container>
 
     <ng-container *ngIf="!item.isComponent">
       <header class="folder-header">{{ item.description }}</header>
       <div class="folder-footer">
-        <mat-icon>folder</mat-icon>
+        <i class="material-icons" style="font-size: 800%">folder</i>
       </div>
     </ng-container>
   </section>

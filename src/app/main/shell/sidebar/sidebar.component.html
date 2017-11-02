@@ -1,4 +1,4 @@
 <atlas-app-list></atlas-app-list>
-<atlas-user-menu></atlas-user-menu>
+<atlas-user-menu *ngIf="isLoggedIn$ | async"></atlas-user-menu>
 <atlas-country-list></atlas-country-list>
 <atlas-language-list></atlas-language-list>

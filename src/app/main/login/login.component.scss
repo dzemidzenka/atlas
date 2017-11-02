@@ -1,22 +1,24 @@
 @import '../../shared/styles/media-breakpoints';
+@import '../../shared/styles/theme';
 :host {
     width: 100vw;
     height: 70vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--login-font-color);
+    color: $login-font-color;
+    user-select: none;
 }
 
 [mat-button] {
-    background-color: var(--header-bg-color);
+    background-color: $header-bg-color;
 }
 
 main {
     flex: 0 0 90%;
     max-width: 500px;
     @include atTablet {
-      flex: 0 0 500px;
+        flex: 0 0 500px;
     }
 }
 

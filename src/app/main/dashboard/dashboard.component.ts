@@ -25,4 +25,8 @@ export class DashboardComponent {
     onFavoriteToggle(item: IMenuModel) {
         this._reduxService.actionFavoriteToggle(item);
     }
+
+    trackByItemId(index, item: IMenuModel) {
+        return item.id;
+    }
 }

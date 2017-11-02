@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
@@ -15,40 +15,54 @@ import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/delay';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/auditTime';
+import 'rxjs/add/operator/debounceTime';
+import 'rxjs/add/operator/distinctUntilChanged';
+import 'rxjs/add/operator/concatMap';
+import 'rxjs/add/operator/shareReplay';
 
 import 'rxjs/add/observable/of';
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/observable/interval';
 import 'rxjs/add/observable/fromEvent';
 
+import { ReduxService } from '../providers/redux.service';
+import { LoadingService } from '../providers/loading.service';
 
-
-import {
-    MatAutocompleteModule,
-    MatButtonModule,
-    // MatButtonToggleModule,
-    // MatCardModule,
-    // MatCheckboxModule,
-    // MatChipsModule,
-    // MatDatepickerModule,
-    // MatDialogModule,
-    // MatExpansionModule,
-    // MatFormFieldModule,
-    MatIconModule,
-    // MatInputModule,
-    // MatListModule,
-    MatMenuModule,
-    // MatProgressBarModule,
-    MatProgressSpinnerModule,
-    // MatRadioModule,
-    // MatSelectModule,
-    MatSidenavModule,
-    // MatSnackBarModule,
-    // MatSliderModule,
-    // MatSlideToggleModule,
-    // MatToolbarModule,
-    MatTooltipModule
-} from '@angular/material';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatTabsModule } from '@angular/material/tabs';
+// import {
+//     MatAutocompleteModule,
+//     MatButtonModule,
+//     // MatButtonToggleModule,
+//     // MatCardModule,
+//     MatCheckboxModule,
+//     // MatChipsModule,
+//     // MatDatepickerModule,
+//     // MatDialogModule,
+//     // MatExpansionModule,
+//     // MatFormFieldModule,
+//     // MatIconModule,
+//     // MatInputModule,
+//     // MatListModule,
+//     // MatMenuModule,
+//     MatProgressBarModule,
+//     MatProgressSpinnerModule,
+//     // MatRadioModule,
+//     // MatSelectModule,
+//     MatSidenavModule,
+//     // MatSnackBarModule,
+//     // MatSliderModule,
+//     // MatSlideToggleModule,
+//     // MatToolbarModule,
+//     MatTooltipModule
+// } from '@angular/material';
 
 import { OverlayModule } from '@angular/cdk/overlay';
 
@@ -64,17 +78,17 @@ const MODULES = [
     MatButtonModule,
     // MatButtonToggleModule,
     // MatCardModule,
-    // MatCheckboxModule,
+    MatCheckboxModule,
     // MatChipsModule,
     // MatDatepickerModule,
     // MatDialogModule,
-    // MatExpansionModule,
+    MatExpansionModule,
     // MatFormFieldModule,
-    MatIconModule,
+    // MatIconModule,
     // MatInputModule,
     // MatListModule,
-    MatMenuModule,
-    // MatProgressBarModule,
+    // MatMenuModule,
+    MatProgressBarModule,
     MatProgressSpinnerModule,
     // MatRadioModule,
     // MatSelectModule,
@@ -83,6 +97,7 @@ const MODULES = [
     // MatSliderModule,
     // MatSlideToggleModule,
     // MatToolbarModule,
+    MatTabsModule,
     MatTooltipModule
 ];
 
@@ -93,4 +108,11 @@ const COMPONENTS = [IFrameComponent];
     imports: [...MODULES],
     exports: [...MODULES, ...COMPONENTS]
 })
-export class SharedModule {}
+export class SharedModule {
+    static forRoot(): ModuleWithProviders {
+        return {
+            ngModule: SharedModule,
+            providers: [ReduxService, LoadingService]
+        };
+    }
+}

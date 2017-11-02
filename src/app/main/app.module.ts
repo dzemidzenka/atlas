@@ -8,9 +8,6 @@ import { SimpleNotificationsModule } from 'angular2-notifications';
 
 // providers
 import * as tokens from '../shared/constants';
-import { ReduxService } from '../providers/redux.service';
-import { AuthService } from '../providers/auth.service';
-import { LoadingService } from '../providers/loading.service';
 import { RouteGuardService } from '../providers/route-guard.service';
 import { RouteResolverService } from '../providers/route-resolver.service';
 import { AuthInterceptor } from '../providers/http.interceptor.service';
@@ -54,6 +51,7 @@ import { AppListComponent } from './shell/header/app-list/app-list.component';
 import { UserMenuComponent } from './shell/header/user-menu/user-menu.component';
 import { LanguageListComponent } from './shell/header/language-list/language-list.component';
 import { NotificationListComponent } from './shell/header/notification-list/notification-list.component';
+import { ReLoginComponent } from './login/re-login/re-login.component';
 
 @NgModule({
     declarations: [
@@ -75,10 +73,11 @@ import { NotificationListComponent } from './shell/header/notification-list/noti
         AppListComponent,
         UserMenuComponent,
         LanguageListComponent,
-        NotificationListComponent
+        NotificationListComponent,
+        ReLoginComponent
     ],
     imports: [
-        SharedModule,
+        SharedModule.forRoot(),
         BrowserAnimationsModule,
         // NoopAnimationsModule,
         HttpClientModule,
@@ -96,14 +95,17 @@ import { NotificationListComponent } from './shell/header/notification-list/noti
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     providers: [
         ...TOKEN_PROVIDERS,
-        ReduxService,
-        AuthService,
-        LoadingService,
         RouteGuardService,
         RouteResolverService,
         [{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }]
     ],
-    entryComponents: [CountryListComponent, AppListComponent, UserMenuComponent, LanguageListComponent, NotificationListComponent],
+    entryComponents: [
+        CountryListComponent,
+        AppListComponent,
+        UserMenuComponent,
+        LanguageListComponent,
+        NotificationListComponent,
+    ],
     bootstrap: [AppComponent]
 })
 export class AppModule {}

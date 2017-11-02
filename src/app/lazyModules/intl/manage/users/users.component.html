@@ -1,0 +1,55 @@
+<mat-tab-group (selectedTabChange)="onSelectedTabChange($event)">
+  <mat-tab label="Atlas Users">
+    <input *ngIf="users$ | async as users" placeholder='User search - {{ users.length }} users found' aria-label="user" [matAutocomplete]="auto" [formControl]="inputCtrl"
+      (keyup.enter)="onSelect(user)">
+
+    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSelect($event.option.value);">
+      <mat-option *ngFor="let user of filteredUser$ | async" [value]="user.name">
+        <span>{{ user.name | uppercase}}</span>
+      </mat-option>
+    </mat-autocomplete>
+
+    <mat-accordion displayMode="flat">
+      <mat-expansion-panel *ngFor="let user of users">
+        <mat-expansion-panel-header>
+          <mat-panel-title (click)="onClick(user)">
+            <strong>{{ user.name }}</strong>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <pre>{{ userPartial | json }}</pre>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </mat-tab>
+
+  <mat-tab label="Active Directory Users">
+    <input placeholder='Active directory search' aria-label="user" [matAutocomplete]="auto1" [formControl]="inputCtrlActiveDir" (keyup.enter)="onSelectActiveDir($event.target.value)">
+
+    <mat-autocomplete #auto1="matAutocomplete" (optionSelected)="onSelectActiveDir($event.option.value);">
+      <mat-option *ngFor="let user of filteredUsersActiveDir$ | async" [value]="user.name">
+        <span>{{ user.name | uppercase}}</span>
+      </mat-option>
+    </mat-autocomplete>
+
+    <mat-accordion displayMode="flat">
+      <mat-expansion-panel *ngFor="let user of usersActiveDir$ | async">
+        <mat-expansion-panel-header>
+          <mat-panel-title (click)="onClick(user)">
+            <strong>{{ user.name }}</strong>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <pre>{{ userPartial | json }}</pre>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </mat-tab>
+</mat-tab-group>
+
+
+
+<mat-tab-group *ngIf="user" class="user-data-tabs">
+  <mat-tab label="Display">
+    <pre class="user-data">{{ user | json }}</pre>
+  </mat-tab>
+  <mat-tab label="Change">Content 2</mat-tab>
+</mat-tab-group>

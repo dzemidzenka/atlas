@@ -1,5 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
-import { AuthService } from '../../providers/auth.service';
+import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
 import { ReduxService } from '../../providers/redux.service';
 import { LoadingService } from '../../providers/loading.service';
 import { Subscription } from 'rxjs/Subscription';
@@ -11,35 +10,47 @@ import { INotificationModel } from '../../shared/models';
     styleUrls: ['./login.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LoginComponent implements OnDestroy {
-    constructor(private _authService: AuthService, private _reduxService: ReduxService, private _loadingService: LoadingService) {}
+export class LoginComponent implements OnInit, OnDestroy {
+    constructor(public _reduxService: ReduxService, private _loadingService: LoadingService) {}
     model = {
         username: '',
-        password: ''
+        password: '',
+        rememberMe: false
     };
     isLoading$ = this._loadingService.isLoading$;
-    auth$Subscription: Subscription;
+    logIn$Subscription: Subscription;
+
+    ngOnInit() {
+        const rememberMe = JSON.parse(localStorage.getItem('rememberMe'));
+        if (rememberMe) {
+            this.model.rememberMe = rememberMe.rememberMe;
+        }
+    }
 
     logIn() {
         this._loadingService.on();
-        this.auth$Subscription = this._authService.logIn(this.model.username, this.model.password).subscribe(
-            response => {
-                this._loadingService.off();
-            },
-            error => {
-                this._loadingService.off();
-                const notification: INotificationModel = {
-                    message: error,
-                    date: Date.now()
-                };
-                this._reduxService.actionNotify([notification]);
-            }
-        );
+        localStorage.setItem('rememberMe', JSON.stringify({ rememberMe: this.model.rememberMe }));
+
+        this.logIn$Subscription = this._reduxService
+            .actionLogIn(this.model.username, this.model.password, this.model.rememberMe)
+            .subscribe(
+                () => {
+                    this._loadingService.off();
+                },
+                error => {
+                    this._loadingService.off();
+                    const notification: INotificationModel = {
+                        message: error,
+                        date: Date.now()
+                    };
+                    this._reduxService.actionNotify([notification]);
+                }
+            );
     }
 
     ngOnDestroy() {
-        if (this.auth$Subscription) {
-            this.auth$Subscription.unsubscribe();
+        if (this.logIn$Subscription) {
+            this.logIn$Subscription.unsubscribe();
         }
     }
 }

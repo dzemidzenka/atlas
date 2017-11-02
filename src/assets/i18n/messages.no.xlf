@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="en" datatype="plaintext" original="ng2.template">
+    <body>
+      <trans-unit id="0cf771c6b768e91650d7f802d584812f307b1f3a" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text="{{ &apos;Login&apos; | translate }}"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app\main\login\login.component.ts</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

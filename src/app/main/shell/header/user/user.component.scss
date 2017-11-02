@@ -1,4 +1,6 @@
 @import '../../../../shared/styles/media-breakpoints';
+@import '../../../../shared/styles/theme';
+
 @mixin center-horizontal-absolute {
     position: absolute;
     transform: translate(-50%, 0);
@@ -7,8 +9,6 @@
 
 :host {
     display: flex;
-    --color-bg: #3d3780;
-    --color-fg-highlight: #00f9a6;
     display: none;
     @include atMobile {
         display: initial;
@@ -38,11 +38,11 @@
     }
     height: 40px;
     width: 40px;
-    background: var(--color-fg);
-    border: solid 2px var(--color-fg-highlight);
+    background: $main-bg-color;
+    border: solid 2px $header-user-picture-border-color;
     font-size: 80%;
     &.background {
-        color: var(--color-bg);
+        color: $main-bg-color;
     }
 }
 

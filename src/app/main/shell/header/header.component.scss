@@ -1,16 +1,30 @@
 @import '../../../shared/styles/media-breakpoints';
-.logo-img {
-    height: 50px;
-    pointer-events: none;
+@import '../../../shared/styles/theme';
+* {
+    user-select: none;
 }
 
-.tcode {
+header {
     display: flex;
-    align-items: center;
+    height: $header-height;
+    min-height: $header-height;
+    max-height: $header-height;
+    background-color: $header-bg-color;
+    color: $font-color;
+    justify-content: start;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    @include atMobile {
+        justify-content: center;
+    }
 }
 
-.text {
-    color: nb-theme(color-fg);
+.spacer {
+    flex: 1 1 auto;
+}
+
+.rightMarginWhenNotLoggedIn {
+    margin-right: 5rem;
 }
 
 // p-megaMenu::ng-deep div.ui-megamenu {
@@ -46,43 +60,3 @@
 //         }
 //     }
 // }
-header {
-    --height: 60px;
-    display: flex;
-    height: var(--height);
-    min-height: var(--height);
-    max-height: var(--height);
-    background-color: var(--header-bg-color);
-    color: var(--font-color);
-    justify-content: start;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    @include atMobile {
-        justify-content: center;
-    }
-}
-
-.menu {
-    mat-icon {
-        font-size: 2rem;
-    }
-}
-
-.spacer {
-    flex: 1 1 auto;
-}
-
-.logo {
-    margin-left: 1rem;
-    margin-right: 2rem;
-    display: none;
-    @include atDesktop {
-        display: initial;
-    }
-}
-
-.rightMarginWhenNotLoggedIn {
-    margin-right: 1em;
-}
-
-

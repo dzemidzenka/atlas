@@ -1,50 +1,25 @@
+@import '../../../../shared/styles/theme';
 @mixin center-horizontal-absolute {
     position: absolute;
     transform: translate(-50%, 0);
     left: 50%;
 }
 
-:host {
-    --color-bg: #3d3780;
-    --color-bg-active: #494299;
-    --color-fg: #a1a1e5;
-    --color-fg-heading: #ffffff;
-    --color-fg-text: #d1d1ff;
-    --color-fg-highlight: #00f9a6;
-    --color-gray: rgba(81, 113, 165, 0.15);
-    --color-neutral: transparent;
-    --color-white: #ffffff;
-    --color-disabled: rgba(255, 255, 255, 0.4);
-}
-
-:host::ng-deep * {
-    user-select: none;
-}
-
-:host::ng-deep mat-icon {
-    display: flex;
-    align-items: center;
-    height: 100%;
-    width: 100%;
-}
-
 :host::ng-deep img {
-    --height: 80%;
-    height: var(--height);
-    max-height: var(--height);
-    min-height: var(--height);
+    height: 80%;
+    max-height: 80%;
+    min-height: 80%;
     width: auto;
 }
 
 main {
     display: flex;
     align-items: center;
-    justify-content: center;
     height: 100%;
+    width: 100%;
     position: relative;
     padding-right: 15px;
     padding-left: 15px;
-    width: 100%;
     .user-context-menu {
         display: none;
     }
@@ -56,7 +31,7 @@ main {
         display: block;
     }
     &.rightBorder {
-        border-right: 2px solid var(--main-bg-color);
+        border-right: 2px solid $main-bg-color;
     }
 }
 
@@ -89,10 +64,10 @@ main {
             margin-left: -12px;
             display: block;
             border: 12px solid transparent;
-            border-bottom: 11px solid var(--color-bg) !important;
+            border-bottom: 11px solid $main-bg-color !important;
         }
-        border-bottom: 11px solid var(--header-action-border) !important;
+        border-bottom: 11px solid $header-action-border !important;
     }
-    border: 2px solid var(--header-action-border);
-    background: var(--color-bg);
+    border: 2px solid $header-action-border;
+    background: $main-bg-color;
 }

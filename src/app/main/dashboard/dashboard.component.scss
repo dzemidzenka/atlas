@@ -1,4 +1,5 @@
 @import '../../shared/styles/media-breakpoints';
+@import '../../shared/styles/theme';
 nav {
     display: flex;
     justify-content: start;
@@ -20,12 +21,13 @@ nav {
     border-radius: 10px;
     font-size: 1em;
     position: relative;
-    background-color: var(--tile-bg-color);
+    background-color: $tile-bg-color;
+    user-select: none;
     &:hover {
-        border-top: 2px solid var(--tile-active);
+        border-top: 2px solid $tile-active;
     }
     * {
-        color: var(--font-color);
+        color: $font-color;
     }
 }
 
@@ -34,16 +36,13 @@ header {
 }
 
 .folder-header {
-    border-bottom: 1px solid var(--tile-footer-border);
+    border-bottom: 1px solid $tile-footer-border;
     text-transform: uppercase;
 }
 
 .folder-footer {
     position: absolute;
     top: 30%;
-    mat-icon {
-        font-size: 8em;
-    }
 }
 
 .component_footer {
@@ -51,10 +50,9 @@ header {
     position: absolute;
     bottom: 0;
     padding: 10px;
-    border-top: 1px solid var(--tile-footer-border);
+    border-top: 1px solid $tile-footer-border;
 }
 
-mat-icon {
-    cursor: pointer;
-    padding-right: 30px;
+.material-icons {
+    padding-right: 10px;
 }

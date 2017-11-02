@@ -1,12 +1,14 @@
 <ul class="header-action-menu">
-  <li (click)="switchApp(view.FAVORITE)">
-    <mat-icon>favorite</mat-icon>
-    <span>{{ view.FAVORITE | titlecase }}</span>
-  </li>
-  <li (click)="switchApp(view.RECENT)">
-    <mat-icon>history</mat-icon>
-    <span>{{ view.RECENT | titlecase }}</span>
-  </li>
+  <div class="views">
+    <li (click)="switchApp(view.FAVORITE)">
+      <i class="material-icons">favorite</i>
+      <span>{{ view.FAVORITE | titlecase }}</span>
+    </li>
+    <li (click)="switchApp(view.RECENT)">
+      <i class="material-icons">history</i>
+      <span>{{ view.RECENT | titlecase }}</span>
+    </li>
+  </div>
   <div class="header-action-separator"></div>
   <li (click)="switchApp('intl')">
     <span>INTL</span>

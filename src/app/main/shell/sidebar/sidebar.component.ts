@@ -1,4 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ReduxService } from '../../../providers/redux.service';
 
 @Component({
     selector: 'atlas-sidebar',
@@ -7,5 +8,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SidebarComponent {
-    constructor() {}
+    constructor(private _reduxService: ReduxService) {}
+
+    isLoggedIn$ = this._reduxService.state$.map(state => state.isLoggedIn);
 }

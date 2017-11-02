@@ -1,18 +1,13 @@
 <main *ngIf="path$ | async as path">
-  <!-- <button mat-button *ngFor="let view of VIEW; let first = first" (click)="switchView(view)">
-      <mat-icon *ngIf="first">home</mat-icon>
-      <span>&nbsp; {{ ('dashboard.' + view) | translate | uppercase }}</span>
-    </button> -->
-
   <ng-container *ngFor="let param of path.urlParams; let index = index; let first = first; let last = last">
-    <button mat-button (click)="onClick(param, index)" class="cdk-focused">
+    <button mat-button (click)="onClick(param, index)">
       <ng-container *ngIf="path && (!last || last && !path.isComponent) else isComponent">
-        <mat-icon *ngIf="first">home</mat-icon>
-        <mat-icon *ngIf="!first">folder</mat-icon>
+        <i class="material-icons" *ngIf="first">home</i>
+        <i class="material-icons" *ngIf="!first">folder</i>
         <span>&nbsp; {{param | uppercase}}</span>
       </ng-container>
       <ng-template #isComponent>
-        <mat-icon>extension</mat-icon>
+        <i class="material-icons">extension</i>
         <span>&nbsp; {{param | uppercase}}</span>
       </ng-template>
     </button>

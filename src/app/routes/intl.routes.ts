@@ -17,6 +17,16 @@ export const INTL_ROUTES: Routes = [
 
   // COMPONENTS
   {
+    path: 'intl/intl-home-native',
+    loadChildren: '../lazyModules/intl/home/home.module#HomeModule',
+    canActivate: [RouteGuardService],
+    resolve: { RouteResolverService },
+    data: {
+      isComponent: true,
+      description: 'International Home (Native)',
+    },
+  },
+  {
     path: 'intl/intl-home',
     component: IFrameComponent,
     canActivate: [RouteGuardService],

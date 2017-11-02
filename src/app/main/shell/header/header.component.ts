@@ -25,15 +25,9 @@ export class HeaderComponent {
         })
     );
 
-
-
     onSidebarToggle() {
         this.sidebarToggle.emit();
     }
-
-    // megaMenuClick(event) {
-    //     console.log('MEGA', event);
-    // }
 }
 
 // items = [

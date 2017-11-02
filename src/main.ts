@@ -9,9 +9,7 @@ if (environment.production) {
 }
 
 platformBrowserDynamic()
-    .bootstrapModule(AppModule, {
-        preserveWhitespaces: false
-    })
+    .bootstrapModule(AppModule)
     .then(ref => {
         // Ensure Angular destroys itself on hot reloads.
         const ngRef = 'ngRef';

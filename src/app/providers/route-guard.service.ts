@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { AuthService } from './auth.service';
+import { ReduxService } from './redux.service';
 
 @Injectable()
 export class RouteGuardService implements CanActivate {
-    constructor(private _router: Router, private _authService: AuthService) {}
+    constructor(private _router: Router, private _reduxService: ReduxService) {}
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-        if (this._authService.isLoggedIn()) {
+        if (this._reduxService.getCurrentState().isLoggedIn) {
             return true;
         }
 
@@ -21,7 +21,7 @@ export class RouteGuardService implements CanActivate {
 
         // this._router.navigate(['login'], { queryParams: { ...queryParams } });
 
-        this._authService.logOut();
+        this._reduxService.actionLogOut();
         return false;
     }
 }

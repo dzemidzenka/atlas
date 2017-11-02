@@ -1,0 +1,16 @@
+{
+    "name": "Atlas Portal",
+    "short_name": "Atlas",
+    "start_url": "index.html",
+    "display": "standalone",
+    "orientation": "portrait-primary",
+    "icons": [
+        {
+            "src": "assets/android-chrome-72x72.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "background_color": "#3d3780",
+    "theme_color": "#3d3780"
+}

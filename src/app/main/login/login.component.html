@@ -1,5 +1,5 @@
 <main *ngIf="!(isLoading$ | async)">
-  <h2>{{ 'Login' | translate }}</h2>
+  <h2 i18n>{{ 'Login' | translate }}</h2>
   <form name="form" (ngSubmit)="f.form.valid && logIn()" #f="ngForm" novalidate>
     <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !username.valid }">
       <label for="username">{{ 'Username' | translate }}</label>
@@ -12,6 +12,9 @@
       <input type="password" class="form-control" name="password" [(ngModel)]="model.password" #password="ngModel" required />
       <div *ngIf="f.submitted && !password.valid" class="help-block">{{ 'Password Required' | translate }}</div>
     </div>
+    <!-- <input type="checkbox" class="form-control" name="rememberMe" [(ngModel)]="model.rememberMe" /> -->
+    <mat-checkbox [(ngModel)]="model.rememberMe" name="rememberMe">Remember me</mat-checkbox>
+
     <div class="form-group">
       <button mat-button mat-raised-button>{{ 'Login' | translate }}</button>
     </div>

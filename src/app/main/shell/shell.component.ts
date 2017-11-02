@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy, ViewChild } from '@angular/core';
 import { ReduxService } from '../../providers/redux.service';
 import { MatDrawer } from '@angular/material/sidenav';
+import { ACTION } from '../../shared/models';
 
 @Component({
     selector: 'atlas-shell',
@@ -11,19 +12,19 @@ import { MatDrawer } from '@angular/material/sidenav';
 export class ShellComponent {
     constructor(private _reduxService: ReduxService) {}
 
-    @ViewChild('sidenav') sidenav: MatDrawer;
+    @ViewChild('sidenav') private _sidenav: MatDrawer;
 
-    state$ = this._reduxService.state$.map(state =>
-        Object.assign({
-            country: state.country,
-            isLoggedIn: state.isLoggedIn,
-            isComponent: state.isComponent,
-            user: state.user,
-            notifications: state.notifications
-        })
-    );
+    state$ = this._reduxService.state$
+        .map(state =>
+            Object.assign({
+                action: state.action,
+                isLoggedIn: state.isLoggedIn,
+                isComponent: state.isComponent
+            })
+        )
+        .do(state => (state.action.type === ACTION.LOGOUT ? this._sidenav.close() : null));
 
     onSidebarToggle() {
-        this.sidenav.toggle();
+        this._sidenav.toggle();
     }
 }

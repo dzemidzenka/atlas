@@ -1,6 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ReduxService } from '../../../providers/redux.service';
-import { VIEW } from '../../../shared/models';
 
 @Component({
     selector: 'atlas-path',
@@ -14,17 +13,9 @@ export class PathComponent {
     path$ = this._reduxService.state$.map(state =>
         Object.assign({
             urlParams: state.urlParams,
-            isComponent: state.isComponent,
-            country: state.country,
-            language: state.language
+            isComponent: state.isComponent
         })
     );
-
-    VIEW = Object.values(VIEW);
-
-    switchView(view: VIEW) {
-        this._reduxService.actionDashboard(view);
-    }
 
     onClick(event: string, index: number) {
         const urlParams = this._reduxService.getCurrentState().urlParams;
