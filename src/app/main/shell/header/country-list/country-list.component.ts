@@ -1,6 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { ReduxService } from '../../../../providers/redux.service';
-import { COUNTRY } from '../../../../shared/models';
+import { ReduxService, COUNTRY } from '../../../../providers/redux.service';
 
 @Component({
     selector: 'atlas-country-list',
@@ -9,7 +8,9 @@ import { COUNTRY } from '../../../../shared/models';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CountryListComponent {
-    constructor(private _reduxService: ReduxService) {}
+    constructor(
+        private _reduxService: ReduxService
+    ) { }
 
     countries$ = this._reduxService.state$.map(state => {
         let countries;

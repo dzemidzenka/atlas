@@ -1,25 +1,40 @@
 import { Injectable, Inject } from '@angular/core';
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
-import * as tokens from '../shared/constants';
-import * as models from '../shared/models';
+import { LocalStorageService } from '../shared/providers/local-storage.service';
+import { ReLoginService } from '../shared/providers/re-login.service';
+import { ReLoginComponent } from '../main/login/re-login/re-login.component';
+import { MatDialog } from '@angular/material';
+import { NotificationService } from '../shared/providers/notification.service';
+import { environment } from '../../environments/environment';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-    constructor(@Inject(tokens.lsAUTH) private _lsAuth: string) {}
+    constructor(
+      private _localStorageService: LocalStorageService,
+      private _reLoginService: ReLoginService,
+      private _dialog: MatDialog,
+      private _notificationsService: NotificationService,
+    ) {}
+    private _count = 1;
 
     // https://medium.com/@ryanchenkie_40935/angular-authentication-using-the-http-client-and-http-interceptors-2f9d1540eb8
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        const user: models.IUserModel = JSON.parse(localStorage.getItem(this._lsAuth));
-        let _request;
+        if (request.url === environment.logInUrl) {
+            return next.handle(request);
+        }
+
+        const user = this._localStorageService.user;
         if (user) {
-            _request = request.clone({
-                // // setHeaders: { Authorization: `Bearer ${this._reduxService.getCurrentState().user.access_token}` }
-                // // setHeaders: { Authorization: `Bearer ${user.access_token}` }
-                // //  headers: req.headers.set('X-CustomAuthHeader', authService.getToken())
-                headers: request.headers.set('Authorization', `Bearer ${user.access_token}`)
+            // const _request = request.clone({
+            //     headers: request.headers.set('Authorization', (this._count === 3) ? `Bearer ${user.accessToken + 1}` : `Bearer ${user.accessToken}`)
+            // });
+            const _request = request.clone({
+                headers: request.headers.set('Authorization', `Bearer ${user.accessToken}`)
             });
-            return next.handle(_request).do(
+            this._count += 1;
+
+            return Observable.merge(next.handle(_request), this._reLoginService.retry$.switchMap(() => next.handle(_request))).do(
                 (event: HttpEvent<any>) => {
                     if (event instanceof HttpResponse) {
                         // do stuff with response if you want
@@ -27,17 +42,25 @@ export class AuthInterceptor implements HttpInterceptor {
                 },
                 (err: any) => {
                     if (err instanceof HttpErrorResponse) {
+                        this._notificationsService.notifySingle(`${err.status}  ${err.error.Message}`);
+                      
                         if (err.status === 401) {
-                            console.log('LOL');
-
-                            // redirect to the login route
-                            // or show a modal
+                            // const dialogRef = this._dialog.open(ReLoginComponent, {
+                            //     width: '500px',
+                            //     height: '300px',
+                            //     // disableClose: true
+                            // });
+                            // dialogRef.afterClosed().subscribe(result => {
+                            //     console.log('The dialog was closed', result);
+                            // });
+                        } else {
+                          // this._notificationsService.notify([{ message: err }]);                          
                         }
                     }
                 }
             );
-        } else {
-            return next.handle(request);
         }
+
+        return next.handle(request);
     }
 }

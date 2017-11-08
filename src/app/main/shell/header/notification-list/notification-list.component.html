@@ -1,6 +1,6 @@
 <button mat-button color="accent" (click)="clearNotifications()"> Delete All Notifications</button>
 
-<ul class="header-action-menu" *ngIf="notifications$ | async as notifications">
+<ul *ngIf="notifications$ | async as notifications" class="header-action-menu" >
   <li *ngFor="let notification of notifications">
     <span>{{ notification.message }}</span>
   </li>

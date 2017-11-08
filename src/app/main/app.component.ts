@@ -3,33 +3,28 @@ import { Title } from '@angular/platform-browser';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { ReduxService } from '../providers/redux.service';
-import { LoadingService } from '../providers/loading.service';
-import { ACTION, IStateModel } from '../shared/models';
-import * as tokens from '../shared/constants';
-import * as constants from '../shared/constants';
-import { Options } from 'angular2-notifications';
+import { LocalStorageService } from '../shared/providers/local-storage.service';
+import { environment } from '../../environments/environment';
 
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss']
+    styleUrls: ['./app.component.scss'],
     // changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent implements OnInit, OnDestroy {
     constructor(
         private _titleService: Title,
         private _reduxService: ReduxService,
-        private _loadingService: LoadingService,
-        @Inject(tokens.lsAUTH) private _lsAuth: string
-    ) {}
+        private _localStorageService: LocalStorageService,
+    ) { }
 
-    isLoading$ = this._loadingService.isLoading$;
     private readonly _title = 'Atlas Portal';
     private _state$Subscription: Subscription;
     private _timeout$Subscription: Subscription;
     private _logOutIfAnySessionLogsOut: Subscription;
 
-    options: Options = {
+    options = {
         position: ['top', 'right'],
         timeOut: 3000,
         lastOnBottom: false,
@@ -38,6 +33,7 @@ export class AppComponent implements OnInit, OnDestroy {
         showProgressBar: true,
         animate: 'scale'
     };
+
 
     ngOnInit() {
         this._titleService.setTitle(this._title);
@@ -48,10 +44,12 @@ export class AppComponent implements OnInit, OnDestroy {
 
         // logout all sessions if any one logs out
         this._logOutIfAnySessionLogsOut = Observable.fromEvent(window, 'storage')
-            .filter((event: StorageEvent) => event.key === this._lsAuth)
+            .do((a) => console.log(a))
+            .filter((event: StorageEvent) => event.key === this._localStorageService.lsAuth)
             .filter((event: StorageEvent) => event.newValue === null)
             .do(() => this._reduxService.actionLogOut())
             .subscribe();
+
 
         // automatically logout after a period of inactivity
         this._timeout$Subscription = Observable.fromEvent(window, 'click')
@@ -61,12 +59,12 @@ export class AppComponent implements OnInit, OnDestroy {
             .map(array => array[1])
             .filter(state => state.isLoggedIn)
             .filter(
-                state =>
-                    !(state.hasOwnProperty('menuItemCurrent') && state.menuItemCurrent && state.menuItemCurrent.hasOwnProperty('iFrameUrl'))
+            state =>
+                !(state.hasOwnProperty('menuItemCurrent') && state.menuItemCurrent && state.menuItemCurrent.hasOwnProperty('iFrameUrl'))
             )
             // period of inactivity must be greater than auditTime
-            .switchMap(state => Observable.of(state).delay(constants.MINUTES_OF_INACTIVITY * 60 * 1000))
-            .do(() => this._reduxService.actionLogOut('Logged out due to inactivity. Goodbye!'))
+            .switchMap(state => Observable.of(state).delay(environment.MINUTES_OF_INACTIVITY * 60 * 1000))
+            .do(() => this._reduxService.actionLogOut())
             .subscribe();
     }
 

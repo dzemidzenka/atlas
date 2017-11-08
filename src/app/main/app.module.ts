@@ -7,17 +7,16 @@ import { SharedModule } from '../shared/shared.module';
 import { SimpleNotificationsModule } from 'angular2-notifications';
 
 // providers
-import * as tokens from '../shared/constants';
 import { RouteGuardService } from '../providers/route-guard.service';
 import { RouteResolverService } from '../providers/route-resolver.service';
 import { AuthInterceptor } from '../providers/http.interceptor.service';
 
 //  INJECTION TOKENS
 const TOKEN_PROVIDERS = [
-    {
-        provide: tokens.lsAUTH,
-        useValue: 'ls.IdentityData'
-    }
+    // {
+    //     provide: tokens.lsAUTH,
+    //     useValue: 'ls.IdentityData'
+    // }
 ];
 
 // routes
@@ -82,7 +81,6 @@ import { ReLoginComponent } from './login/re-login/re-login.component';
         // NoopAnimationsModule,
         HttpClientModule,
         RouterModule.forRoot(ROUTES),
-        // BrowserModule,
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,
@@ -105,6 +103,7 @@ import { ReLoginComponent } from './login/re-login/re-login.component';
         UserMenuComponent,
         LanguageListComponent,
         NotificationListComponent,
+        ReLoginComponent
     ],
     bootstrap: [AppComponent]
 })

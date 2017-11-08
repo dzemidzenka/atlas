@@ -1,29 +1,108 @@
-import { Injectable, Inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
-
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
-
 import { TranslateService } from '@ngx-translate/core';
-import { NotificationsService } from 'angular2-notifications';
-
-import * as models from '../shared/models';
-import * as constants from '../shared/constants';
-import * as tokens from '../shared/constants';
+import { NotificationService } from '../shared/providers/notification.service';
+import { LocalStorageService } from '../shared/providers/local-storage.service';
+import { environment } from '../../environments/environment';
 
 // import sortBy from 'lodash-es/sortBy';
 // import sortedUniq from 'lodash-es/sortedUniq';
 import cloneDeep from 'lodash-es/cloneDeep';
 import omit from 'lodash-es/omit';
+import isEmpty from 'lodash-es/isEmpty';
 
-import REDUCER_INIT from './reducer.INIT';
-import REDUCER_LOGIN from './reducer.LOGIN';
-import REDUCER_LOGOUT from './reducer.LOGOUT';
-import REDUCER_ROUTE from './reducer.ROUTE';
-import REDUCER_NOTIFICATION from './reducer.NOTIFICATION';
-import REDUCER_NOTIFICATION_CLEAR from './reducer.NOTIFICATION_CLEAR';
-import REDUCER_FAVORITE_TOGGLE from './reducer.FAVORITE_TOGGLE';
+export enum ACTION {
+    INIT = 'INIT',
+    LOGIN = 'LOGIN',
+    LOGOUT = 'LOGOUT',
+    ROUTE = 'ROUTE',
+    FAVORITE_TOGGLE = 'FAVORITE_TOGGLE',
+    NOTIFICATION = 'NOTIFICATION',
+    NOTIFICATION_CLEAR = 'NOTIFICATION_CLEAR'
+}
+
+// valid 2char country codes at https://www.iso.org/obp/ui/#search
+export enum COUNTRY {
+    US = 'us',
+    DE = 'de',
+    RU = 'ru',
+    FR = 'fr',
+    IT = 'it',
+    GB = 'gb',
+    JP = 'jp'
+}
+
+export enum LANGUAGE {
+    EN = 'en',
+    DE = 'de',
+    RU = 'ru'
+}
+
+export enum VIEW {
+    DASHBOARD = 'dashboard',
+    FAVORITE = 'favorites',
+    RECENT = 'recent'
+}
+
+export interface IActionModel {
+    type: ACTION;
+    date?: number;
+    user?: IUserModel;
+    rememberMe?: boolean;
+    url?: string;
+    urlParams?: Array<string>;
+    queryParams?: Array<string>;
+    country?: COUNTRY;
+    language?: LANGUAGE;
+    menuItem?: IMenuModel;
+}
+
+export interface IStateModel {
+    action: IActionModel;
+    url: string;
+    urlParams: Array<string>;
+    queryParams: Array<string>;
+    isComponent: boolean;
+    isLoggedIn: boolean;
+    user: IUserModel;
+    country: COUNTRY;
+    language: LANGUAGE;
+    view: VIEW;
+    menu: Array<IMenuModel>;
+    menuItemCurrent: IMenuModel;
+    menuRecent: Array<IMenuModel>;
+}
+
+
+export interface IUserModel {
+    userName: string;
+    phone: string;
+    nameDisplay: string;
+    countryDefault: COUNTRY;
+    allowedCountries: Array<string>;
+    languageDefault: LANGUAGE;
+    expires: number;
+    accessToken: string;
+}
+
+export interface IMenuModel {
+    id: number;
+    active: boolean;
+    description: string;
+    help: string;
+    isComponent: boolean;
+    isLazy: boolean;
+    isFavorite: boolean;
+    routerPath: string;
+    urlParams: Array<string>;
+    tcode: string;
+    iFrameUrl: string;
+}
+
+
 
 @Injectable()
 export class ReduxService {
@@ -31,45 +110,38 @@ export class ReduxService {
         private _route: ActivatedRoute,
         private _router: Router,
         private _http: HttpClient,
-        private _notificationsService: NotificationsService,
         private _translate: TranslateService,
-        @Inject(tokens.lsAUTH) private _lsAuth: string
+        private _notificationsService: NotificationService,
+        private _localStorageService: LocalStorageService,
     ) {
-        // initialize reducers
-        REDUCER_INIT.bind(this)();
-        REDUCER_LOGIN.bind(this)();
-        REDUCER_LOGOUT.bind(this)();
-        REDUCER_ROUTE.bind(this)();
-        REDUCER_NOTIFICATION.bind(this)();
-        REDUCER_NOTIFICATION_CLEAR.bind(this)();
-        REDUCER_FAVORITE_TOGGLE.bind(this)();
-
+        this._initializeReducers();
         // console.log('ROUTES', this._router.config);
         // generateAdditionalRoutes(this._router.config);
-        this._translate.setDefaultLang(models.LANGUAGE.EN);
+        this._translate.setDefaultLang(LANGUAGE.EN);
         // this._translate.get('HOME.HELLO', { value: 'world' }).subscribe((res: string) => {
         //   console.log(res);
         // });
     }
 
-    private _currentState: models.IStateModel;
+    private _currentState: IStateModel;
     private _reducers: Array<Function> = [];
-    private _actionSubject$ = new Subject<models.IActionModel>();
-    private _initialState: models.IStateModel = (() => {
-        const state: models.IStateModel = {} as models.IStateModel;
-        state.notifications = [];
+    private _actionSubject$ = new Subject<IActionModel>();
+    private _initialState: IStateModel = (() => {
+        const state: IStateModel = {} as IStateModel;
         state.urlParams = [];
         state.queryParams = [];
         state.menu = this._router.config
             .filter(route => route.hasOwnProperty('data'))
             .filter(route => route.data.hasOwnProperty('description'))
             .map(this._menuItemFromRoute)
-            .map((menu: models.IMenuModel, i) => {
-                menu.id = i + 1;
-                return menu;
+            .map((item: IMenuModel, i) => {
+                item.id = i + 1;
+                return item;
             });
         return state;
     })();
+
+
 
     // ROUTING EVENTS HANDLER
     private _routerEvents$ = this._router.events
@@ -83,22 +155,25 @@ export class ReduxService {
                 .filter(param => param !== '')
                 .map(param => param.split('?')[0]);
             const queryParams = urlTree.queryParams;
-            return { type: models.ACTION.ROUTE, url: url, urlParams: urlParams, queryParams: queryParams };
+            return { type: ACTION.ROUTE, url: url, urlParams: urlParams, queryParams: queryParams };
         });
 
     // APPLICATION STATE STORE
-    state$: Observable<models.IStateModel> = this._actionSubject$
-        .startWith({ type: models.ACTION.INIT, user: JSON.parse(localStorage.getItem(this._lsAuth)) })
+    state$: Observable<IStateModel> = this._actionSubject$
+        .startWith({ type: ACTION.INIT, user: this._localStorageService.user })
         .merge(this._routerEvents$)
-        .scan((state: models.IStateModel, action: models.IActionModel) => this._reducer(state, action), this._initialState)
-        .do(state => (this._currentState = state))
+        .scan((state: IStateModel, action: IActionModel) => this._reducer(state, action), this._initialState)
+        .map(this._getActiveMenu)
+        .do(state => this._currentState = state)
         .publishBehavior({})
-        .refCount() as Observable<models.IStateModel>;
+        .refCount() as Observable<IStateModel>;
+
+
 
     // REDUCER HANDLER
-    private _reducer(state: models.IStateModel, action: models.IActionModel) {
+    private _reducer(state: IStateModel, action: IActionModel) {
         const _state = cloneDeep(state);
-        if (action.type in models.ACTION) {
+        if (action.type in ACTION) {
             const _action = cloneDeep(action);
             this._reducers[_action.type].call(this, _state, _action);
             _state.action = _action;
@@ -111,75 +186,139 @@ export class ReduxService {
         return _state;
     }
 
+    private _initializeReducers() {
+        this._reducers[ACTION.INIT] = (state: IStateModel, action: IActionModel) => {
+            if (!isEmpty(action.user)) {
+                state.user = action.user;
+                state.isLoggedIn = true;
+            }
+
+            const url = window.location.pathname.substring(1);
+            if (url) {
+                const menuItem = state.menu.find(menu => menu.routerPath.toLowerCase() === url.toLowerCase());
+                if (menuItem) {
+                    state.isComponent = menuItem.isComponent; // to prevent screen blinking due to the delay of lazy loading network request
+                }
+            }
+        };
+
+        this._reducers[ACTION.LOGIN] = (state: IStateModel, action: IActionModel) => {
+            state.user = action.user;
+            state.isLoggedIn = true;
+            this._localStorageService.user = state.user;
+            this._notificationsService.clear();
+        };
+
+        this._reducers[ACTION.LOGOUT] = (state: IStateModel, action: IActionModel) => {
+            state.user = {} as IUserModel;
+            this._localStorageService.user = state.user;
+            state.isLoggedIn = false;
+        };
+
+        this._reducers[ACTION.ROUTE] = (state: IStateModel, action: IActionModel) => {
+            state.url = action.url;
+            state.urlParams = action.urlParams.filter(param => param.length > 0).map(param => param.toLowerCase());
+            state.queryParams = action.queryParams;
+
+            if (state.queryParams['language']) {
+                state.language = state.queryParams['language'];
+            } else {
+                state.language = LANGUAGE.EN;
+            }
+            this._translate.use(state.language);
+
+            if (state.queryParams['country']) {
+                state.country = state.queryParams['country'];
+            } else {
+                state.country = COUNTRY.US;
+            }
+
+            if (state.queryParams['view']) {
+                state.view = state.queryParams['view'];
+            }
+            if (!state.menuRecent) {
+                state.menuRecent = [];
+            }
+
+            const _urlParams = [...state.urlParams];
+            const _routerPath = _urlParams.join('/');
+            if (state.menu) {
+                state.menuItemCurrent = state.menu.find(item => item.routerPath === _routerPath);
+            }
+            state.isComponent = false;
+            if (state.menuItemCurrent) {
+                state.isComponent = state.menuItemCurrent.isComponent;
+            }
+
+            if (state.isComponent) {
+                // add component to recent
+                if (!state.menuRecent.some(recent => recent.id === state.menuItemCurrent.id)) {
+                    state.menuRecent.unshift(state.menuItemCurrent);
+                    state.menuRecent = state.menuRecent.slice(0, environment.MAX_OF_RECENT - 1);
+                }
+            }
+        };
+
+        this._reducers[ACTION.FAVORITE_TOGGLE] = (state: IStateModel, action: IActionModel) => {
+            state.menu
+                .filter(menu => menu.id === action.menuItem.id)
+                .map(menu => menu.isFavorite = !menu.isFavorite);
+        };
+    }
+
+
+
+
     // REDUX ACTIONS
-    actionLogIn(username: string, password: string, rememberMe: boolean): Observable<models.IUserModel> {
+    actionLogIn(username: string, password: string, rememberMe: boolean): Observable<IUserModel> {
         const data = `grant_type=password&username=${username}&password=${password}&client_id=atlaswebapp`;
         const headers = new HttpHeaders().set('Content-type', 'application/x-www-form-urlencoded');
 
-        return (
-            this._http
-                .post('http://atlasglobal-dev.nuvasive.com/api/token', data)
-                // .switchMap(response => {
-                //   console.log('response["ok"]', response['ok']);
-                //   return Observable.throw(new Error(JSON.parse(response['error'])['error_description']));
-                //   // return response['ok'] ?
-                //   //   Observable.of(response) : Observable.throw(new Error(JSON.parse(response['error'])['error_description']));
-                // })
-                .map(this._userFromAuthResponse)
-                .do(user => this._actionSubject$.next({ type: models.ACTION.LOGIN, user: user, rememberMe: rememberMe }))
-                .catch((errorResponse: HttpErrorResponse) => {
-                    console.log('HTTP AUTH ERROR', errorResponse);
-                    if (errorResponse.ok) {
-                        return Observable.throw(JSON.parse(errorResponse['error'])['error_description']);
-                    } else {
-                        return Observable.throw(errorResponse.message);
-                    }
-                })
-        );
+        return this._http
+            .post(environment.logInUrl, data)
+            .catch((errorResponse: HttpErrorResponse) => {
+                console.log('HTTP LOGIN ERROR', errorResponse);
+                if (errorResponse.ok) {
+                    return Observable.throw(JSON.parse(errorResponse['error'])['error_description']);
+                } else {
+                    return Observable.throw(errorResponse.message);
+                }
+            })
+            .map(this._userFromAuthResponse)
+            .do(user => this._actionSubject$.next({ type: ACTION.LOGIN, user: user, rememberMe: rememberMe }));
     }
 
-    actionLogOut(message?: string) {
+    actionLogOut() {
         if (this._currentState.isLoggedIn) {
-            this._actionSubject$.next({
-                type: models.ACTION.LOGOUT,
-                notifications: message ? [{ message: message }] : []
-            });
+            this._actionSubject$.next({ type: ACTION.LOGOUT });
         }
     }
 
-    actionFavoriteToggle(menuItem: models.IMenuModel) {
-        this._actionSubject$.next({ type: models.ACTION.FAVORITE_TOGGLE, menuItem: menuItem });
+    actionFavoriteToggle(menuItem: IMenuModel) {
+        this._actionSubject$.next({ type: ACTION.FAVORITE_TOGGLE, menuItem: menuItem });
     }
 
-    actionNotify(notifications: Array<models.INotificationModel>) {
-        this._actionSubject$.next({ type: models.ACTION.NOTIFICATION, notifications: notifications });
-    }
-
-    actionClearNotifications() {
-        this._actionSubject$.next({ type: models.ACTION.NOTIFICATION_CLEAR });
-    }
-
-    actionLanguage(language: models.LANGUAGE) {
+    actionLanguage(language: LANGUAGE) {
         this._translate.use(language);
         const urlParams = this._currentState.urlParams;
         const queryParams = this._currentState.queryParams;
         this._router.navigate([urlParams.join('/')], { queryParams: { ...queryParams, language: language } });
     }
 
-    actionCountry(country: models.COUNTRY) {
+    actionCountry(country: COUNTRY) {
         const urlParams = this._currentState.urlParams;
         const queryParams = this._currentState.queryParams;
         this._router.navigate([urlParams.join('/')], { queryParams: { ...queryParams, country: country } });
     }
 
-    actionDashboard(view: models.VIEW) {
+    actionDashboard(view: VIEW) {
         const queryParams = this._route.snapshot.queryParams;
         this._router.navigate([''], { queryParams: { ...queryParams, view: view } });
     }
 
     actionMenu(urlParams: Array<string>) {
         const queryParams = omit(this._route.snapshot.queryParams, 'view');
-        this._router.navigate([urlParams.join('/')], { queryParams: { ...queryParams, view: models.VIEW.DASHBOARD } });
+        this._router.navigate([urlParams.join('/')], { queryParams: { ...queryParams, view: VIEW.DASHBOARD } });
     }
 
     actionTcode(tcode: string) {
@@ -194,20 +333,20 @@ export class ReduxService {
     }
 
     // current state getter to prevent direct state access
-    getCurrentState(): models.IStateModel {
+    get currentState(): IStateModel {
         return cloneDeep(this._currentState);
     }
 
     // determine which menus are active per current URL params
-    private _getActiveMenu(state: models.IStateModel) {
+    private _getActiveMenu(state: IStateModel): IStateModel {
         if (state.menu) {
             state.menu.map(item => {
                 item.active = false;
-                if (state.view === models.VIEW.FAVORITE) {
+                if (state.view === VIEW.FAVORITE) {
                     item.active = item.isFavorite;
                     return item;
                 }
-                if (state.view === models.VIEW.RECENT) {
+                if (state.view === VIEW.RECENT) {
                     if (state.hasOwnProperty('menuRecent')) {
                         item.active = state.menuRecent.some(menuItem => menuItem.id === item.id);
                     }
@@ -234,7 +373,10 @@ export class ReduxService {
                 return item;
             });
         }
+        return state;
     }
+
+
 
     private _menuItemFromRoute(route, i, routes) {
         const params = route.path.split('/');
@@ -247,12 +389,15 @@ export class ReduxService {
         return {
             urlParams: params,
             routerPath: route.path,
+            isLazy: route.hasOwnProperty('loadChildren'),
             tcode: tcode,
             ...route.data
         };
     }
 
-    private _userFromAuthResponse(response: Response): models.IUserModel {
+
+
+    private _userFromAuthResponse(response: Response): IUserModel {
         const allowedCountries = response['as:tenantContextHosts'].split(', ').map(country =>
             country
                 .trim()
@@ -260,16 +405,17 @@ export class ReduxService {
                 .toLowerCase()
         );
 
-        const user: models.IUserModel = {
+        const user: IUserModel = {
             userName: response['userName'],
             phone: response['as:claim:http://schemas.xmlsoap.org/ws/2005/05/identity/claims/mobilephone'],
             nameDisplay: response['as:claim:http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname'],
-            countryDefault: response['as:claim:http://schemas.xmlsoap.org/ws/2005/05/identity/claims/country'].toLowerCase(),
+            countryDefault: response['as:claim:http://schemas.xmlsoap.org/ws/2005/05/identity/claims/country'],
             allowedCountries: [...allowedCountries],
-            languageDefault: models.LANGUAGE.EN,
+            languageDefault: LANGUAGE.EN,
             expires: Math.floor(Date.now() / 1000) + response['expires_in'],
-            access_token: response['access_token']
+            accessToken: response['access_token']
         };
+        user.countryDefault = user.countryDefault ? user.countryDefault.toLowerCase() as COUNTRY : COUNTRY.US;
         return user;
     }
 }

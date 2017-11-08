@@ -1,7 +1,6 @@
 import { Component, ChangeDetectionStrategy, ViewChild } from '@angular/core';
-import { ReduxService } from '../../providers/redux.service';
+import { ReduxService, ACTION } from '../../providers/redux.service';
 import { MatDrawer } from '@angular/material/sidenav';
-import { ACTION } from '../../shared/models';
 
 @Component({
     selector: 'atlas-shell',
@@ -10,7 +9,9 @@ import { ACTION } from '../../shared/models';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ShellComponent {
-    constructor(private _reduxService: ReduxService) {}
+    constructor(
+        private _reduxService: ReduxService
+    ) {}
 
     @ViewChild('sidenav') private _sidenav: MatDrawer;
 

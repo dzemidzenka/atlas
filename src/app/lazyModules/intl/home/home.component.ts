@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
+import { LoadingService } from '../../../shared/providers/loading.service';
 
 @Component({
     selector: 'atlas-home',
@@ -9,9 +10,13 @@ import { Observable } from 'rxjs/Observable';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HomeComponent implements OnInit {
-    constructor(private _http: HttpClient) {}
+    constructor(
+        private _http: HttpClient,
+        private _loadingService: LoadingService        
+    ) {}
 
     ngOnInit() {
+        this._loadingService.off();
         // const headers = new HttpHeaders().set('Content-type', 'application/x-www-form-urlencoded');
 
         // const payload = {

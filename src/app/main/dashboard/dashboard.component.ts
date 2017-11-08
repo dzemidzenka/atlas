@@ -1,6 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { ReduxService } from '../../providers/redux.service';
-import { IMenuModel } from '../../shared/models';
+import { ReduxService, IMenuModel } from '../../providers/redux.service';
 
 @Component({
     selector: 'atlas-dashboard',
@@ -9,7 +8,9 @@ import { IMenuModel } from '../../shared/models';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DashboardComponent {
-    constructor(private _reduxService: ReduxService) {}
+    constructor(
+        private _reduxService: ReduxService
+    ) { }
 
     state$ = this._reduxService.state$.filter(state => state.hasOwnProperty('menu')).map(state =>
         Object.assign({

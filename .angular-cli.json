@@ -13,7 +13,7 @@
         "robots.txt",
         "manifest.json"
       ],
-      "serviceWorker": true,
+      "serviceWorker": false,
       "index": "index.html",
       "main": "main.ts",
       "polyfills": "polyfills.ts",

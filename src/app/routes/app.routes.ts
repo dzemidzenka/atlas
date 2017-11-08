@@ -17,8 +17,4 @@ export const ROUTES: Routes = [
     ...CRM_ROUTES,
     ...SAP_ROUTES,
     ...DEMO_ROUTES
-    // {
-    //     path: '**',
-    //     loadChildren: '../lazyModules/page-not-found/page-not-found.module#PageNotFoundModule'
-    // }
 ];

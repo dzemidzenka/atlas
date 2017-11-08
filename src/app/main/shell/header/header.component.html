@@ -16,7 +16,7 @@
 
   <ng-container *ngIf="state.isLoggedIn">
     <atlas-app-selector></atlas-app-selector>
-    <atlas-notification-count [notifications]="state.notifications.length"></atlas-notification-count>
+    <atlas-notification-count [notifications]="(notifications$ | async).length"></atlas-notification-count>
     <atlas-user [name]="('dashboard.hello' | translate:{value: state.user.nameDisplay + '!'})" picture="../../../../../assets/steve.jpg"></atlas-user>
   </ng-container>
 </header>

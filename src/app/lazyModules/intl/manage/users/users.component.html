@@ -1,16 +1,9 @@
 <mat-tab-group (selectedTabChange)="onSelectedTabChange($event)">
   <mat-tab label="Atlas Users">
-    <input *ngIf="users$ | async as users" placeholder='User search - {{ users.length }} users found' aria-label="user" [matAutocomplete]="auto" [formControl]="inputCtrl"
-      (keyup.enter)="onSelect(user)">
-
-    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSelect($event.option.value);">
-      <mat-option *ngFor="let user of filteredUser$ | async" [value]="user.name">
-        <span>{{ user.name | uppercase}}</span>
-      </mat-option>
-    </mat-autocomplete>
+    <input *ngIf="users$ | async as users" placeholder='User search - {{ users.length }} users found' aria-label="user" [formControl]="inputCtrl">
 
     <mat-accordion displayMode="flat">
-      <mat-expansion-panel *ngFor="let user of users">
+      <mat-expansion-panel *ngFor="let user of filteredUsers$ | async">
         <mat-expansion-panel-header>
           <mat-panel-title (click)="onClick(user)">
             <strong>{{ user.name }}</strong>
@@ -23,16 +16,10 @@
   </mat-tab>
 
   <mat-tab label="Active Directory Users">
-    <input placeholder='Active directory search' aria-label="user" [matAutocomplete]="auto1" [formControl]="inputCtrlActiveDir" (keyup.enter)="onSelectActiveDir($event.target.value)">
-
-    <mat-autocomplete #auto1="matAutocomplete" (optionSelected)="onSelectActiveDir($event.option.value);">
-      <mat-option *ngFor="let user of filteredUsersActiveDir$ | async" [value]="user.name">
-        <span>{{ user.name | uppercase}}</span>
-      </mat-option>
-    </mat-autocomplete>
+    <input placeholder='Active directory search (3char minimum)' aria-label="user" [formControl]="inputCtrlActiveDir">
 
     <mat-accordion displayMode="flat">
-      <mat-expansion-panel *ngFor="let user of usersActiveDir$ | async">
+      <mat-expansion-panel *ngFor="let user of filteredUsersActiveDir$ | async">
         <mat-expansion-panel-header>
           <mat-panel-title (click)="onClick(user)">
             <strong>{{ user.name }}</strong>

@@ -1,6 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { ReduxService } from '../../../../providers/redux.service';
-import { VIEW } from '../../../../shared/models';
+import { ReduxService, VIEW } from '../../../../providers/redux.service';
 
 @Component({
     selector: 'atlas-app-list',
@@ -9,7 +8,9 @@ import { VIEW } from '../../../../shared/models';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppListComponent {
-    constructor(private _reduxService: ReduxService) {}
+    constructor(
+        private _reduxService: ReduxService
+    ) { }
     view = VIEW;
 
     switchApp(app: string) {

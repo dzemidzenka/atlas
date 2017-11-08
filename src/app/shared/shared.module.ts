@@ -1,6 +1,6 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 
 // RxJs operators
 import 'rxjs/add/operator/startWith';
@@ -19,14 +19,20 @@ import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/concatMap';
 import 'rxjs/add/operator/shareReplay';
+import 'rxjs/add/operator/repeat';
+import 'rxjs/add/operator/retryWhen';
 
 import 'rxjs/add/observable/of';
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/observable/interval';
 import 'rxjs/add/observable/fromEvent';
+import 'rxjs/add/observable/merge';
 
 import { ReduxService } from '../providers/redux.service';
-import { LoadingService } from '../providers/loading.service';
+import { LoadingService } from './providers/loading.service';
+import { LocalStorageService } from './providers/local-storage.service';
+import { NotificationService } from './providers/notification.service';
+import { ReLoginService } from './providers/re-login.service';
 
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
@@ -37,6 +43,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatDialogModule } from '@angular/material/dialog';
 // import {
 //     MatAutocompleteModule,
 //     MatButtonModule,
@@ -67,10 +74,11 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { OverlayModule } from '@angular/cdk/overlay';
 
 import { IFrameComponent } from './components/iframe/iframe.component';
+import { SpinnerComponent } from './components/spinner/spinner.component';
 
 const MODULES = [
     CommonModule,
-    FormsModule,
+    // FormsModule,
     ReactiveFormsModule,
     OverlayModule,
 
@@ -81,7 +89,7 @@ const MODULES = [
     MatCheckboxModule,
     // MatChipsModule,
     // MatDatepickerModule,
-    // MatDialogModule,
+    MatDialogModule,
     MatExpansionModule,
     // MatFormFieldModule,
     // MatIconModule,
@@ -101,7 +109,13 @@ const MODULES = [
     MatTooltipModule
 ];
 
-const COMPONENTS = [IFrameComponent];
+const COMPONENTS =
+    [
+        IFrameComponent,
+        SpinnerComponent
+    ];
+
+
 
 @NgModule({
     declarations: [...COMPONENTS],
@@ -112,7 +126,13 @@ export class SharedModule {
     static forRoot(): ModuleWithProviders {
         return {
             ngModule: SharedModule,
-            providers: [ReduxService, LoadingService]
+            providers: [
+                LoadingService,
+                LocalStorageService,
+                NotificationService,
+                ReduxService,
+                ReLoginService,
+            ]
         };
     }
 }

@@ -1,8 +1,8 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ReduxService } from '../../../providers/redux.service';
-import { ACTION } from '../../../shared/models';
 import { Observable } from 'rxjs/Observable';
+import { LoadingService } from '../../providers/loading.service';
 
 @Component({
     selector: 'atlas-iframe',
@@ -11,19 +11,25 @@ import { Observable } from 'rxjs/Observable';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class IFrameComponent {
-    constructor(private _reduxService: ReduxService, private _sanitizer: DomSanitizer) {}
+    constructor(
+        private _reduxService: ReduxService,
+        private _sanitizer: DomSanitizer,
+        private _loadingService: LoadingService
+    ) { }
 
-    // loading$ = Observable.of(true).delay(20 * 1000);
 
     iFrameUrl$ = this._reduxService.state$
-        .filter(state => state.action.type === ACTION.ROUTE)
         .filter(state => state.hasOwnProperty('menuItemCurrent'))
         .filter(state => state.menuItemCurrent.hasOwnProperty('iFrameUrl'))
         .filter(state => (state.menuItemCurrent.iFrameUrl ? true : false))
         .map(state => state.menuItemCurrent.iFrameUrl.replace('{{country}}', state.country))
         .map(iFrameUrl => this._sanitizer.bypassSecurityTrustResourceUrl(iFrameUrl));
 
+
+
     onLoad() {
+        this._loadingService.off();
+
         const iframe = document.getElementById('iframe1');
         // const doc = (<HTMLIFrameElement>iframe).contentDocument || (<HTMLIFrameElement>iframe).contentWindow.document;
         // const head = doc.getElementsByTagName('head')[0];

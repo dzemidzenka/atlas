@@ -1,8 +1,11 @@
-import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ReduxService } from '../../providers/redux.service';
-import { LoadingService } from '../../providers/loading.service';
+import { LoadingService } from '../../shared/providers/loading.service';
+import { LocalStorageService } from '../../shared/providers/local-storage.service';
+import { NotificationService } from '../../shared/providers/notification.service';
+import { ReLoginService } from '../../shared/providers/re-login.service';
 import { Subscription } from 'rxjs/Subscription';
-import { INotificationModel } from '../../shared/models';
 
 @Component({
     selector: 'atlas-login',
@@ -10,40 +13,57 @@ import { INotificationModel } from '../../shared/models';
     styleUrls: ['./login.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LoginComponent implements OnInit, OnDestroy {
-    constructor(public _reduxService: ReduxService, private _loadingService: LoadingService) {}
-    model = {
-        username: '',
-        password: '',
-        rememberMe: false
-    };
+export class LoginComponent implements OnDestroy {
+    constructor(
+        protected _reduxService: ReduxService,
+        private _loadingService: LoadingService,
+        private _localStorageService: LocalStorageService,
+        private _notificationService: NotificationService,
+        private _reLoginService: ReLoginService
+    ) {}
+
+    logInForm = new FormGroup(
+        {
+            userName: new FormControl(null, Validators.required),
+            password: new FormControl(null, Validators.required),
+            rememberMe: new FormControl(this._localStorageService.rememberMe)
+        },
+        {
+            updateOn: 'submit'
+        }
+    );
+
     isLoading$ = this._loadingService.isLoading$;
     logIn$Subscription: Subscription;
 
-    ngOnInit() {
-        const rememberMe = JSON.parse(localStorage.getItem('rememberMe'));
-        if (rememberMe) {
-            this.model.rememberMe = rememberMe.rememberMe;
-        }
-    }
 
     logIn() {
+        if (!this.logInForm.valid) {
+            return;
+        }
+
         this._loadingService.on();
-        localStorage.setItem('rememberMe', JSON.stringify({ rememberMe: this.model.rememberMe }));
+        this._localStorageService.rememberMe = this.logInForm.value.rememberMe;
+        if (this.logInForm.value.userName) {
+            if (this.logInForm.value.userName.includes('@')) {
+                this.logInForm.value.userName = this.logInForm.value.userName.split('@')[0]; // if email is entered, just grab username
+            }
+        } else {
+            if (this._reduxService.currentState.user) {
+                this.logInForm.value.userName = this._reduxService.currentState.user.userName;
+            }
+        }
 
         this.logIn$Subscription = this._reduxService
-            .actionLogIn(this.model.username, this.model.password, this.model.rememberMe)
+            .actionLogIn(this.logInForm.value.userName, this.logInForm.value.password, this.logInForm.value.rememberMe)
             .subscribe(
                 () => {
                     this._loadingService.off();
+                    this._reLoginService.retry();
                 },
                 error => {
                     this._loadingService.off();
-                    const notification: INotificationModel = {
-                        message: error,
-                        date: Date.now()
-                    };
-                    this._reduxService.actionNotify([notification]);
+                    this._notificationService.notify([{ message: error }]);
                 }
             );
     }

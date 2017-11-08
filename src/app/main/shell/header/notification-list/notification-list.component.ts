@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { ReduxService } from '../../../../providers/redux.service';
+import { NotificationService } from '../../../../shared/providers/notification.service';
 
 @Component({
     selector: 'atlas-notification-list',
@@ -8,11 +8,13 @@ import { ReduxService } from '../../../../providers/redux.service';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NotificationListComponent {
-    constructor(private _reduxService: ReduxService) {}
+    constructor(
+        private _notificationService: NotificationService
+    ) {}
 
-    notifications$ = this._reduxService.state$.map(state => state.notifications || []);
+    notifications$ = this._notificationService.notifications$;
 
     clearNotifications() {
-        this._reduxService.actionClearNotifications();
+        this._notificationService.clear();
     }
 }

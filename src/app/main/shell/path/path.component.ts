@@ -18,7 +18,7 @@ export class PathComponent {
     );
 
     onClick(event: string, index: number) {
-        const urlParams = this._reduxService.getCurrentState().urlParams;
+        const urlParams = this._reduxService.currentState.urlParams;
         this._reduxService.actionMenu(urlParams.slice(0, index + 1));
     }
 }

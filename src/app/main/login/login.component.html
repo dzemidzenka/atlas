@@ -1,21 +1,22 @@
 <main *ngIf="!(isLoading$ | async)">
   <h2 i18n>{{ 'Login' | translate }}</h2>
-  <form name="form" (ngSubmit)="f.form.valid && logIn()" #f="ngForm" novalidate>
-    <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !username.valid }">
-      <label for="username">{{ 'Username' | translate }}</label>
-      <input type="text" autofocus="true" class="form-control" name="username" [(ngModel)]="model.username" #username="ngModel"
-        required />
-      <div *ngIf="f.submitted && !username.valid" class="help-block">{{ 'Username Required' | translate }}</div>
+
+  <form [formGroup]="logInForm" (ngSubmit)="logIn()">
+    <div class="form-group">
+      <label for="userName">{{ 'Username' | translate }}</label>
+      <input type="text" autofocus="true" name="userName" formControlName="userName" class="form-control" novalidate/>
+      <div *ngIf="logInForm.get('userName').touched && !logInForm.get('userName').valid" class="help-block">{{ 'Username Required' | translate }}</div>
     </div>
-    <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !password.valid }">
-      <label for="password">{{ 'Password' | translate }}</label>
-      <input type="password" class="form-control" name="password" [(ngModel)]="model.password" #password="ngModel" required />
-      <div *ngIf="f.submitted && !password.valid" class="help-block">{{ 'Password Required' | translate }}</div>
-    </div>
-    <!-- <input type="checkbox" class="form-control" name="rememberMe" [(ngModel)]="model.rememberMe" /> -->
-    <mat-checkbox [(ngModel)]="model.rememberMe" name="rememberMe">Remember me</mat-checkbox>
 
     <div class="form-group">
+      <label for="password">{{ 'Password' | translate }}</label>
+      <input type="password" name="password" formControlName="password" class="form-control" novalidate/>
+      <div *ngIf="logInForm.get('password').touched && !logInForm.get('password').valid">{{ 'Password Required' | translate }}</div>
+    </div>
+
+    <mat-checkbox formControlName="rememberMe">Remember me</mat-checkbox>
+
+    <div>
       <button mat-button mat-raised-button>{{ 'Login' | translate }}</button>
     </div>
   </form>

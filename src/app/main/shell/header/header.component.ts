@@ -1,7 +1,6 @@
 import { Component, ChangeDetectionStrategy, Output, EventEmitter } from '@angular/core';
 import { ReduxService } from '../../../providers/redux.service';
-import { ACTION, IUserModel } from '../../../shared/models';
-
+import { NotificationService } from '../../../shared/providers/notification.service';
 import { CountryListComponent } from './country-list/country-list.component';
 
 @Component({
@@ -11,7 +10,10 @@ import { CountryListComponent } from './country-list/country-list.component';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HeaderComponent {
-    constructor(private _reduxService: ReduxService) {}
+    constructor(
+        private _reduxService: ReduxService,
+        private _notificationService: NotificationService
+    ) {}
     componentRef = CountryListComponent;
 
     @Output() sidebarToggle = new EventEmitter<void>();
@@ -20,10 +22,11 @@ export class HeaderComponent {
         Object.assign({
             country: state.country,
             isLoggedIn: state.isLoggedIn,
-            user: state.user,
-            notifications: state.notifications || []
+            user: state.user
         })
     );
+    notifications$ = this._notificationService.notifications$;
+
 
     onSidebarToggle() {
         this.sidebarToggle.emit();

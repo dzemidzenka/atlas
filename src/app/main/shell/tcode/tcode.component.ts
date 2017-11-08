@@ -1,10 +1,9 @@
-import { Component, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteTrigger } from '@angular/material';
-import { Observable } from 'rxjs/Observable';
+import { ReduxService, IMenuModel } from '../../../providers/redux.service';
+import { environment } from '../../../../environments/environment';
 
-import { ReduxService } from '../../../providers/redux.service';
-import { IMenuModel } from '../../../shared/models';
 
 @Component({
     selector: 'atlas-tcode',
@@ -12,22 +11,23 @@ import { IMenuModel } from '../../../shared/models';
     styleUrls: ['./tcode.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TcodeComponent implements OnInit {
-    constructor(private _reduxService: ReduxService) {}
+export class TcodeComponent {
+    constructor(
+        private _reduxService: ReduxService
+    ) { }
 
-    menuCtrl: FormControl;
-    filteredMenu: Observable<Array<IMenuModel>>;
+    menuCtrl = new FormControl();
+
+    filteredMenu = this.menuCtrl.valueChanges
+        .startWith(null)
+        .debounceTime(environment.debounceTime)
+        .distinctUntilChanged()
+        .withLatestFrom(this._reduxService.state$)
+        .map(array => (array[0] ? this.matchTcode(array[0], array[1].menu) : array[1].menu.filter(item => item.tcode)));
+
     // @ViewChild(MatAutocompleteTrigger) private _trigger;
 
-    ngOnInit() {
-        this.menuCtrl = new FormControl();
-        this.filteredMenu = this.menuCtrl.valueChanges
-            .startWith(null)
-            .debounceTime(250)
-            .distinctUntilChanged()
-            .withLatestFrom(this._reduxService.state$)
-            .map(array => (array[0] ? this.matchTcode(array[0], array[1].menu) : array[1].menu.filter(item => item.tcode)));
-    }
+
 
     matchTcode(tcode: string, menu: Array<IMenuModel>): Array<IMenuModel> {
         return menu

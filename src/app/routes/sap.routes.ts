@@ -51,16 +51,6 @@ export const SAP_ROUTES: Routes = [
     }
   },
   {
-    path: 'sap/sap-app3',
-    loadChildren: '../lazyModules/settings/settings.module#SettingsModule',
-    canActivate: [RouteGuardService],
-    resolve: { RouteResolverService },
-    data: {
-      isComponent: true,
-      description: 'App3'
-    }
-  },
-  {
     path: 'sap/configurator',
     component: IFrameComponent,
     canActivate: [RouteGuardService],

@@ -1,20 +1,14 @@
-<ng-container *ngIf="reLoginPrompt$ | async">
-  <main *ngIf="!(isLoading$ | async)">
-    <!-- <h2>{{ 'Login' | translate }}</h2> -->
+<!-- <ng-container *ngIf="reLoginPrompt$ | async"> -->
+  <!-- <main *ngIf="!(isLoading$ | async)">
     <mat-progress-bar [value]="timeToSessionExpiration$ | async"></mat-progress-bar>
     <form name="form" (ngSubmit)="f.form.valid && logIn()" #f="ngForm" novalidate>
       <div>Your session is about to expire. Please re-login</div>
-      <!-- <label for="username">{{ 'Username' | translate }}</label>
-      <input type="text" autofocus="true" class="form-control" name="username" [(ngModel)]="model.username" #username="ngModel"
-        required />
-      <span *ngIf="f.submitted && !username.valid" class="help-block">{{ 'Username Required' | translate }}</span> -->
-
       <label for="password">{{ 'Password' | translate }}</label>
-      <input type="password" class="form-control" name="password" [(ngModel)]="model.password" #password="ngModel" required />
-      <span *ngIf="f.submitted && !password.valid" class="help-block">{{ 'Password Required' | translate }}</span>
+      <input type="password" name="password" [(ngModel)]="model.password" #password="ngModel" required />
+      <span *ngIf="f.submitted && !password.valid">{{ 'Password Required' | translate }}</span>
 
       <button mat-button mat-raised-button>{{ 'Login' | translate }}</button>
       <button mat-button mat-raised-button (click)="logOut()">{{ 'Logout' | translate }}</button>
     </form>
-  </main>
-</ng-container>
+  </main> -->
+<!-- </ng-container> -->
