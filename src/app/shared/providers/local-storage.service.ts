@@ -6,7 +6,7 @@ import isEmpty from 'lodash-es/isEmpty';
 export class LocalStorageService {
     readonly lsAuth = 'lsAUTH';
     readonly lsRememberMe = 'lsRememberMe';
-    
+
     private _user: IUserModel;
     private _rememberMe: boolean;
 
@@ -15,12 +15,16 @@ export class LocalStorageService {
         if (!isEmpty(this._user)) {
             return this._user;
         }
-        return JSON.parse(localStorage.getItem(this.lsAuth));
+        const _lsAuth = localStorage.getItem(this.lsAuth);
+        if (_lsAuth) {
+            return JSON.parse(_lsAuth);
+        }
+        return {} as IUserModel;
     }
 
     set user(user: IUserModel) {
         if (isEmpty(user)) {
-            this._user = null;
+            this._user = {} as IUserModel;
             localStorage.removeItem(this.lsAuth);
         } else {
             this._user = user;
@@ -36,13 +40,14 @@ export class LocalStorageService {
 
     // REMEMBER ME
     get rememberMe(): boolean {
-        if (!isEmpty(this._rememberMe)) {
+        if (this._rememberMe != undefined) {
             return this._rememberMe;
         }
         const _rememberMe = localStorage.getItem(this.lsRememberMe);
         if (_rememberMe) {
             return JSON.parse(_rememberMe).rememberMe;
         }
+        return true;
     }
 
     set rememberMe(rememberMe: boolean) {

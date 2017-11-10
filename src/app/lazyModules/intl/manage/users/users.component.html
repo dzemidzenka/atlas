@@ -1,42 +1,28 @@
 <mat-tab-group (selectedTabChange)="onSelectedTabChange($event)">
   <mat-tab label="Atlas Users">
-    <input *ngIf="users$ | async as users" placeholder='User search - {{ users.length }} users found' aria-label="user" [formControl]="inputCtrl">
+    <input *ngIf="users" placeholder='User search - {{ users.length }} users found' aria-label="user" [formControl]="inputCtrl" autofocus>
 
-    <mat-accordion displayMode="flat">
-      <mat-expansion-panel *ngFor="let user of filteredUsers$ | async">
-        <mat-expansion-panel-header>
-          <mat-panel-title (click)="onClick(user)">
-            <strong>{{ user.name }}</strong>
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-
-        <pre>{{ userPartial | json }}</pre>
-      </mat-expansion-panel>
-    </mat-accordion>
+    <div *ngFor="let user of filteredUsers$ | async" (click)="onUserSelect(user)">
+      <strong class="user">{{ user?.name }}</strong>
+    </div>
   </mat-tab>
 
   <mat-tab label="Active Directory Users">
     <input placeholder='Active directory search (3char minimum)' aria-label="user" [formControl]="inputCtrlActiveDir">
 
-    <mat-accordion displayMode="flat">
-      <mat-expansion-panel *ngFor="let user of filteredUsersActiveDir$ | async">
-        <mat-expansion-panel-header>
-          <mat-panel-title (click)="onClick(user)">
-            <strong>{{ user.name }}</strong>
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-
-        <pre>{{ userPartial | json }}</pre>
-      </mat-expansion-panel>
-    </mat-accordion>
+    <div *ngFor="let user of filteredUsersActiveDir$ | async" (click)="onUserSelect(user)">
+      <strong class="user">{{ user?.name }}</strong>
+    </div>
   </mat-tab>
 </mat-tab-group>
 
-
+ 
 
 <mat-tab-group *ngIf="user" class="user-data-tabs">
   <mat-tab label="Display">
     <pre class="user-data">{{ user | json }}</pre>
   </mat-tab>
-  <mat-tab label="Change">Content 2</mat-tab>
+  <mat-tab label="Change">
+    <atlas-user-change [user]="user" [tenants]="tenants$ | async" (userUpdated)="onUserUpdate($event)"></atlas-user-change>
+  </mat-tab>
 </mat-tab-group>

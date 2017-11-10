@@ -10,8 +10,8 @@ import { environment } from '../../environments/environment';
 
 // import sortBy from 'lodash-es/sortBy';
 // import sortedUniq from 'lodash-es/sortedUniq';
+// import omit from 'lodash-es/omit';
 import cloneDeep from 'lodash-es/cloneDeep';
-import omit from 'lodash-es/omit';
 import isEmpty from 'lodash-es/isEmpty';
 
 export enum ACTION {
@@ -19,9 +19,7 @@ export enum ACTION {
     LOGIN = 'LOGIN',
     LOGOUT = 'LOGOUT',
     ROUTE = 'ROUTE',
-    FAVORITE_TOGGLE = 'FAVORITE_TOGGLE',
-    NOTIFICATION = 'NOTIFICATION',
-    NOTIFICATION_CLEAR = 'NOTIFICATION_CLEAR'
+    FAVORITE_TOGGLE = 'FAVORITE_TOGGLE'
 }
 
 // valid 2char country codes at https://www.iso.org/obp/ui/#search
@@ -47,20 +45,44 @@ export enum VIEW {
     RECENT = 'recent'
 }
 
-export interface IActionModel {
-    type: ACTION;
-    date?: number;
-    user?: IUserModel;
-    rememberMe?: boolean;
-    url?: string;
-    urlParams?: Array<string>;
-    queryParams?: Array<string>;
-    country?: COUNTRY;
-    language?: LANGUAGE;
-    menuItem?: IMenuModel;
+type IActionModel = IActionInitModel | IActionRouteModel | IActionLogInModel | IActionLogOutModel | IActionFavoriteToggleModel;
+//  {
+//     readonly type: ACTION;
+//     readonly date: number;
+//     readonly user: IUserModel;
+//     readonly rememberMe: boolean;
+//     readonly url: string;
+//     readonly urlParams: Array<string>;
+//     readonly queryParams: Array<string>;
+//     readonly menuItem: IMenuModel;
+// }
+type IActionType = {
+    readonly type: ACTION;
 }
 
-export interface IStateModel {
+interface IActionRouteModel extends IActionType {
+    readonly url: string;
+    readonly urlParams: Array<string>;
+    readonly queryParams: Array<string>;
+}
+
+interface IActionInitModel extends IActionType {
+    readonly user: IUserModel;
+}
+
+interface IActionLogInModel extends IActionType {
+    readonly user: IUserModel;
+    readonly rememberMe: boolean;
+}
+
+interface IActionLogOutModel extends IActionType { }
+
+interface IActionFavoriteToggleModel extends IActionType {
+    readonly menuItem: IMenuModel;
+}
+
+
+export type IStateModel = {
     action: IActionModel;
     url: string;
     urlParams: Array<string>;
@@ -77,7 +99,7 @@ export interface IStateModel {
 }
 
 
-export interface IUserModel {
+export type IUserModel = {
     userName: string;
     phone: string;
     nameDisplay: string;
@@ -88,7 +110,7 @@ export interface IUserModel {
     accessToken: string;
 }
 
-export interface IMenuModel {
+export type IMenuModel = {
     id: number;
     active: boolean;
     description: string;
@@ -114,10 +136,10 @@ export class ReduxService {
         private _notificationsService: NotificationService,
         private _localStorageService: LocalStorageService,
     ) {
+        this._translate.setDefaultLang(LANGUAGE.EN);
         this._initializeReducers();
         // console.log('ROUTES', this._router.config);
         // generateAdditionalRoutes(this._router.config);
-        this._translate.setDefaultLang(LANGUAGE.EN);
         // this._translate.get('HOME.HELLO', { value: 'world' }).subscribe((res: string) => {
         //   console.log(res);
         // });
@@ -131,8 +153,8 @@ export class ReduxService {
         state.urlParams = [];
         state.queryParams = [];
         state.menu = this._router.config
-            .filter(route => route.hasOwnProperty('data'))
-            .filter(route => route.data.hasOwnProperty('description'))
+            // .filter(route => route.hasOwnProperty('data'))
+            .filter(route => route.data && route.data.description)
             .map(this._menuItemFromRoute)
             .map((item: IMenuModel, i) => {
                 item.id = i + 1;
@@ -177,17 +199,14 @@ export class ReduxService {
             const _action = cloneDeep(action);
             this._reducers[_action.type].call(this, _state, _action);
             _state.action = _action;
-            _state.action.date = Math.floor(Date.now() / 1000);
-            // check if session has expired
-            if (_state.isLoggedIn) {
-                _state.isLoggedIn = _state.action.date < _state.user.expires;
-            }
         }
         return _state;
     }
 
+
+
     private _initializeReducers() {
-        this._reducers[ACTION.INIT] = (state: IStateModel, action: IActionModel) => {
+        this._reducers[ACTION.INIT] = (state: IStateModel, action: IActionInitModel) => {
             if (!isEmpty(action.user)) {
                 state.user = action.user;
                 state.isLoggedIn = true;
@@ -202,20 +221,20 @@ export class ReduxService {
             }
         };
 
-        this._reducers[ACTION.LOGIN] = (state: IStateModel, action: IActionModel) => {
+        this._reducers[ACTION.LOGIN] = (state: IStateModel, action: IActionLogInModel) => {
             state.user = action.user;
             state.isLoggedIn = true;
             this._localStorageService.user = state.user;
             this._notificationsService.clear();
         };
 
-        this._reducers[ACTION.LOGOUT] = (state: IStateModel, action: IActionModel) => {
+        this._reducers[ACTION.LOGOUT] = (state: IStateModel, action: IActionLogOutModel) => {
             state.user = {} as IUserModel;
             this._localStorageService.user = state.user;
             state.isLoggedIn = false;
         };
 
-        this._reducers[ACTION.ROUTE] = (state: IStateModel, action: IActionModel) => {
+        this._reducers[ACTION.ROUTE] = (state: IStateModel, action: IActionRouteModel) => {
             state.url = action.url;
             state.urlParams = action.urlParams.filter(param => param.length > 0).map(param => param.toLowerCase());
             state.queryParams = action.queryParams;
@@ -243,7 +262,7 @@ export class ReduxService {
             const _urlParams = [...state.urlParams];
             const _routerPath = _urlParams.join('/');
             if (state.menu) {
-                state.menuItemCurrent = state.menu.find(item => item.routerPath === _routerPath);
+                state.menuItemCurrent = state.menu.find(item => item.routerPath === _routerPath) || {} as IMenuModel;
             }
             state.isComponent = false;
             if (state.menuItemCurrent) {
@@ -259,9 +278,9 @@ export class ReduxService {
             }
         };
 
-        this._reducers[ACTION.FAVORITE_TOGGLE] = (state: IStateModel, action: IActionModel) => {
+        this._reducers[ACTION.FAVORITE_TOGGLE] = (state: IStateModel, action: IActionFavoriteToggleModel) => {
             state.menu
-                .filter(menu => menu.id === action.menuItem.id)
+                .filter(menu => action.menuItem && menu.id === action.menuItem.id)
                 .map(menu => menu.isFavorite = !menu.isFavorite);
         };
     }
@@ -273,17 +292,8 @@ export class ReduxService {
     actionLogIn(username: string, password: string, rememberMe: boolean): Observable<IUserModel> {
         const data = `grant_type=password&username=${username}&password=${password}&client_id=atlaswebapp`;
         const headers = new HttpHeaders().set('Content-type', 'application/x-www-form-urlencoded');
-
         return this._http
             .post(environment.logInUrl, data)
-            .catch((errorResponse: HttpErrorResponse) => {
-                console.log('HTTP LOGIN ERROR', errorResponse);
-                if (errorResponse.ok) {
-                    return Observable.throw(JSON.parse(errorResponse['error'])['error_description']);
-                } else {
-                    return Observable.throw(errorResponse.message);
-                }
-            })
             .map(this._userFromAuthResponse)
             .do(user => this._actionSubject$.next({ type: ACTION.LOGIN, user: user, rememberMe: rememberMe }));
     }
@@ -317,7 +327,8 @@ export class ReduxService {
     }
 
     actionMenu(urlParams: Array<string>) {
-        const queryParams = omit(this._route.snapshot.queryParams, 'view');
+        // const queryParams = omit(this._route.snapshot.queryParams, 'view');
+        const queryParams = this._route.snapshot.queryParams;
         this._router.navigate([urlParams.join('/')], { queryParams: { ...queryParams, view: VIEW.DASHBOARD } });
     }
 
@@ -398,12 +409,12 @@ export class ReduxService {
 
 
     private _userFromAuthResponse(response: Response): IUserModel {
-        const allowedCountries = response['as:tenantContextHosts'].split(', ').map(country =>
-            country
-                .trim()
-                .slice(0, 2)
-                .toLowerCase()
-        );
+        const allowedCountries = response['as:tenantContextHosts']
+            .split(', ')
+            .map(country => country.trim().slice(0, 2).toLowerCase());
+        if (!allowedCountries) {
+            allowedCountries[0] = COUNTRY.US;
+        }
 
         const user: IUserModel = {
             userName: response['userName'],
@@ -423,7 +434,7 @@ export class ReduxService {
 // ***********************************************************************
 // UTILITY FUNCTIONS
 // ***********************************************************************
-function generateAdditionalRoutes(routes) {
+// function generateAdditionalRoutes(routes) {
     // const _routes = routes;
     // create a route for each country
     // Object.keys(models.COUNTRY)
@@ -442,4 +453,4 @@ function generateAdditionalRoutes(routes) {
     //     redirectTo: 'us/page-not-found',
     //   }
     // );
-}
+// }

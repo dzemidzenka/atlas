@@ -20,7 +20,6 @@ import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/concatMap';
 import 'rxjs/add/operator/shareReplay';
 import 'rxjs/add/operator/repeat';
-import 'rxjs/add/operator/retryWhen';
 
 import 'rxjs/add/observable/of';
 import 'rxjs/add/observable/throw';
@@ -41,9 +40,11 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatExpansionModule } from '@angular/material/expansion';
+// import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTabsModule } from '@angular/material/tabs';
-import { MatDialogModule } from '@angular/material/dialog';
+// import { MatDialogModule } from '@angular/material/dialog';
+
+
 // import {
 //     MatAutocompleteModule,
 //     MatButtonModule,
@@ -89,8 +90,8 @@ const MODULES = [
     MatCheckboxModule,
     // MatChipsModule,
     // MatDatepickerModule,
-    MatDialogModule,
-    MatExpansionModule,
+    // MatDialogModule,
+    // MatExpansionModule,
     // MatFormFieldModule,
     // MatIconModule,
     // MatInputModule,

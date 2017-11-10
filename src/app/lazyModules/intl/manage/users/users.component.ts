@@ -1,21 +1,18 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
-import pick from 'lodash-es/pick';
+import { Subject } from 'rxjs/Subject';
 import { FormControl } from '@angular/forms';
 import { LoadingService } from '../../../../shared/providers/loading.service';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { ReLoginService } from '../../../../shared/providers/re-login.service';
 import { environment } from '../../../../../environments/environment';
 
-interface IClaim {
-    country: Array<Object>;
-}
 
-interface IUser {
+export type IUser = {
     accountType: string;
     authorizedTenantContexts: Array<string>;
-    claims: Array<IClaim>;
+    claims: Array<any>;
     email: string;
     exists: boolean;
     lockoutEnabled: boolean;
@@ -33,30 +30,30 @@ interface IUser {
     styleUrls: ['./users.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class UsersComponent {
+export class UsersComponent implements OnInit {
     constructor(
         private _http: HttpClient,
         private _loadingService: LoadingService,
         private _reLoginService: ReLoginService,
     ) { }
 
-    // usersActiveDir$: Observable<any>;
-    user: IUser;
-    userPartial: Partial<IUser>;
+    user: IUser | null;
     users: Array<IUser>;
-    usersActiveDir: Array<IUser>;
-    inputCtrl: FormControl = new FormControl();
-    inputCtrlActiveDir: FormControl = new FormControl();
+    inputCtrl = new FormControl();
+    inputCtrlActiveDir = new FormControl();
+    updateSubject$ = new Subject();
 
 
-    users$ = this._http
+    tenants$ = this._http
+        .get<Array<string>>('http://de.atlasglobal-dev.nuvasive.com/api/V1/en-us/users/tenants?q=names')
+        .shareReplay();
+
+
+
+    users$: Observable<Array<IUser>> = this._http
         .get<Array<IUser>>('http://de.atlasglobal-dev.nuvasive.com/api/V1/en-us/users')
         .do(users => this.users = users)
         .do(() => this._loadingService.off())
-        .catch((errorResponse: HttpErrorResponse) => {
-            console.log('HTTP ERROR', errorResponse);
-            return Observable.throw(errorResponse.message);
-        })
         .shareReplay();
 
 
@@ -64,15 +61,15 @@ export class UsersComponent {
     filteredUsers$: Observable<Array<IUser>> = this.users$.concatMap(users =>
         this.inputCtrl.valueChanges
             .startWith(null)
-            .debounceTime(environment.debounceTime)
-            .distinctUntilChanged()
-            .map(searchTerm => (searchTerm ? users.filter(user => user.name.toLowerCase().includes(searchTerm.toLowerCase())) : users))
+            .do(() => this.user = null)
+            .map(searchTerm => searchTerm ? users.filter(user => user.name.toLowerCase().includes(searchTerm.toLowerCase())) : users)
     );
 
     filteredUsersActiveDir$: Observable<Array<IUser>> = this.inputCtrlActiveDir.valueChanges
-        // .startWith(null)
-        .do(() => this._loadingService.off())
+        // .startWith('')
         .debounceTime(environment.debounceTime)
+        .merge(this.updateSubject$)
+        .map(searchTerm => searchTerm.trim())
         .distinctUntilChanged()
         // .merge(c => this._reLoginService.retry$.switchMap(() =>
         //     this._http
@@ -80,70 +77,45 @@ export class UsersComponent {
         //         .do(users => this.usersActiveDir = users)
         //         .do(() => this._loadingService.off())
         // ))
-        // .do((a) => console.log(a))
-        .filter(searchTerm => searchTerm && searchTerm.length > 2)
+        // .filter(searchTerm => searchTerm && searchTerm.length >= environment.minCharForHttpSearch)
+        .do(() => this.user = null)
         .switchMap(searchTerm => {
-            this._loadingService.on();
-            return this._http
-                .get<Array<IUser>>(`http://de.atlasglobal-dev.nuvasive.com/api/V1/en-us/users/search/${searchTerm}?index=0&limit=20`)
-                .do(users => this.usersActiveDir = users)
-                .do(() => this._loadingService.off())
-                // .retryWhen(error => {
-                //     console.log('retryWhen');
-
-                //     return Observable.throw(this._reLoginService.retry$)
-                // })        
-
-                .catch((errorResponse: HttpErrorResponse) => Observable.throw(errorResponse.message));
-        })
-        .catch((errorResponse: HttpErrorResponse) => {
-            this._loadingService.off()
-            return Observable.of([{ name: 'No users found' }]);
-        })
-        // .retryWhen(error => Observable.throw(true))        
-        .repeat();
+            if (searchTerm.length >= environment.minCharForHttpSearch) {
+                this._loadingService.on();
+                return this._http
+                    .get<Array<IUser>>(`http://de.atlasglobal-dev.nuvasive.com/api/V1/en-us/users/search/${searchTerm}?index=0&limit=20`)
+                    .do(() => this._loadingService.off())
+            } else {
+                return Observable.of([null])
+                // return Observable.of(this.users)
+            }
+        });
 
 
 
-    onClick(user: IUser) {
-        this.user = user;
-        // this.userPartial = pick(user, ['userName', 'email', 'preferredTenantContext', 'authorizedTenantContexts', 'claims.Role']);
+    ngOnInit() {
+        this.users$.subscribe;
     }
 
-    onSelect(name: string) {
-        this.user = this.users.find(u => u.name === name);
-        this.inputCtrl.setValue(null);
-    }
-
-    onSelectActiveDir(name: string) {
-        this.user = this.usersActiveDir.find(u => u.name === name);
-        // this.inputCtrlActiveDir.setValue(null);
-    }
 
     onSelectedTabChange(tabGroup: MatTabChangeEvent) {
         this.user = null;
-        if (tabGroup.index === 0) {
-            return;
-        }
-        if (this.usersActiveDir) {
-            return;
-        }
+    }
 
-        // this.usersActiveDir$ = this._http
-        //     .get<Array<IUser>>('http://de.atlasglobal-dev.nuvasive.com/api/V1/en-us/users/search/tom?index=0')
-        //     .do(users => (this.usersActiveDir = users))
-        //     .catch((errorResponse: HttpErrorResponse) => {
-        //         console.log('HTTP ERROR', errorResponse);
-        //         return Observable.throw(errorResponse.message);
-        //     })
-        //     .shareReplay();
+    onUserSelect(user: IUser) {
+        this.user = user;
+    }
 
-        // this.filteredUsersActiveDir$ = this.usersActiveDir$.concatMap(users =>
-        //     this.inputCtrlActiveDir.valueChanges
-        //         .startWith(null)
-        //         .debounceTime(250)
-        //         .distinctUntilChanged()
-        //         .map(searchTerm => (searchTerm ? users.filter(user => user.name.toLowerCase().includes(searchTerm.toLowerCase())) : users))
-        // );
+
+    onUserUpdate(user: IUser) {
+        this.updateSubject$.next('');
+        this.inputCtrlActiveDir.setValue('');
+        this.onUserSelect(user);
+        const index = this.users.findIndex(u => u.userName === user.userName);
+        if (index === -1) {
+            this.users.push(user);
+        } else {
+            this.users[index] = user;
+        }
     }
 }

@@ -4,6 +4,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { SharedModule } from '../../../../shared/shared.module';
 
 import { UsersComponent } from './users.component';
+import { UserChangeComponent } from './user-change/user-change.component';
 
 const ROUTES: Routes = [
     {
@@ -14,6 +15,6 @@ const ROUTES: Routes = [
 
 @NgModule({
     imports: [SharedModule, RouterModule.forChild(ROUTES), TranslateModule.forChild()],
-    declarations: [UsersComponent]
+    declarations: [UsersComponent, UserChangeComponent]
 })
 export class UsersModule {}

@@ -1,0 +1,27 @@
+{
+  "index": "/index.html",
+  "assetGroups": [{
+    "name": "Atlas Portal",
+    "installMode": "prefetch",
+    "resources": {
+      "files": [
+        "/index.html",
+        "/assets/i18n/en.json"        
+      ],
+      "versionedFiles": [
+        "/*.bundle.css",
+        "/*.bundle.js",
+        "/*.chunk.js"
+      ]
+    }
+  }, {
+    "name": "assets",
+    "installMode": "lazy",
+    "updateMode": "prefetch",
+    "resources": {
+      "files": [
+        "/assets/**"
+      ]
+    }
+  }]
+}

@@ -34,7 +34,7 @@ export class LoginComponent implements OnDestroy {
     );
 
     isLoading$ = this._loadingService.isLoading$;
-    logIn$Subscription: Subscription;
+    private _logIn$Subscription: Subscription;
 
 
     logIn() {
@@ -54,7 +54,7 @@ export class LoginComponent implements OnDestroy {
             }
         }
 
-        this.logIn$Subscription = this._reduxService
+        this._logIn$Subscription = this._reduxService
             .actionLogIn(this.logInForm.value.userName, this.logInForm.value.password, this.logInForm.value.rememberMe)
             .subscribe(
                 () => {
@@ -63,14 +63,14 @@ export class LoginComponent implements OnDestroy {
                 },
                 error => {
                     this._loadingService.off();
-                    this._notificationService.notify([{ message: error }]);
+                    // this._notificationService.notify([{ message: error }]);
                 }
             );
     }
 
     ngOnDestroy() {
-        if (this.logIn$Subscription) {
-            this.logIn$Subscription.unsubscribe();
+        if (this._logIn$Subscription) {
+            this._logIn$Subscription.unsubscribe();
         }
     }
 }

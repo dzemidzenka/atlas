@@ -2,18 +2,20 @@
     "compileOnSave": false,
     "compilerOptions": {
         "outDir": "./dist/out-tsc",
-        "sourceMap": true,
+        "sourceMap": false,
         "declaration": false,
         "moduleResolution": "node",
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "noUnusedParameters": false,
-        "target": "es5",
+        "target": "es2015",
         "typeRoots": ["node_modules/@types"],
-        "lib": ["es2017", "dom"]
+        "lib": ["es2017", "dom"],
+        "strictNullChecks": true,
+        "alwaysStrict": true
     },
     "angularCompilerOptions": {
-        "preserveWhitespaces": false
+        "preserveWhitespaces": false        
     },
     "exclude": ["test.ts", "**/*.spec.ts"]
 }

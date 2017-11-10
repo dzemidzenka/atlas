@@ -1,0 +1,46 @@
+<form [formGroup]="userForm" (ngSubmit)="update()">
+  <div>
+    <button mat-button mat-raised-button>{{ 'Save' | translate }}</button>
+  </div>
+
+  <strong>User</strong>
+  <div class="form-group">
+    <label for="userName">{{ 'Username' }}</label>
+    <input type="text" name="userName" formControlName="userName" class="form-control" novalidate/>
+    <!-- <div *ngIf="logInForm.get('userName').touched && !logInForm.get('userName').valid">{{ 'Username Required' | translate }}</div> -->
+  </div>
+
+  <div class="form-group">
+    <label for="name">{{ 'Name' }}</label>
+    <input type="text" autofocus="true" name="name" formControlName="name" class="form-control" novalidate/>
+    <!-- <div *ngIf="logInForm.get('userName').touched && !logInForm.get('userName').valid">{{ 'Username Required' | translate }}</div> -->
+  </div>
+
+  <div class="form-group">
+    <label for="phoneNumber">{{ 'Phone' }}</label>
+    <input type="text" name="phoneNumber" formControlName="phoneNumber" class="form-control" novalidate/>
+    <!-- <div *ngIf="logInForm.get('userName').touched && !logInForm.get('userName').valid">{{ 'Username Required' | translate }}</div> -->
+  </div>
+
+
+  <ng-container *ngIf="tenants">
+    <strong>Authorized Tenants</strong>
+    <div *ngFor="let tenantControl of userForm.get('tenants').controls; let i = index;" formArrayName="tenants">
+      <input type="checkbox" name="tenant" [formControlName]="i">
+      <label for="tenant">{{ tenants[i] }}</label>
+    </div>
+  </ng-container>
+
+
+  <ng-container *ngIf="claims$ | async as claims">
+    <strong>Claims</strong>
+    <div *ngFor="let claim of claims.claimTypes">
+      <span>{{ claim }}</span>
+    </div>
+
+    <strong>Roles</strong>
+    <div *ngFor="let role of claims.roleNames">
+      <span>{{ role }}</span>
+    </div>
+  </ng-container>
+</form>

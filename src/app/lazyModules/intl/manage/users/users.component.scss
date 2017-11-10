@@ -4,9 +4,13 @@
     background-color: white;
 }
 
-mat-accordion {
+.user {
     overflow: auto;
-    width: 800px;
+    display: block;
+    width: 300px;
+    height: 30px;
+    margin-left: 1rem;
+    cursor: pointer;
 }
 
 .user-data-tabs, .user-data {
@@ -16,4 +20,12 @@ mat-accordion {
 input {
   width: 100%;
   outline: none;
+//   position: absolute;
+//   top: 0;
 }
+
+
+mat-tab-group{
+    position: relative;
+}
+
