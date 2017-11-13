@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, Output, EventEmitter } from '@angular/core';
 import { ReduxService } from '../../../providers/redux.service';
 import { NotificationService } from '../../../shared/providers/notification.service';
-import { CountryListComponent } from './country-list/country-list.component';
+import { DashboardComponent } from '../../dashboard/dashboard.component';
 
 @Component({
     selector: 'atlas-header',
@@ -14,8 +14,8 @@ export class HeaderComponent {
         private _reduxService: ReduxService,
         private _notificationService: NotificationService
     ) {}
-    componentRef = CountryListComponent;
-
+    // componentRef = DashboardComponent;
+    
     @Output() sidebarToggle = new EventEmitter<void>();
 
     state$ = this._reduxService.state$.map(state =>

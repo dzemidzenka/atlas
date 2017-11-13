@@ -1,28 +1,31 @@
-<mat-tab-group (selectedTabChange)="onSelectedTabChange($event)">
-  <mat-tab label="Atlas Users">
-    <input *ngIf="users" placeholder='User search - {{ users.length }} users found' aria-label="user" [formControl]="inputCtrl" autofocus>
+<ng-container *ngIf="state$ | async as state">
+  <mat-tab-group (selectedTabChange)="onSelectedTabChange($event)">
+    <mat-tab label="Atlas Users">
+      <input *ngIf="state.users" placeholder='User search - {{ state.users.length }} users found' aria-label="user" [formControl]="inputCtrl"
+        autofocus>
 
-    <div *ngFor="let user of filteredUsers$ | async" (click)="onUserSelect(user)">
-      <strong class="user">{{ user?.name }}</strong>
-    </div>
-  </mat-tab>
+      <div *ngFor="let user of state.filteredUsers" (click)="onUserSelect(user)">
+        <strong class="user">{{ user?.name }}</strong>
+      </div>
+    </mat-tab>
 
-  <mat-tab label="Active Directory Users">
-    <input placeholder='Active directory search (3char minimum)' aria-label="user" [formControl]="inputCtrlActiveDir">
+    <mat-tab label="Active Directory Users">
+      <input placeholder='Active directory search (3char minimum)' aria-label="user" [formControl]="inputCtrlActiveDir">
 
-    <div *ngFor="let user of filteredUsersActiveDir$ | async" (click)="onUserSelect(user)">
-      <strong class="user">{{ user?.name }}</strong>
-    </div>
-  </mat-tab>
-</mat-tab-group>
+      <div *ngFor="let user of state.filteredUsersActiveDir" (click)="onUserSelect(user)">
+        <strong class="user">{{ user?.name }}</strong>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
 
- 
 
-<mat-tab-group *ngIf="user" class="user-data-tabs">
-  <mat-tab label="Display">
-    <pre class="user-data">{{ user | json }}</pre>
-  </mat-tab>
-  <mat-tab label="Change">
-    <atlas-user-change [user]="user" [tenants]="tenants$ | async" (userUpdated)="onUserUpdate($event)"></atlas-user-change>
-  </mat-tab>
-</mat-tab-group>
+
+  <mat-tab-group *ngIf="state.user" class="user-data-tabs">
+    <mat-tab label="Display">
+      <pre class="user-data">{{ state.user | json }}</pre>
+    </mat-tab>
+    <mat-tab label="Change">
+      <atlas-user-change [user]="state.user" [tenants]="state.tenants" [claims]="state.claims" (userUpdated)="onUserUpdate($event)"></atlas-user-change>
+    </mat-tab>
+  </mat-tab-group>
+</ng-container>

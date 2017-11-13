@@ -1,13 +1,9 @@
-import { Component, OnChanges, OnDestroy, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { Component, OnChanges, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
-import { IUser } from '../users.component';
+import { IUser } from '../users.service';
 import cloneDeep from 'lodash-es/cloneDeep';
 import omit from 'lodash-es/omit';
-import { NotificationService } from '../../../../../shared/providers/notification.service';
-import { LoadingService } from '../../../../../shared/providers/loading.service';
+
 
 @Component({
   selector: 'atlas-user-change',
@@ -15,22 +11,12 @@ import { LoadingService } from '../../../../../shared/providers/loading.service'
   styleUrls: ['./user-change.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class UserChangeComponent implements OnChanges, OnDestroy {
-  constructor(
-    private _http: HttpClient,
-    private _notificationsService: NotificationService,
-    private _loadingService: LoadingService,
-  ) { }
-
+export class UserChangeComponent implements OnChanges {
   @Input() user: IUser;
   @Input() tenants: Array<string>;
-  @Output() userUpdated: EventEmitter<IUser> = new EventEmitter();
+  @Input() claims: Array<string>;
+  @Output() userUpdated: EventEmitter<any> = new EventEmitter();
   userForm: FormGroup;
-  private _http$Subscription: Subscription;
-
-  claims$ = this._http
-    .get('http://de.atlasglobal-dev.nuvasive.com/api/V1/en-us/users/claims?q=[claimtypes,rolenames]')
-    .shareReplay();
 
 
   ngOnChanges() {
@@ -54,7 +40,6 @@ export class UserChangeComponent implements OnChanges, OnDestroy {
 
 
   update() {
-    this._loadingService.on()
     const _user = cloneDeep(this.user);
 
     // const claims = [
@@ -68,29 +53,14 @@ export class UserChangeComponent implements OnChanges, OnDestroy {
     //   { key: 'Role', value: 'GlobalAdmin' }
     // ];
 
-    const claims: Array<{key, value}> = [];
+    const claims: Array<{ key, value }> = [];
     Object.entries(_user.claims).forEach(claim => claim[1].forEach(value => claims.push({ 'key': claim[0], 'value': value })));
     _user.claims = claims;
     const data = Object.assign(_user, omit(this.userForm.value, ['tenants']));
 
     data.authorizedTenantContexts = [];
     this.userForm.value.tenants.forEach((selected, i) => selected ? data.authorizedTenantContexts.push(this.tenants[i]) : null);
-   
-    this._http$Subscription = this._http
-      .put('http://de.atlasglobal-dev.nuvasive.com/api/V1/en-us/users/' + _user.userName, JSON.stringify(data), {
-        headers: new HttpHeaders().set('Content-Type', 'application/json'),
-      })
-      .do(() => this._notificationsService.notifySingle('Updated successfully'))
-      .do((res: IUser) => this.userUpdated.emit(res))           // there is a bug on API side that nulls the new tenants
-      // .do((res: IUser) => console.log('reposnse', res))
-      .do(() => this._loadingService.off())
-      // .do((res: IUser) => merge(this.user, res))
-      .subscribe();
-  }
 
-  ngOnDestroy() {
-    if (this._http$Subscription) {
-      this._http$Subscription.unsubscribe();
-    }
+    this.userUpdated.emit(data);
   }
 }

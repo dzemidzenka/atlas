@@ -5,6 +5,8 @@ import { RouterModule } from '@angular/router';
 import { HttpClientModule, HttpClient, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { SharedModule } from '../shared/shared.module';
 import { SimpleNotificationsModule } from 'angular2-notifications';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../../environments/environment';
 
 // providers
 import { RouteGuardService } from '../providers/route-guard.service';
@@ -76,6 +78,7 @@ import { ReLoginComponent } from './login/re-login/re-login.component';
         ReLoginComponent
     ],
     imports: [
+        environment.production ? ServiceWorkerModule.register('/ngsw-worker.js') : [],
         SharedModule.forRoot(),
         BrowserAnimationsModule,
         // NoopAnimationsModule,

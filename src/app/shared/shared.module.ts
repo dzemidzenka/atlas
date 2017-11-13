@@ -20,13 +20,15 @@ import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/concatMap';
 import 'rxjs/add/operator/shareReplay';
 import 'rxjs/add/operator/repeat';
+import 'rxjs/add/operator/toPromise';
 
 import 'rxjs/add/observable/of';
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/observable/interval';
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/observable/merge';
-
+import 'rxjs/add/observable/forkJoin';
+ 
 import { ReduxService } from '../providers/redux.service';
 import { LoadingService } from './providers/loading.service';
 import { LocalStorageService } from './providers/local-storage.service';

@@ -32,7 +32,7 @@
   </ng-container>
 
 
-  <ng-container *ngIf="claims$ | async as claims">
+  <ng-container *ngIf="claims">
     <strong>Claims</strong>
     <div *ngFor="let claim of claims.claimTypes">
       <span>{{ claim }}</span>
