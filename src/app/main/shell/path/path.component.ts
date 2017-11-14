@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { ReduxService } from '../../../providers/redux.service';
+import { AppService } from '../../../main/app.service';
 
 @Component({
     selector: 'atlas-path',
@@ -8,17 +8,19 @@ import { ReduxService } from '../../../providers/redux.service';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PathComponent {
-    constructor(private _reduxService: ReduxService) {}
+    constructor(
+        private _appService: AppService
+    ) { }
 
-    path$ = this._reduxService.state$.map(state =>
+    path$ = this._appService.state$.map(state =>
         Object.assign({
             urlParams: state.urlParams,
             isComponent: state.isComponent
         })
     );
 
-    onClick(event: string, index: number) {
-        const urlParams = this._reduxService.currentState.urlParams;
-        this._reduxService.actionMenu(urlParams.slice(0, index + 1));
+    onClick(index: number) {
+        const urlParams = this._appService.currentState.urlParams;
+        this._appService.actionMenu(urlParams.slice(0, index + 1));
     }
 }

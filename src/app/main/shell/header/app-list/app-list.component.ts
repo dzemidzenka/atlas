@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { ReduxService, VIEW } from '../../../../providers/redux.service';
+import { AppService, VIEW } from '../../../../main/app.service';
 
 @Component({
     selector: 'atlas-app-list',
@@ -9,15 +9,15 @@ import { ReduxService, VIEW } from '../../../../providers/redux.service';
 })
 export class AppListComponent {
     constructor(
-        private _reduxService: ReduxService
+        private _appService: AppService
     ) { }
     view = VIEW;
 
     switchApp(app: string) {
         if (Object.values(VIEW).includes(app)) {
-            this._reduxService.actionDashboard(app as VIEW);
+            this._appService.actionDashboard(app as VIEW);
         } else {
-            this._reduxService.actionMenu([app]);
+            this._appService.actionMenu([app]);
         }
     }
 }

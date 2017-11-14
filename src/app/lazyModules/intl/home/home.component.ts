@@ -1,6 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
+import { HttpClient } from '@angular/common/http';
 import { LoadingService } from '../../../shared/providers/loading.service';
 
 @Component({
@@ -36,10 +35,6 @@ export class HomeComponent implements OnInit {
                 // { headers: headers }
             )
             .do(json => console.log(json))
-            .catch((errorResponse: HttpErrorResponse) => {
-                console.log('HTTP ERROR', errorResponse);
-                return Observable.throw(errorResponse.message);
-            })
             .subscribe();
     }
 }

@@ -1,7 +1,6 @@
-import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { MatAutocompleteTrigger } from '@angular/material';
-import { ReduxService, IMenuModel } from '../../../providers/redux.service';
+import { AppService, IMenuModel } from '../../../main/app.service';
 import { environment } from '../../../../environments/environment';
 
 
@@ -13,7 +12,7 @@ import { environment } from '../../../../environments/environment';
 })
 export class TcodeComponent {
     constructor(
-        private _reduxService: ReduxService
+        private _appService: AppService
     ) { }
 
     menuCtrl = new FormControl();
@@ -22,10 +21,9 @@ export class TcodeComponent {
         .startWith(null)
         .debounceTime(environment.debounceTime)
         .distinctUntilChanged()
-        .withLatestFrom(this._reduxService.state$)
+        .withLatestFrom(this._appService.state$)
         .map(array => (array[0] ? this.matchTcode(array[0], array[1].menu) : array[1].menu.filter(item => item.tcode)));
 
-    // @ViewChild(MatAutocompleteTrigger) private _trigger;
 
 
 
@@ -37,7 +35,7 @@ export class TcodeComponent {
     }
 
     onSelect(tcode: string) {
-        this._reduxService.actionTcode(tcode);
+        this._appService.actionTcode(tcode);
         this.menuCtrl.setValue(null);
         // this._trigger.closePanel();
     }

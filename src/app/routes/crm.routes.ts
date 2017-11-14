@@ -1,6 +1,4 @@
 import { Routes } from '@angular/router';
-import { RouteGuardService } from '../providers/route-guard.service';
-import { RouteResolverService } from '../providers/route-resolver.service';
 import { DashboardComponent } from '../main/dashboard/dashboard.component';
 import { IFrameComponent } from '../shared/components/iframe/iframe.component';
 
@@ -19,8 +17,6 @@ export const CRM_ROUTES: Routes = [
   {
     path: 'crm/crm-contacts',
     component: IFrameComponent,
-    canActivate: [RouteGuardService],
-    resolve: { RouteResolverService },
     data: {
       isComponent: true,
       description: 'Contacts',
@@ -30,8 +26,6 @@ export const CRM_ROUTES: Routes = [
   {
     path: 'crm/crm-accounts',
     component: IFrameComponent,
-    canActivate: [RouteGuardService],
-    resolve: { RouteResolverService },
     data: {
       isComponent: true,
       description: 'Accounts',
@@ -41,8 +35,6 @@ export const CRM_ROUTES: Routes = [
   {
     path: 'crm/crm-salesreps',
     component: IFrameComponent,
-    canActivate: [RouteGuardService],
-    resolve: { RouteResolverService },
     data: {
       isComponent: true,
       description: 'Sales Reps',
@@ -52,8 +44,6 @@ export const CRM_ROUTES: Routes = [
   {
     path: 'crm/crm-apperian',
     component: IFrameComponent,
-    canActivate: [RouteGuardService],
-    resolve: { RouteResolverService },
     data: {
       isComponent: true,
       description: 'Apperian',
@@ -63,8 +53,6 @@ export const CRM_ROUTES: Routes = [
   {
     path: 'crm/crm-pricing_requests',
     component: IFrameComponent,
-    canActivate: [RouteGuardService],
-    resolve: { RouteResolverService },
     data: {
       isComponent: true,
       description: 'Contract Pricing Requests',
@@ -74,8 +62,6 @@ export const CRM_ROUTES: Routes = [
   {
     path: 'crm/crm-event_requests',
     component: IFrameComponent,
-    canActivate: [RouteGuardService],
-    resolve: { RouteResolverService },
     data: {
       isComponent: true,
       description: 'Event Requests',
@@ -85,8 +71,6 @@ export const CRM_ROUTES: Routes = [
   {
     path: 'crm/crm-intl_event_requests',
     component: IFrameComponent,
-    canActivate: [RouteGuardService],
-    resolve: { RouteResolverService },
     data: {
       isComponent: true,
       description: 'International Event Requests',
@@ -96,8 +80,6 @@ export const CRM_ROUTES: Routes = [
   {
     path: 'crm/crm-permissions',
     component: IFrameComponent,
-    canActivate: [RouteGuardService],
-    resolve: { RouteResolverService },
     data: {
       isComponent: true,
       description: 'Permissions',
@@ -107,8 +89,6 @@ export const CRM_ROUTES: Routes = [
   {
     path: 'crm/crm-configurations',
     component: IFrameComponent,
-    canActivate: [RouteGuardService],
-    resolve: { RouteResolverService },
     data: {
       isComponent: true,
       description: 'Configurations',

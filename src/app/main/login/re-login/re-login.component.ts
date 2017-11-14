@@ -1,6 +1,6 @@
-import { Component, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { LoginComponent } from '../login.component';
-import { ReduxService } from '../../../providers/redux.service';
+import { AppService } from '../../../main/app.service';
 import { LoadingService } from '../../../shared/providers/loading.service';
 import { LocalStorageService } from '../../../shared/providers/local-storage.service';
 import { NotificationService } from '../../../shared/providers/notification.service';
@@ -18,17 +18,17 @@ import { environment } from '../../../../environments/environment';
 })
 export class ReLoginComponent extends LoginComponent {
     constructor(
-        _reduxService: ReduxService,
+        _appService: AppService,
         _loadingService: LoadingService,
         _localStorageService: LocalStorageService,
         _notificationService: NotificationService,
-        _retryService: ReLoginService,
+        _reLoginService: ReLoginService,
         private _dialogRef: MatDialogRef<ReLoginComponent>,
     ) {
-        super(_reduxService, _loadingService, _localStorageService, _notificationService, _retryService);
+        super(_appService, _loadingService, _localStorageService, _reLoginService);
     }
 
-    // reLoginPrompt$ = this._reduxService.state$.switchMap((state: IStateModel) => {
+    // reLoginPrompt$ = this._appService.state$.switchMap((state: IStateModel) => {
     //     if (!state.isLoggedIn) {
     //         return Observable.of(false);
     //     }
@@ -51,6 +51,6 @@ export class ReLoginComponent extends LoginComponent {
 
     logOut() {
         this._dialogRef.close();
-        this._reduxService.actionLogOut();
+        this._appService.actionLogOut();
     }
 }

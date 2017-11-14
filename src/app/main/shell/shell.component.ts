@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, ViewChild } from '@angular/core';
-import { ReduxService, ACTION } from '../../providers/redux.service';
+import { AppService, ACTION } from '../../main/app.service';
 import { MatDrawer } from '@angular/material/sidenav';
 
 @Component({
@@ -10,12 +10,12 @@ import { MatDrawer } from '@angular/material/sidenav';
 })
 export class ShellComponent {
     constructor(
-        private _reduxService: ReduxService
+        private _appService: AppService
     ) {}
 
     @ViewChild('sidenav') private _sidenav: MatDrawer;
 
-    state$ = this._reduxService.state$
+    state$ = this._appService.state$
         .map(state =>
             Object.assign({
                 action: state.action,

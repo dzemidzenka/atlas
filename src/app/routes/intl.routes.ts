@@ -1,6 +1,4 @@
 import { Routes } from '@angular/router';
-import { RouteGuardService } from '../providers/route-guard.service';
-import { RouteResolverService } from '../providers/route-resolver.service';
 import { DashboardComponent } from '../main/dashboard/dashboard.component';
 import { IFrameComponent } from '../shared/components/iframe/iframe.component';
 
@@ -19,8 +17,6 @@ export const INTL_ROUTES: Routes = [
   {
     path: 'intl/intl-home-native',
     loadChildren: '../lazyModules/intl/home/home.module#HomeModule',
-    canActivate: [RouteGuardService],
-    resolve: { RouteResolverService },
     data: {
       isComponent: true,
       description: 'International Home (Native)',
@@ -29,8 +25,6 @@ export const INTL_ROUTES: Routes = [
   {
     path: 'intl/intl-home',
     component: IFrameComponent,
-    canActivate: [RouteGuardService],
-    resolve: { RouteResolverService },
     data: {
       isComponent: true,
       isFavorite: true,
@@ -41,8 +35,6 @@ export const INTL_ROUTES: Routes = [
   {
     path: 'intl/intl-order',
     component: IFrameComponent,
-    canActivate: [RouteGuardService],
-    resolve: { RouteResolverService },
     data: {
       isComponent: true,
       isFavorite: true,

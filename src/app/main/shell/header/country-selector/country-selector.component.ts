@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { ReduxService } from '../../../../providers/redux.service';
+import { AppService } from '../../../../main/app.service';
 import { CountryListComponent } from '../country-list/country-list.component';
 
 @Component({
@@ -9,8 +9,10 @@ import { CountryListComponent } from '../country-list/country-list.component';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CountrySelectorComponent {
-    constructor(private _reduxService: ReduxService) {}
+    constructor(
+        private _appService: AppService
+    ) {}
 
-    country$ = this._reduxService.state$.map(state => state.country);
+    country$ = this._appService.state$.map(state => state.country);
     componentRef = CountryListComponent;
 }

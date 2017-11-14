@@ -1,8 +1,8 @@
-import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, Inject, isDevMode } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, isDevMode } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import { ReduxService } from '../providers/redux.service';
+import { AppService } from '../main/app.service';
 import { LocalStorageService } from '../shared/providers/local-storage.service';
 import { environment } from '../../environments/environment';
 
@@ -15,7 +15,7 @@ import { environment } from '../../environments/environment';
 export class AppComponent implements OnInit, OnDestroy {
     constructor(
         private _titleService: Title,
-        private _reduxService: ReduxService,
+        private _appService: AppService,
         private _localStorageService: LocalStorageService,
     ) { }
 
@@ -39,23 +39,22 @@ export class AppComponent implements OnInit, OnDestroy {
         this._titleService.setTitle(this._title);
 
         if (isDevMode) {
-            this._state$Subscription = this._reduxService.state$.subscribe(state => console.log('Redux state', state));
+            this._state$Subscription = this._appService.state$.subscribe(state => console.log('App state', state));
         }
 
         // logout all sessions if any one logs out
         this._logOutIfAnySessionLogsOut = Observable.fromEvent(window, 'storage')
-            .do((a) => console.log(a))
             .filter((event: StorageEvent) => event.key === this._localStorageService.lsAuth)
             .filter((event: StorageEvent) => event.newValue === null)
-            .do(() => this._reduxService.actionLogOut())
+            .do(() => this._appService.actionLogOut())
             .subscribe();
 
 
         // automatically logout after a period of inactivity
         this._timeout$Subscription = Observable.fromEvent(window, 'click')
-            .merge(this._reduxService.state$) // trigger upon redux action too
+            .merge(this._appService.state$) // trigger upon redux action too
             .auditTime(60 * 1000) // for performance reasons, react only to the last event within the audit time window
-            .withLatestFrom(this._reduxService.state$)
+            .withLatestFrom(this._appService.state$)
             .map(array => array[1])
             .filter(state => state.isLoggedIn)
             .filter(
@@ -64,7 +63,7 @@ export class AppComponent implements OnInit, OnDestroy {
             )
             // period of inactivity must be greater than auditTime
             .switchMap(state => Observable.of(state).delay(environment.MINUTES_OF_INACTIVITY * 60 * 1000))
-            .do(() => this._reduxService.actionLogOut())
+            .do(() => this._appService.actionLogOut())
             .subscribe();
     }
 

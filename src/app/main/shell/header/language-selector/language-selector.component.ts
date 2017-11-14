@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { ReduxService } from '../../../../providers/redux.service';
+import { AppService } from '../../../../main/app.service';
 import { LanguageListComponent } from '../language-list/language-list.component';
 
 @Component({
@@ -9,10 +9,12 @@ import { LanguageListComponent } from '../language-list/language-list.component'
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LanguageSelectorComponent {
-    constructor(private _reduxService: ReduxService) {}
+    constructor(
+        private _appService: AppService
+    ) { }
     componentRef = LanguageListComponent;
 
-    state$ = this._reduxService.state$.map(state =>
+    state$ = this._appService.state$.map(state =>
         Object.assign({
             language: state.language,
             isLoggedIn: state.isLoggedIn

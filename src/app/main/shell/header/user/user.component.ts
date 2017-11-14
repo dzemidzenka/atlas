@@ -8,9 +8,7 @@ import { UserMenuComponent } from '../user-menu/user-menu.component';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserComponent {
-    constructor() {}
     componentRef = UserMenuComponent;
-
     @Input() name: string;
     @Input() picture: string;
 }

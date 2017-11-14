@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { ReduxService, LANGUAGE } from '../../../../providers/redux.service';
+import { AppService, LANGUAGE } from '../../../../main/app.service';
 
 @Component({
     selector: 'atlas-language-list',
@@ -9,12 +9,12 @@ import { ReduxService, LANGUAGE } from '../../../../providers/redux.service';
 })
 export class LanguageListComponent {
     constructor(
-        private _reduxService: ReduxService
+        private _appService: AppService
     ) { }
 
     languages = Object.values(LANGUAGE).sort();
 
     switchLanguage(language: LANGUAGE) {
-        this._reduxService.actionLanguage(language);
+        this._appService.actionLanguage(language);
     }
 }

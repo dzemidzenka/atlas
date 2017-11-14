@@ -9,17 +9,9 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../../environments/environment';
 
 // providers
-import { RouteGuardService } from '../providers/route-guard.service';
-import { RouteResolverService } from '../providers/route-resolver.service';
+import { AppService } from './app.service';
 import { AuthInterceptor } from '../providers/http.interceptor.service';
 
-//  INJECTION TOKENS
-const TOKEN_PROVIDERS = [
-    // {
-    //     provide: tokens.lsAUTH,
-    //     useValue: 'ls.IdentityData'
-    // }
-];
 
 // routes
 import { ROUTES } from '../routes/app.routes';
@@ -95,9 +87,7 @@ import { ReLoginComponent } from './login/re-login/re-login.component';
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     providers: [
-        ...TOKEN_PROVIDERS,
-        RouteGuardService,
-        RouteResolverService,
+        AppService,
         [{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }]
     ],
     entryComponents: [

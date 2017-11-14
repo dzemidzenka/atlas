@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { ReduxService } from '../../../../providers/redux.service';
+import { AppService } from '../../../../main/app.service';
 
 @Component({
     selector: 'atlas-user-menu',
@@ -8,13 +8,15 @@ import { ReduxService } from '../../../../providers/redux.service';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserMenuComponent {
-    constructor(public _reduxService: ReduxService) {}
+    constructor(
+        public _appService: AppService
+    ) { }
 
     profile() {
         alert('not done yet');
     }
 
     logOut() {
-        this._reduxService.actionLogOut();
+        this._appService.actionLogOut();
     }
 }

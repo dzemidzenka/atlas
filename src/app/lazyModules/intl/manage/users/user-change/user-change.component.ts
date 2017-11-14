@@ -53,13 +53,13 @@ export class UserChangeComponent implements OnChanges {
     //   { key: 'Role', value: 'GlobalAdmin' }
     // ];
 
-    const claims: Array<{ key, value }> = [];
-    Object.entries(_user.claims).forEach(claim => claim[1].forEach(value => claims.push({ 'key': claim[0], 'value': value })));
+    const claims: Array<{ key: string, value: string }> = [];
+    Object.entries(_user.claims).forEach(claim => claim[1].forEach((value: string) => claims.push({ 'key': claim[0], 'value': value })));
     _user.claims = claims;
     const data = Object.assign(_user, omit(this.userForm.value, ['tenants']));
 
     data.authorizedTenantContexts = [];
-    this.userForm.value.tenants.forEach((selected, i) => selected ? data.authorizedTenantContexts.push(this.tenants[i]) : null);
+    this.userForm.value.tenants.forEach((selected: string, i: number) => selected ? data.authorizedTenantContexts.push(this.tenants[i]) : null);
 
     this.userUpdated.emit(data);
   }

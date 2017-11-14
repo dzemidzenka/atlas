@@ -1,9 +1,8 @@
 import { Component, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { ReduxService } from '../../providers/redux.service';
+import { AppService } from '../../main/app.service';
 import { LoadingService } from '../../shared/providers/loading.service';
 import { LocalStorageService } from '../../shared/providers/local-storage.service';
-import { NotificationService } from '../../shared/providers/notification.service';
 import { ReLoginService } from '../../shared/providers/re-login.service';
 import { Subscription } from 'rxjs/Subscription';
 
@@ -15,10 +14,9 @@ import { Subscription } from 'rxjs/Subscription';
 })
 export class LoginComponent implements OnDestroy {
     constructor(
-        protected _reduxService: ReduxService,
+        protected _appService: AppService,
         private _loadingService: LoadingService,
         private _localStorageService: LocalStorageService,
-        private _notificationService: NotificationService,
         private _reLoginService: ReLoginService
     ) {}
 
@@ -49,22 +47,22 @@ export class LoginComponent implements OnDestroy {
                 this.logInForm.value.userName = this.logInForm.value.userName.split('@')[0]; // if email is entered, just grab username
             }
         } else {
-            if (this._reduxService.currentState.user) {
-                this.logInForm.value.userName = this._reduxService.currentState.user.userName;
+            if (this._appService.currentState.user) {
+                this.logInForm.value.userName = this._appService.currentState.user.userName;
             }
         }
 
-        this._logIn$Subscription = this._reduxService
+        this._logIn$Subscription = this._appService
             .actionLogIn(this.logInForm.value.userName, this.logInForm.value.password, this.logInForm.value.rememberMe)
             .subscribe(
                 () => {
                     this._loadingService.off();
                     this._reLoginService.retry();
-                },
-                error => {
-                    this._loadingService.off();
-                    // this._notificationService.notify([{ message: error }]);
-                }
+                 }
+                // error => {
+                //     this._loadingService.off();
+                //     // this._notificationService.notify([{ message: error }]);
+                // }
             );
     }
 

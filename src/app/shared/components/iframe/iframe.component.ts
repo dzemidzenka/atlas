@@ -1,7 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { ReduxService } from '../../../providers/redux.service';
-import { Observable } from 'rxjs/Observable';
+import { AppService } from '../../../main/app.service';
 import { LoadingService } from '../../providers/loading.service';
 
 @Component({
@@ -12,13 +11,13 @@ import { LoadingService } from '../../providers/loading.service';
 })
 export class IFrameComponent {
     constructor(
-        private _reduxService: ReduxService,
+        private _appService: AppService,
         private _sanitizer: DomSanitizer,
         private _loadingService: LoadingService
     ) { }
 
 
-    iFrameUrl$ = this._reduxService.state$
+    iFrameUrl$ = this._appService.state$
         .filter(state => state.hasOwnProperty('menuItemCurrent'))
         .filter(state => state.menuItemCurrent.hasOwnProperty('iFrameUrl'))
         .filter(state => (state.menuItemCurrent.iFrameUrl ? true : false))

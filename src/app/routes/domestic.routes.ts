@@ -1,6 +1,4 @@
 import { Routes } from '@angular/router';
-import { RouteGuardService } from '../providers/route-guard.service';
-import { RouteResolverService } from '../providers/route-resolver.service';
 import { DashboardComponent } from '../main/dashboard/dashboard.component';
 import { IFrameComponent } from '../shared/components/iframe/iframe.component';
 

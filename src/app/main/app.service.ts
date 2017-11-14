@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
-import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { Router, Route, ActivatedRoute, NavigationEnd } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { TranslateService } from '@ngx-translate/core';
@@ -46,16 +46,6 @@ export enum VIEW {
 }
 
 type IActionModel = IActionInitModel | IActionRouteModel | IActionLogInModel | IActionLogOutModel | IActionFavoriteToggleModel;
-//  {
-//     readonly type: ACTION;
-//     readonly date: number;
-//     readonly user: IUserModel;
-//     readonly rememberMe: boolean;
-//     readonly url: string;
-//     readonly urlParams: Array<string>;
-//     readonly queryParams: Array<string>;
-//     readonly menuItem: IMenuModel;
-// }
 type IActionType = {
     readonly type: ACTION;
 }
@@ -63,7 +53,7 @@ type IActionType = {
 interface IActionRouteModel extends IActionType {
     readonly url: string;
     readonly urlParams: Array<string>;
-    readonly queryParams: Array<string>;
+    readonly queryParams: IQueryParamsModel;
 }
 
 interface IActionInitModel extends IActionType {
@@ -81,12 +71,17 @@ interface IActionFavoriteToggleModel extends IActionType {
     readonly menuItem: IMenuModel;
 }
 
+type IQueryParamsModel = {
+    country: COUNTRY;
+    language: LANGUAGE;
+    view: VIEW;
+}
 
 export type IStateModel = {
     action: IActionModel;
     url: string;
     urlParams: Array<string>;
-    queryParams: Array<string>;
+    queryParams: IQueryParamsModel;
     isComponent: boolean;
     isLoggedIn: boolean;
     user: IUserModel;
@@ -127,7 +122,7 @@ export type IMenuModel = {
 
 
 @Injectable()
-export class ReduxService {
+export class AppService {
     constructor(
         private _route: ActivatedRoute,
         private _router: Router,
@@ -146,20 +141,15 @@ export class ReduxService {
     }
 
     private _currentState: IStateModel;
-    private _reducers: Array<Function> = [];
+    // private _reducers: Array<(state: IStateModel, action: IActionModel) => void>  = [];
+    private _reducers = new Map();
     private _actionSubject$ = new Subject<IActionModel>();
     private _initialState: IStateModel = (() => {
         const state: IStateModel = {} as IStateModel;
         state.urlParams = [];
-        state.queryParams = [];
         state.menu = this._router.config
-            // .filter(route => route.hasOwnProperty('data'))
-            .filter(route => route.data && route.data.description)
-            .map(this._menuItemFromRoute)
-            .map((item: IMenuModel, i) => {
-                item.id = i + 1;
-                return item;
-            });
+            .filter((route: Route) => route.data && route.data.description)
+            .map(this._menuItemFromRoute);
         return state;
     })();
 
@@ -169,13 +159,13 @@ export class ReduxService {
     private _routerEvents$ = this._router.events
         .filter(event => event instanceof NavigationEnd)
         // .do(event => console.log(this._router))
-        .map(event => {
+        .map((event: NavigationEnd) => {
             const url = event['urlAfterRedirects'];
             const urlTree = this._router.parseUrl(url);
             const urlParams = url
                 .split('/')
-                .filter(param => param !== '')
-                .map(param => param.split('?')[0]);
+                .filter((param: string) => param !== '')
+                .map((param: string) => param.split('?')[0]);
             const queryParams = urlTree.queryParams;
             return { type: ACTION.ROUTE, url: url, urlParams: urlParams, queryParams: queryParams };
         });
@@ -186,19 +176,22 @@ export class ReduxService {
         .merge(this._routerEvents$)
         .scan((state: IStateModel, action: IActionModel) => this._reducer(state, action), this._initialState)
         .map(this._getActiveMenu)
-        .do(state => this._currentState = state)
+        .do((state: IStateModel) => this._currentState = state)
         .publishBehavior({})
         .refCount() as Observable<IStateModel>;
 
 
 
     // REDUCER HANDLER
-    private _reducer(state: IStateModel, action: IActionModel) {
+    private _reducer(state: IStateModel, action: IActionModel): IStateModel {
         const _state = cloneDeep(state);
         if (action.type in ACTION) {
             const _action = cloneDeep(action);
-            this._reducers[_action.type].call(this, _state, _action);
+            this._reducers.get(_action.type).call(this, _state, _action);
             _state.action = _action;
+        }
+        if (_state.isLoggedIn) {
+            _state.isLoggedIn = _state.user.hasOwnProperty('accessToken');
         }
         return _state;
     }
@@ -206,7 +199,7 @@ export class ReduxService {
 
 
     private _initializeReducers() {
-        this._reducers[ACTION.INIT] = (state: IStateModel, action: IActionInitModel) => {
+        this._reducers.set(ACTION.INIT, (state: IStateModel, action: IActionInitModel) => {
             if (!isEmpty(action.user)) {
                 state.user = action.user;
                 state.isLoggedIn = true;
@@ -219,41 +212,31 @@ export class ReduxService {
                     state.isComponent = menuItem.isComponent; // to prevent screen blinking due to the delay of lazy loading network request
                 }
             }
-        };
+        });
 
-        this._reducers[ACTION.LOGIN] = (state: IStateModel, action: IActionLogInModel) => {
+        this._reducers.set(ACTION.LOGIN, (state: IStateModel, action: IActionLogInModel) => {
             state.user = action.user;
             state.isLoggedIn = true;
             this._localStorageService.user = state.user;
             this._notificationsService.clear();
-        };
+        });
 
-        this._reducers[ACTION.LOGOUT] = (state: IStateModel, action: IActionLogOutModel) => {
+        this._reducers.set(ACTION.LOGOUT, (state: IStateModel, action: IActionLogOutModel) => {
             state.user = {} as IUserModel;
             this._localStorageService.user = state.user;
             state.isLoggedIn = false;
-        };
+        });
 
-        this._reducers[ACTION.ROUTE] = (state: IStateModel, action: IActionRouteModel) => {
+        this._reducers.set(ACTION.ROUTE, (state: IStateModel, action: IActionRouteModel) => {
             state.url = action.url;
             state.urlParams = action.urlParams.filter(param => param.length > 0).map(param => param.toLowerCase());
             state.queryParams = action.queryParams;
 
-            if (state.queryParams['language']) {
-                state.language = state.queryParams['language'];
-            } else {
-                state.language = LANGUAGE.EN;
-            }
+            state.language = state.queryParams.language || LANGUAGE.EN;
             this._translate.use(state.language);
-
-            if (state.queryParams['country']) {
-                state.country = state.queryParams['country'];
-            } else {
-                state.country = COUNTRY.US;
-            }
-
-            if (state.queryParams['view']) {
-                state.view = state.queryParams['view'];
+            state.country = state.queryParams.country || COUNTRY.US;
+            if (state.queryParams.view) {
+                state.view = state.queryParams.view;
             }
             if (!state.menuRecent) {
                 state.menuRecent = [];
@@ -276,13 +259,13 @@ export class ReduxService {
                     state.menuRecent = state.menuRecent.slice(0, environment.MAX_OF_RECENT - 1);
                 }
             }
-        };
+        });
 
-        this._reducers[ACTION.FAVORITE_TOGGLE] = (state: IStateModel, action: IActionFavoriteToggleModel) => {
+        this._reducers.set(ACTION.FAVORITE_TOGGLE, (state: IStateModel, action: IActionFavoriteToggleModel) => {
             state.menu
                 .filter(menu => action.menuItem && menu.id === action.menuItem.id)
                 .map(menu => menu.isFavorite = !menu.isFavorite);
-        };
+        });
     }
 
 
@@ -291,7 +274,7 @@ export class ReduxService {
     // REDUX ACTIONS
     actionLogIn(username: string, password: string, rememberMe: boolean): Observable<IUserModel> {
         const data = `grant_type=password&username=${username}&password=${password}&client_id=atlaswebapp`;
-        const headers = new HttpHeaders().set('Content-type', 'application/x-www-form-urlencoded');
+        // const headers = new HttpHeaders().set('Content-type', 'application/x-www-form-urlencoded');
         return this._http
             .post(environment.logInUrl, data)
             .map(this._userFromAuthResponse)
@@ -389,29 +372,34 @@ export class ReduxService {
 
 
 
-    private _menuItemFromRoute(route, i, routes) {
+    private _menuItemFromRoute(route: Route, index: number): IMenuModel {
+        if (!route.path) {
+            return {} as IMenuModel;
+        }
+
         const params = route.path.split('/');
 
         let tcode;
-        if (route.hasOwnProperty('data') && route.data.hasOwnProperty('isComponent')) {
+        if (route.data && route.data.isComponent) {
             tcode = params[params.length - 1];
         }
 
         return {
+            id: index + 1,
             urlParams: params,
             routerPath: route.path,
             isLazy: route.hasOwnProperty('loadChildren'),
             tcode: tcode,
             ...route.data
-        };
+        } as IMenuModel;
     }
 
 
 
-    private _userFromAuthResponse(response: Response): IUserModel {
+    private _userFromAuthResponse(response: any): IUserModel {
         const allowedCountries = response['as:tenantContextHosts']
             .split(', ')
-            .map(country => country.trim().slice(0, 2).toLowerCase());
+            .map((country: string) => country.trim().slice(0, 2).toLowerCase());
         if (!allowedCountries) {
             allowedCountries[0] = COUNTRY.US;
         }

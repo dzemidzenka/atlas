@@ -8,7 +8,5 @@ import { AppListComponent } from '../app-list/app-list.component';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppSelectorComponent {
-    constructor() {}
-
     componentRef = AppListComponent;
 }

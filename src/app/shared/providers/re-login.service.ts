@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { HttpRequest } from '@angular/common/http';
 import { Subject } from 'rxjs/Subject';
 
 @Injectable()

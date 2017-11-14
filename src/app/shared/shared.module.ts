@@ -29,7 +29,6 @@ import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/observable/merge';
 import 'rxjs/add/observable/forkJoin';
  
-import { ReduxService } from '../providers/redux.service';
 import { LoadingService } from './providers/loading.service';
 import { LocalStorageService } from './providers/local-storage.service';
 import { NotificationService } from './providers/notification.service';
@@ -133,7 +132,6 @@ export class SharedModule {
                 LoadingService,
                 LocalStorageService,
                 NotificationService,
-                ReduxService,
                 ReLoginService,
             ]
         };

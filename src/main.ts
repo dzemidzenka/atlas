@@ -10,9 +10,9 @@ if (environment.production) {
 
 platformBrowserDynamic()
     .bootstrapModule(AppModule)
-    .then(ref => {
-        // Ensure Angular destroys itself on hot reloads.
-        // const ngRef = 'ngRef';
-        // window[ngRef] ? window[ngRef].destroy() : (window[ngRef] = ref);
-    })
+    // .then(ref => {
+    //     // Ensure Angular destroys itself on hot reloads.
+    //     // const ngRef = 'ngRef';
+    //     // window[ngRef] ? window[ngRef].destroy() : (window[ngRef] = ref);
+    // })
     .catch(err => console.log(err));

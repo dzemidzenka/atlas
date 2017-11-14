@@ -9,9 +9,7 @@ import { NotificationListComponent } from '../notification-list/notification-lis
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NotificationCountComponent {
-  constructor() {}
   componentRef = NotificationListComponent;
-
   @Input() notifications: number;
 
   get notificationsDisplay(): string {

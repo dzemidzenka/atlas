@@ -7,9 +7,9 @@ import {
     ApplicationRef,
     ViewChild,
     ElementRef,
-    ComponentFactory
+    ComponentFactory,
+    ComponentRef
 } from '@angular/core';
-import { ReduxService } from '../../../providers/redux.service';
 
 import { TestComponent } from './test/test.component';
 
@@ -21,7 +21,6 @@ import { TestComponent } from './test/test.component';
 })
 export class Demo1Component implements OnInit {
     constructor(
-        private _reduxService: ReduxService,
         private _componentFactoryResolver: ComponentFactoryResolver,
         private _applicationRef: ApplicationRef,
         private _injector: Injector
@@ -30,7 +29,7 @@ export class Demo1Component implements OnInit {
     isOpen = false;
     componentOutlet = TestComponent;
 
-    private _componentRef;
+    private _componentRef: ComponentRef<TestComponent>;
     @ViewChild('test') test: ElementRef;
 
     ngOnInit() {

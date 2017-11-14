@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { ReduxService, IMenuModel } from '../../providers/redux.service';
+import { AppService, IMenuModel } from '../../main/app.service';
 
 @Component({
     selector: 'atlas-dashboard',
@@ -9,10 +9,10 @@ import { ReduxService, IMenuModel } from '../../providers/redux.service';
 })
 export class DashboardComponent {
     constructor(
-        private _reduxService: ReduxService
+        private _appService: AppService
     ) { }
 
-    state$ = this._reduxService.state$.filter(state => state.hasOwnProperty('menu')).map(state =>
+    state$ = this._appService.state$.filter(state => state.hasOwnProperty('menu')).map(state =>
         Object.assign({
             view: state.view,
             menu: state.menu.filter(menu => menu.active)
@@ -20,14 +20,14 @@ export class DashboardComponent {
     );
 
     onNavigate(urlParams: Array<string>) {
-        this._reduxService.actionMenu(urlParams);
+        this._appService.actionMenu(urlParams);
     }
 
     onFavoriteToggle(item: IMenuModel) {
-        this._reduxService.actionFavoriteToggle(item);
+        this._appService.actionFavoriteToggle(item);
     }
 
-    trackByItemId(index, item: IMenuModel) {
+    trackByItemId(index: number, item: IMenuModel) {
         return item.id;
     }
 }

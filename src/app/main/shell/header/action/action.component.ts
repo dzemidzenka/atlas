@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, ComponentRef } from '@angular/core';
 
 @Component({
     selector: 'atlas-action',
@@ -7,8 +7,6 @@ import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ActionComponent {
-    constructor() {}
-
     @Input() rightBorder = true;
-    @Input() componentRef;
+    @Input() componentRef: ComponentRef<any>;
 }

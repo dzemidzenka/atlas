@@ -1,6 +1,4 @@
 import { Routes } from '@angular/router';
-import { RouteGuardService } from '../providers/route-guard.service';
-import { RouteResolverService } from '../providers/route-resolver.service';
 import { DashboardComponent } from '../main/dashboard/dashboard.component';
 import { IFrameComponent } from '../shared/components/iframe/iframe.component';
 
@@ -19,8 +17,6 @@ export const INTL_INVENTORY_ROUTES: Routes = [
   {
     path: 'intl/inventory/intl-constrained',
     component: IFrameComponent,
-    canActivate: [RouteGuardService],
-    resolve: { RouteResolverService },
     data: {
       isComponent: true,
       description: 'Constrained Materials',
@@ -30,8 +26,6 @@ export const INTL_INVENTORY_ROUTES: Routes = [
   {
     path: 'intl/inventory/intl-set_inventory',
     component: IFrameComponent,
-    canActivate: [RouteGuardService],
-    resolve: { RouteResolverService },
     data: {
       isComponent: true,
       description: 'set inventory',
@@ -41,8 +35,6 @@ export const INTL_INVENTORY_ROUTES: Routes = [
   {
     path: 'intl/inventory/intl-shipping',
     component: IFrameComponent,
-    canActivate: [RouteGuardService],
-    resolve: { RouteResolverService },
     data: {
       isComponent: true,
       description: 'Shipping',
@@ -52,8 +44,6 @@ export const INTL_INVENTORY_ROUTES: Routes = [
   {
     path: 'intl/inventory/intl-billing',
     component: IFrameComponent,
-    canActivate: [RouteGuardService],
-    resolve: { RouteResolverService },
     data: {
       isComponent: true,
       description: 'Billing/Extras',
@@ -63,8 +53,6 @@ export const INTL_INVENTORY_ROUTES: Routes = [
   {
     path: 'intl/inventory/intl-sub_to_sub',
     component: IFrameComponent,
-    canActivate: [RouteGuardService],
-    resolve: { RouteResolverService },
     data: {
       isComponent: true,
       description: 'Sub To Sub',

@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { ReduxService, COUNTRY } from '../../../../providers/redux.service';
+import { AppService, COUNTRY } from '../../../../main/app.service';
 
 @Component({
     selector: 'atlas-country-list',
@@ -9,10 +9,10 @@ import { ReduxService, COUNTRY } from '../../../../providers/redux.service';
 })
 export class CountryListComponent {
     constructor(
-        private _reduxService: ReduxService
+        private _appService: AppService
     ) { }
 
-    countries$ = this._reduxService.state$.map(state => {
+    countries$ = this._appService.state$.map(state => {
         let countries;
         if (state.hasOwnProperty('user') && state.user.hasOwnProperty('allowedCountries')) {
             countries = state.user.allowedCountries;
@@ -24,6 +24,6 @@ export class CountryListComponent {
     });
 
     switchCountry(country: COUNTRY) {
-        this._reduxService.actionCountry(country);
+        this._appService.actionCountry(country);
     }
 }

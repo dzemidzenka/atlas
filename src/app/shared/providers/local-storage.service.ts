@@ -1,5 +1,5 @@
-import { Injectable, Inject } from '@angular/core';
-import { IUserModel } from '../../providers/redux.service';
+import { Injectable } from '@angular/core';
+import { IUserModel } from '../../main/app.service';
 import isEmpty from 'lodash-es/isEmpty';
 
 @Injectable()
