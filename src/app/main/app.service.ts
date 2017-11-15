@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Router, Route, ActivatedRoute, NavigationEnd } from '@angular/router';
+import { Router, Route, ActivatedRoute, RouterEvent, NavigationEnd } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
@@ -7,12 +7,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { NotificationService } from '../shared/providers/notification.service';
 import { LocalStorageService } from '../shared/providers/local-storage.service';
 import { environment } from '../../environments/environment';
-
-// import sortBy from 'lodash-es/sortBy';
-// import sortedUniq from 'lodash-es/sortedUniq';
-// import omit from 'lodash-es/omit';
 import cloneDeep from 'lodash-es/cloneDeep';
-import isEmpty from 'lodash-es/isEmpty';
 
 export enum ACTION {
     INIT = 'INIT',
@@ -46,38 +41,39 @@ export enum VIEW {
 }
 
 type IActionModel = IActionInitModel | IActionRouteModel | IActionLogInModel | IActionLogOutModel | IActionFavoriteToggleModel;
-type IActionType = {
-    readonly type: ACTION;
+
+interface IActionType {
+    type: ACTION;
 }
 
 interface IActionRouteModel extends IActionType {
-    readonly url: string;
-    readonly urlParams: Array<string>;
-    readonly queryParams: IQueryParamsModel;
+    url: string;
+    urlParams: Array<string>;
+    queryParams: IQueryParamsModel;
 }
 
 interface IActionInitModel extends IActionType {
-    readonly user: IUserModel;
+    user: IUserModel;
 }
 
 interface IActionLogInModel extends IActionType {
-    readonly user: IUserModel;
-    readonly rememberMe: boolean;
+    user: IUserModel;
+    rememberMe: boolean;
 }
 
 interface IActionLogOutModel extends IActionType { }
 
 interface IActionFavoriteToggleModel extends IActionType {
-    readonly menuItem: IMenuModel;
+    menuItem: IMenuModel;
 }
 
-type IQueryParamsModel = {
+interface IQueryParamsModel {
     country: COUNTRY;
     language: LANGUAGE;
     view: VIEW;
 }
 
-export type IStateModel = {
+export interface IStateModel {
     action: IActionModel;
     url: string;
     urlParams: Array<string>;
@@ -94,7 +90,7 @@ export type IStateModel = {
 }
 
 
-export type IUserModel = {
+export interface IUserModel {
     userName: string;
     phone: string;
     nameDisplay: string;
@@ -105,7 +101,7 @@ export type IUserModel = {
     accessToken: string;
 }
 
-export type IMenuModel = {
+export interface IMenuModel {
     id: number;
     active: boolean;
     description: string;
@@ -141,26 +137,16 @@ export class AppService {
     }
 
     private _currentState: IStateModel;
-    // private _reducers: Array<(state: IStateModel, action: IActionModel) => void>  = [];
     private _reducers = new Map();
     private _actionSubject$ = new Subject<IActionModel>();
-    private _initialState: IStateModel = (() => {
-        const state: IStateModel = {} as IStateModel;
-        state.urlParams = [];
-        state.menu = this._router.config
-            .filter((route: Route) => route.data && route.data.description)
-            .map(this._menuItemFromRoute);
-        return state;
-    })();
 
 
 
     // ROUTING EVENTS HANDLER
     private _routerEvents$ = this._router.events
-        .filter(event => event instanceof NavigationEnd)
-        // .do(event => console.log(this._router))
-        .map((event: NavigationEnd) => {
-            const url = event['urlAfterRedirects'];
+        .filter((event: {}) => event instanceof NavigationEnd)
+        .map((event: {}) => {
+            const url = (<NavigationEnd>event).urlAfterRedirects;
             const urlTree = this._router.parseUrl(url);
             const urlParams = url
                 .split('/')
@@ -174,7 +160,7 @@ export class AppService {
     state$: Observable<IStateModel> = this._actionSubject$
         .startWith({ type: ACTION.INIT, user: this._localStorageService.user })
         .merge(this._routerEvents$)
-        .scan((state: IStateModel, action: IActionModel) => this._reducer(state, action), this._initialState)
+        .scan((state: IStateModel, action: IActionModel) => this._reducer(state, action), this._initializeState())
         .map(this._getActiveMenu)
         .do((state: IStateModel) => this._currentState = state)
         .publishBehavior({})
@@ -190,21 +176,34 @@ export class AppService {
             this._reducers.get(_action.type).call(this, _state, _action);
             _state.action = _action;
         }
-        if (_state.isLoggedIn) {
-            _state.isLoggedIn = _state.user.hasOwnProperty('accessToken');
-        }
+        _state.isLoggedIn = _state.user.hasOwnProperty('accessToken');
         return _state;
     }
 
 
+    private _initializeState(): IStateModel {
+        return Object.freeze({
+            action: {} as IActionModel,
+            url: '',
+            urlParams: [],
+            queryParams: {} as IQueryParamsModel,
+            isComponent: false,
+            isLoggedIn: false,
+            user: {} as IUserModel,
+            country: COUNTRY.US,
+            language: LANGUAGE.EN,
+            view: VIEW.DASHBOARD,
+            menu: this._router.config
+                .filter((route: Route) => route.data && route.data.description)
+                .map(this._menuItemFromRoute),
+            menuItemCurrent: {} as IMenuModel,
+            menuRecent: [],
+        });
+    }
 
     private _initializeReducers() {
         this._reducers.set(ACTION.INIT, (state: IStateModel, action: IActionInitModel) => {
-            if (!isEmpty(action.user)) {
-                state.user = action.user;
-                state.isLoggedIn = true;
-            }
-
+            state.user = action.user;
             const url = window.location.pathname.substring(1);
             if (url) {
                 const menuItem = state.menu.find(menu => menu.routerPath.toLowerCase() === url.toLowerCase());
@@ -216,7 +215,7 @@ export class AppService {
 
         this._reducers.set(ACTION.LOGIN, (state: IStateModel, action: IActionLogInModel) => {
             state.user = action.user;
-            state.isLoggedIn = true;
+            // state.isLoggedIn = true;
             this._localStorageService.user = state.user;
             this._notificationsService.clear();
         });
@@ -224,20 +223,17 @@ export class AppService {
         this._reducers.set(ACTION.LOGOUT, (state: IStateModel, action: IActionLogOutModel) => {
             state.user = {} as IUserModel;
             this._localStorageService.user = state.user;
-            state.isLoggedIn = false;
+            // state.isLoggedIn = false;
         });
 
         this._reducers.set(ACTION.ROUTE, (state: IStateModel, action: IActionRouteModel) => {
             state.url = action.url;
             state.urlParams = action.urlParams.filter(param => param.length > 0).map(param => param.toLowerCase());
             state.queryParams = action.queryParams;
-
             state.language = state.queryParams.language || LANGUAGE.EN;
             this._translate.use(state.language);
             state.country = state.queryParams.country || COUNTRY.US;
-            if (state.queryParams.view) {
-                state.view = state.queryParams.view;
-            }
+            state.view = state.queryParams.view || VIEW.DASHBOARD;
             if (!state.menuRecent) {
                 state.menuRecent = [];
             }
@@ -305,14 +301,11 @@ export class AppService {
     }
 
     actionDashboard(view: VIEW) {
-        const queryParams = this._route.snapshot.queryParams;
-        this._router.navigate([''], { queryParams: { ...queryParams, view: view } });
+        this._router.navigate([''], { queryParams: { ...this._route.snapshot.queryParams, view: view } });
     }
 
     actionMenu(urlParams: Array<string>) {
-        // const queryParams = omit(this._route.snapshot.queryParams, 'view');
-        const queryParams = this._route.snapshot.queryParams;
-        this._router.navigate([urlParams.join('/')], { queryParams: { ...queryParams, view: VIEW.DASHBOARD } });
+        this._router.navigate([urlParams.join('/')], { queryParams: { ...this._route.snapshot.queryParams, view: null } });
     }
 
     actionTcode(tcode: string) {

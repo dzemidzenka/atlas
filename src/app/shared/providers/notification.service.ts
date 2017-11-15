@@ -33,7 +33,7 @@ export class NotificationService {
     }
 
     notifySingle(message: string) {
-        this.notify([{ message: message }])
+        this.notify([{ message: message }]);
     }
 
     clear() {

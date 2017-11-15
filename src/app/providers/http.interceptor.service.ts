@@ -50,7 +50,7 @@ export class AuthInterceptor implements HttpInterceptor {
             }
             this._notificationsService.notifySingle(message);
             this._loadingService.off();
-            return Observable.of({} as HttpEvent<null>)
+            return Observable.of({} as HttpEvent<null>);
         });
         // .do((event: HttpEvent<any>) => {
         //     if (event instanceof HttpResponse) { }

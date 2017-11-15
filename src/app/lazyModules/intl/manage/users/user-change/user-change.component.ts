@@ -2,7 +2,7 @@ import { Component, OnChanges, ChangeDetectionStrategy, Input, Output, EventEmit
 import { FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
 import { IUser } from '../users.service';
 import cloneDeep from 'lodash-es/cloneDeep';
-import omit from 'lodash-es/omit';
+
 
 
 @Component({
@@ -56,8 +56,9 @@ export class UserChangeComponent implements OnChanges {
     const claims: Array<{ key: string, value: string }> = [];
     Object.entries(_user.claims).forEach(claim => claim[1].forEach((value: string) => claims.push({ 'key': claim[0], 'value': value })));
     _user.claims = claims;
-    const data = Object.assign(_user, omit(this.userForm.value, ['tenants']));
-
+    const data = Object.assign(_user, this.userForm.value);
+    delete data['tenants'];  
+    
     data.authorizedTenantContexts = [];
     this.userForm.value.tenants.forEach((selected: string, i: number) => selected ? data.authorizedTenantContexts.push(this.tenants[i]) : null);
 

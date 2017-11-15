@@ -10,14 +10,16 @@
         "target": "es5",
         "typeRoots": ["node_modules/@types"],
         "lib": ["es2017", "dom"],
-        "strict": false,
+        "strict": true,
         "strictNullChecks": true,
         "noUnusedParameters": false,        
         "noUnusedLocals": false,
         "noFallthroughCasesInSwitch": true,
         "noImplicitAny": true,
         "noImplicitReturns": true,
-        "noImplicitThis": true
+        "noImplicitThis": true,
+        "noEmitHelpers": true,
+        "importHelpers": true
     },
     "angularCompilerOptions": {
         "preserveWhitespaces": false        

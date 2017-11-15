@@ -13,7 +13,6 @@
         "robots.txt",
         "manifest.json"
       ],
-      "serviceWorker": true,
       "index": "index.html",
       "main": "main.ts",
       "polyfills": "polyfills.ts",
@@ -21,6 +20,7 @@
       "tsconfig": "tsconfig.app.json",
       "testTsconfig": "tsconfig.spec.json",
       "prefix": "atlas",
+      "serviceWorker": true,
       "styles": [
         "styles.scss"
       ],
@@ -61,5 +61,8 @@
     "component": {
       "changeDetection": "OnPush"
     }
+  },
+  "warnings": {
+    "typescriptMismatch": false
   }
 }

@@ -11,7 +11,7 @@ import { LoadingService } from '../../../shared/providers/loading.service';
 export class HomeComponent implements OnInit {
     constructor(
         private _http: HttpClient,
-        private _loadingService: LoadingService        
+        private _loadingService: LoadingService,        
     ) {}
 
     ngOnInit() {

@@ -1,18 +1,17 @@
 import { Injectable } from '@angular/core';
 import { IUserModel } from '../../main/app.service';
-import isEmpty from 'lodash-es/isEmpty';
 
 @Injectable()
 export class LocalStorageService {
     readonly lsAuth = 'lsAUTH';
     readonly lsRememberMe = 'lsRememberMe';
 
-    private _user: IUserModel;
+    private _user: IUserModel | null;
     private _rememberMe: boolean;
 
     // USER
     get user(): IUserModel {
-        if (!isEmpty(this._user)) {
+        if (this._user) {
             return this._user;
         }
         const _lsAuth = localStorage.getItem(this.lsAuth);
@@ -23,8 +22,8 @@ export class LocalStorageService {
     }
 
     set user(user: IUserModel) {
-        if (isEmpty(user)) {
-            this._user = {} as IUserModel;
+        if (Object.keys(user).length === 0) {
+            this._user = null;
             localStorage.removeItem(this.lsAuth);
         } else {
             this._user = user;
@@ -40,7 +39,7 @@ export class LocalStorageService {
 
     // REMEMBER ME
     get rememberMe(): boolean {
-        if (this._rememberMe != undefined) {
+        if (this._rememberMe !== undefined) {
             return this._rememberMe;
         }
         const _rememberMe = localStorage.getItem(this.lsRememberMe);

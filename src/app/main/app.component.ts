@@ -44,8 +44,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
         // logout all sessions if any one logs out
         this._logOutIfAnySessionLogsOut = Observable.fromEvent(window, 'storage')
-            .filter((event: StorageEvent) => event.key === this._localStorageService.lsAuth)
-            .filter((event: StorageEvent) => event.newValue === null)
+            .filter((event: {}) => (<StorageEvent>event).key === this._localStorageService.lsAuth)
+            .filter((event: {}) => (<StorageEvent>event).newValue === null)
             .do(() => this._appService.actionLogOut())
             .subscribe();
 
