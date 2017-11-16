@@ -3,10 +3,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { HttpClientModule, HttpClient, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { SharedModule } from '../shared/shared.module';
+import { SharedModule } from '@shared/shared.module';
 import { SimpleNotificationsModule } from 'angular2-notifications';
 import { ServiceWorkerModule } from '@angular/service-worker';
-import { environment } from '../../environments/environment';
+import { environment } from '@env';
 
 // providers
 import { AppService } from './app.service';
@@ -14,7 +14,7 @@ import { AuthInterceptor } from '../providers/http.interceptor.service';
 
 
 // routes
-import { ROUTES } from '../routes/app.routes';
+import { ROUTES } from '@routes';
 
 // translation
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';

@@ -11,8 +11,8 @@ import { LoadingService } from '../../../shared/providers/loading.service';
 export class HomeComponent implements OnInit {
     constructor(
         private _http: HttpClient,
-        private _loadingService: LoadingService,        
-    ) {}
+        private _loadingService: LoadingService,
+    ) { }
 
     ngOnInit() {
         this._loadingService.off();
@@ -28,12 +28,12 @@ export class HomeComponent implements OnInit {
 
         return this._http
             .get(
-                // 'http://de.atlasglobal-dev.nuvasive.com/api/V1/en-us/users',
-                // 'http://de.atlasglobal-dev.nuvasive.com/api/V1/en-us/users/tenants?q=names',
-                'http://de.atlasglobal-dev.nuvasive.com/api/V1/en-us/users/claims?q=[claimtypes,rolenames]',
-                // JSON.stringify(payload)
-                // { headers: headers }
-            )
+            // 'http://de.atlasglobal-dev.nuvasive.com/api/V1/en-us/users',
+            // 'http://de.atlasglobal-dev.nuvasive.com/api/V1/en-us/users/tenants?q=names',
+            'http://de.atlasglobal-dev.nuvasive.com/api/V1/en-us/users/claims?q=[claimtypes,rolenames]',
+            // JSON.stringify(payload)
+            // { headers: headers }
+        )
             .do(json => console.log(json))
             .subscribe();
     }

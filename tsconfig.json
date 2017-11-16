@@ -1,28 +1,52 @@
 {
     "compileOnSave": false,
     "compilerOptions": {
-        "outDir": "./dist/out-tsc",
+        "outDir": "../out-tsc/app",
         "sourceMap": false,
         "declaration": false,
         "moduleResolution": "node",
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
-        "target": "es5",
-        "typeRoots": ["node_modules/@types"],
-        "lib": ["es2017", "dom"],
+        "target": "es2015",
+        "module": "es2015",
+        "typeRoots": [
+            "node_modules/@types"
+        ],
+        "lib": [
+            "es2017",
+            "dom"
+        ],
         "strict": true,
         "strictNullChecks": true,
-        "noUnusedParameters": false,        
+        "noUnusedParameters": false,
         "noUnusedLocals": false,
         "noFallthroughCasesInSwitch": true,
         "noImplicitAny": true,
         "noImplicitReturns": true,
         "noImplicitThis": true,
         "noEmitHelpers": true,
-        "importHelpers": true
+        "importHelpers": true,
+        "baseUrl": "src",
+        "paths": {
+            "@main/*": [
+                "./app/main/*"
+            ],
+            "@shared/*": [
+                "./app/shared/*"
+            ],
+            "@routes": [
+                "./app/routes/app.routes"
+            ],
+            "@env": [
+                "./environments/environment"
+            ]
+        }
     },
     "angularCompilerOptions": {
-        "preserveWhitespaces": false        
+        "preserveWhitespaces": false
     },
-    "exclude": ["test.ts", "**/*.spec.ts"]
+    "exclude": [
+        "test.ts",
+        "**/*.spec.ts"
+    ]
 }

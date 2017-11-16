@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, ViewChild } from '@angular/core';
-import { AppService, ACTION } from '../../main/app.service';
+import { AppService, ACTION } from '@main/app.service';
 import { MatDrawer } from '@angular/material/sidenav';
 
 @Component({

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { NotificationService } from '../../shared/providers/notification.service';
-import { LoadingService } from '../../shared/providers/loading.service';
+import { NotificationService } from '@shared/providers/notification.service';
+import { LoadingService } from '@shared/providers/loading.service';
 
 @Component({
     selector: 'atlas-settings',

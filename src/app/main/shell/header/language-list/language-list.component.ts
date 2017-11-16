@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { AppService, LANGUAGE } from '../../../../main/app.service';
+import { AppService, LANGUAGE } from '@main/app.service';
 
 @Component({
     selector: 'atlas-language-list',

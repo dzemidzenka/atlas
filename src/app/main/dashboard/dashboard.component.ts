@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { AppService, IMenuModel } from '../../main/app.service';
+import { AppService, IMenuModel } from '@main/app.service';
 
 @Component({
     selector: 'atlas-dashboard',

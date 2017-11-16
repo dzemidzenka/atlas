@@ -4,15 +4,15 @@
   "license": "Nuvasive",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --aot --build-optimizer=false --open --watch",
-    "build": "ng build --aot --prod --stats-json --build-optimizer --vendor-chunk --extract-css=false --named-chunks=false",
+    "start": "ng serve --aot --open --watch --build-optimizer=false",
+    "build": "ng build --aot --prod --build-optimizer --stats-json --vendor-chunk=true --extract-css=false --named-chunks=false --sourcemaps=false",
     "test": "ng test --browser ChromeHeadless --single-run",
     "watch": "ng test --browser ChromeHeadless",
     "lint": "ng lint",
     "e2e": "ng e2e",
     "deploy": "./node_modules/.bin/firebase deploy",
     "bundle-report": "webpack-bundle-analyzer dist/stats.json",
-    "presme": "ng build --aot --prod --sourcemaps --build-optimizer --vendor-chunk --extract-css=false --named-chunks=true --output-hashing=none",
+    "presme": "ng build --aot --prod --build-optimizer --sourcemaps=true --vendor-chunk=true",
     "sme": "source-map-explorer ./dist/vendor.bundle.js",
     "i18n": "ng xi18n --output-path=./src/assets/i18n/ --out-file=messages.no.xlf",
     "doc": "./node_modules/.bin/compodoc -p tsconfig.json -s"
@@ -61,7 +61,7 @@
     "karma-jasmine-html-reporter": "^0.2.2",
     "protractor": "^5.1.2",
     "ts-node": "^3.2.0",
-    "tslint": "^5.7.0",
+    "tslint": "^5.8.0",
     "typescript": "^2.5.0",
     "webpack-bundle-analyzer": "^2.9.0"
   },

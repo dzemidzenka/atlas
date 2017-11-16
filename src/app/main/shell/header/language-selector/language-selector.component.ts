@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { AppService } from '../../../../main/app.service';
+import { AppService } from '@main/app.service';
 import { LanguageListComponent } from '../language-list/language-list.component';
 
 @Component({

@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { AppService, IMenuModel } from '../../../main/app.service';
-import { environment } from '../../../../environments/environment';
+import { AppService, IMenuModel } from '@main/app.service';
+import { environment } from '@env';
 
 
 @Component({

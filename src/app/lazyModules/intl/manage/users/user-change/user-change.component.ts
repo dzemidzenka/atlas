@@ -57,8 +57,8 @@ export class UserChangeComponent implements OnChanges {
     Object.entries(_user.claims).forEach(claim => claim[1].forEach((value: string) => claims.push({ 'key': claim[0], 'value': value })));
     _user.claims = claims;
     const data = Object.assign(_user, this.userForm.value);
-    delete data['tenants'];  
-    
+    delete data['tenants'];
+
     data.authorizedTenantContexts = [];
     this.userForm.value.tenants.forEach((selected: string, i: number) => selected ? data.authorizedTenantContexts.push(this.tenants[i]) : null);
 

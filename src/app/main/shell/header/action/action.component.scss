@@ -1,4 +1,4 @@
-@import '../../../../shared/styles/theme';
+@import 'theme';
 @mixin center-horizontal-absolute {
     position: absolute;
     transform: translate(-50%, 0);

@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
-import { LocalStorageService } from '../shared/providers/local-storage.service';
-// import { ReLoginService } from '../shared/providers/re-login.service';
-import { NotificationService } from '../shared/providers/notification.service';
-import { environment } from '../../environments/environment';
-import { LoadingService } from '../shared/providers/loading.service';
+import { LocalStorageService } from '@shared/providers/local-storage.service';
+// import { ReLoginService } from '@shared/providers/re-login.service';
+import { NotificationService } from '@shared/providers/notification.service';
+import { LoadingService } from '@shared/providers/loading.service';
+import { environment } from '@env';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {

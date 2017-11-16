@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { SharedModule } from '../../../../shared/shared.module';
+import { SharedModule } from '@shared/shared.module';
 import { UsersService } from './users.service';
 import { UsersComponent } from './users.component';
 import { UserChangeComponent } from './user-change/user-change.component';

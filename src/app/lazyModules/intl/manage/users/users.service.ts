@@ -3,9 +3,9 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
-import { LoadingService } from '../../../../shared/providers/loading.service';
-import { NotificationService } from '../../../../shared/providers/notification.service';
-import { environment } from '../../../../../environments/environment';
+import { LoadingService } from '@shared/providers/loading.service';
+import { NotificationService } from '@shared/providers/notification.service';
+import { environment } from '@env';
 import cloneDeep from 'lodash-es/cloneDeep';
 
 enum ACTION {

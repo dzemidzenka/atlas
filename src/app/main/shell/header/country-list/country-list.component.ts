@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { AppService, COUNTRY } from '../../../../main/app.service';
+import { AppService, COUNTRY } from '@main/app.service';
 
 @Component({
     selector: 'atlas-country-list',

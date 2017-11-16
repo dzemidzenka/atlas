@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { NotificationService } from '../../../../shared/providers/notification.service';
+import { NotificationService } from '@shared/providers/notification.service';
 
 @Component({
     selector: 'atlas-notification-list',

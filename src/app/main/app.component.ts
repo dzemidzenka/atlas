@@ -2,12 +2,12 @@ import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, isDevMode } from
 import { Title } from '@angular/platform-browser';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import { AppService } from '../main/app.service';
-import { LocalStorageService } from '../shared/providers/local-storage.service';
-import { environment } from '../../environments/environment';
+import { AppService } from '@main/app.service';
+import { LocalStorageService } from '@shared/providers/local-storage.service';
+import { environment } from '@env';
 
 @Component({
-    selector: 'app-root',
+    selector: 'atlas-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -57,10 +57,7 @@ export class AppComponent implements OnInit, OnDestroy {
             .withLatestFrom(this._appService.state$)
             .map(array => array[1])
             .filter(state => state.isLoggedIn)
-            .filter(
-            state =>
-                !(state.hasOwnProperty('menuItemCurrent') && state.menuItemCurrent && state.menuItemCurrent.hasOwnProperty('iFrameUrl'))
-            )
+            .filter(state => !(state.hasOwnProperty('menuItemCurrent') && state.menuItemCurrent && state.menuItemCurrent.hasOwnProperty('iFrameUrl')))
             // period of inactivity must be greater than auditTime
             .switchMap(state => Observable.of(state).delay(environment.MINUTES_OF_INACTIVITY * 60 * 1000))
             .do(() => this._appService.actionLogOut())

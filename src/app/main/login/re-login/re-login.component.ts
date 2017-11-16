@@ -1,13 +1,13 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { LoginComponent } from '../login.component';
-import { AppService } from '../../../main/app.service';
-import { LoadingService } from '../../../shared/providers/loading.service';
-import { LocalStorageService } from '../../../shared/providers/local-storage.service';
-import { NotificationService } from '../../../shared/providers/notification.service';
+import { AppService } from '@main/app.service';
+import { LoadingService } from '@shared/providers/loading.service';
+import { LocalStorageService } from '@shared/providers/local-storage.service';
+import { NotificationService } from '@shared/providers/notification.service';
 import { Observable } from 'rxjs/Observable';
 import { MatDialogRef } from '@angular/material';
-import { ReLoginService } from '../../../shared/providers/re-login.service';
-import { environment } from '../../../../environments/environment';
+import { ReLoginService } from '@shared/providers/re-login.service';
+import { environment } from '@env';
 
 
 @Component({

@@ -28,7 +28,7 @@ import 'rxjs/add/observable/interval';
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/observable/merge';
 import 'rxjs/add/observable/forkJoin';
- 
+
 import { LoadingService } from './providers/loading.service';
 import { LocalStorageService } from './providers/local-storage.service';
 import { NotificationService } from './providers/notification.service';

@@ -17,8 +17,8 @@
       "main": "main.ts",
       "polyfills": "polyfills.ts",
       "test": "test.ts",
-      "tsconfig": "tsconfig.app.json",
-      "testTsconfig": "tsconfig.spec.json",
+      "tsconfig": "../tsconfig.json",
+      "testTsconfig": "../tsconfig.spec.json",
       "prefix": "atlas",
       "serviceWorker": true,
       "styles": [
@@ -29,6 +29,9 @@
       "environments": {
         "dev": "environments/environment.ts",
         "prod": "environments/environment.prod.ts"
+      },
+      "stylePreprocessorOptions": {
+        "includePaths": ["./app/shared/styles"]
       }
     }
   ],
@@ -59,7 +62,8 @@
   "defaults": {
     "styleExt": "scss",
     "component": {
-      "changeDetection": "OnPush"
+      "changeDetection": "OnPush",
+      "viewEncapsulation": "Emulated"
     }
   },
   "warnings": {

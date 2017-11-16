@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Output, EventEmitter } from '@angular/core';
-import { AppService } from '../../../main/app.service';
-import { NotificationService } from '../../../shared/providers/notification.service';
+import { AppService } from '@main/app.service';
+import { NotificationService } from '@shared/providers/notification.service';
 // import { DashboardComponent } from '../../dashboard/dashboard.component';
 
 @Component({
@@ -13,9 +13,9 @@ export class HeaderComponent {
     constructor(
         private _appService: AppService,
         private _notificationService: NotificationService
-    ) {}
+    ) { }
     // componentRef = DashboardComponent;
-    
+
     @Output() sidebarToggle = new EventEmitter<void>();
 
     state$ = this._appService.state$.map(state =>

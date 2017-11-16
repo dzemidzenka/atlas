@@ -1,9 +1,9 @@
 import { Component, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { AppService } from '../../main/app.service';
-import { LoadingService } from '../../shared/providers/loading.service';
-import { LocalStorageService } from '../../shared/providers/local-storage.service';
-import { ReLoginService } from '../../shared/providers/re-login.service';
+import { AppService } from '@main/app.service';
+import { LoadingService } from '@shared/providers/loading.service';
+import { LocalStorageService } from '@shared/providers/local-storage.service';
+import { ReLoginService } from '@shared/providers/re-login.service';
 import { Subscription } from 'rxjs/Subscription';
 
 @Component({

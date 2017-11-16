@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { LoadingService } from '../../providers/loading.service';
+import { LoadingService } from '@shared/providers/loading.service';
 
 @Component({
   selector: 'atlas-spinner',

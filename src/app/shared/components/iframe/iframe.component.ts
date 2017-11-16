@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { AppService } from '../../../main/app.service';
-import { LoadingService } from '../../providers/loading.service';
+import { AppService } from '@main/app.service';
+import { LoadingService } from '@shared/providers/loading.service';
 
 @Component({
     selector: 'atlas-iframe',

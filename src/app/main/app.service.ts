@@ -4,9 +4,9 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { TranslateService } from '@ngx-translate/core';
-import { NotificationService } from '../shared/providers/notification.service';
-import { LocalStorageService } from '../shared/providers/local-storage.service';
-import { environment } from '../../environments/environment';
+import { NotificationService } from '@shared/providers/notification.service';
+import { LocalStorageService } from '@shared/providers/local-storage.service';
+import { environment } from '@env';
 import cloneDeep from 'lodash-es/cloneDeep';
 
 export enum ACTION {
@@ -40,30 +40,28 @@ export enum VIEW {
     RECENT = 'recent'
 }
 
-type IActionModel = IActionInitModel | IActionRouteModel | IActionLogInModel | IActionLogOutModel | IActionFavoriteToggleModel;
+type IActionModel = IActionInitModel | IActionRouteModel | IActionLogInModel | IAction | IActionFavoriteToggleModel;
 
-interface IActionType {
+interface IAction {
     type: ACTION;
 }
 
-interface IActionRouteModel extends IActionType {
+interface IActionRouteModel extends IAction {
     url: string;
     urlParams: Array<string>;
     queryParams: IQueryParamsModel;
 }
 
-interface IActionInitModel extends IActionType {
+interface IActionInitModel extends IAction {
     user: IUserModel;
 }
 
-interface IActionLogInModel extends IActionType {
+interface IActionLogInModel extends IAction {
     user: IUserModel;
     rememberMe: boolean;
 }
 
-interface IActionLogOutModel extends IActionType { }
-
-interface IActionFavoriteToggleModel extends IActionType {
+interface IActionFavoriteToggleModel extends IAction {
     menuItem: IMenuModel;
 }
 
@@ -220,7 +218,7 @@ export class AppService {
             this._notificationsService.clear();
         });
 
-        this._reducers.set(ACTION.LOGOUT, (state: IStateModel, action: IActionLogOutModel) => {
+        this._reducers.set(ACTION.LOGOUT, (state: IStateModel, action: IAction) => {
             state.user = {} as IUserModel;
             this._localStorageService.user = state.user;
             // state.isLoggedIn = false;

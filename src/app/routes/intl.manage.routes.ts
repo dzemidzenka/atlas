@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
-import { DashboardComponent } from '../main/dashboard/dashboard.component';
-import { IFrameComponent } from '../shared/components/iframe/iframe.component';
+import { DashboardComponent } from '@main/dashboard/dashboard.component';
+import { IFrameComponent } from '@shared/components/iframe/iframe.component';
 
 export const INTL_MANAGE_ROUTES: Routes = [
     // FOLDER
