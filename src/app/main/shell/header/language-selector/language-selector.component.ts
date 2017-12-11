@@ -13,11 +13,5 @@ export class LanguageSelectorComponent {
         private _appService: AppService
     ) { }
     componentRef = LanguageListComponent;
-
-    state$ = this._appService.state$.map(state =>
-        Object.assign({
-            language: state.language,
-            isLoggedIn: state.isLoggedIn
-        })
-    );
+    state$ = this._appService.state$;
 }

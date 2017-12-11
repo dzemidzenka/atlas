@@ -1,5 +1,5 @@
 <ng-container *ngIf="state$ | async as state">
-  <mat-tab-group (selectedTabChange)="onSelectedTabChange($event)">
+  <mat-tab-group (selectedTabChange)="onSelectedTabChange($event)" [@.disabled]="true">
     <mat-tab label="Atlas Users">
       <input *ngIf="state.users" placeholder='User search - {{ state.users.length }} users found' aria-label="user" [formControl]="inputCtrl"
         autofocus>
@@ -20,7 +20,7 @@
 
 
 
-  <mat-tab-group *ngIf="state.user" class="user-data-tabs">
+  <mat-tab-group *ngIf="state.user" class="user-data-tabs" [@.disabled]="true">
     <mat-tab label="Display">
       <pre class="user-data">{{ state.user | json }}</pre>
     </mat-tab>

@@ -13,6 +13,6 @@ export class CountrySelectorComponent {
         private _appService: AppService
     ) {}
 
-    country$ = this._appService.state$.map(state => state.country);
+    state$ = this._appService.state$;
     componentRef = CountryListComponent;
 }

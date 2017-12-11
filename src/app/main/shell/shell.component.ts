@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy, ViewChild } from '@angular/core';
 import { AppService, ACTION } from '@main/app.service';
 import { MatDrawer } from '@angular/material/sidenav';
+import { tap } from "rxjs/operators/tap";
 
 @Component({
     selector: 'atlas-shell',
@@ -10,20 +11,13 @@ import { MatDrawer } from '@angular/material/sidenav';
 })
 export class ShellComponent {
     constructor(
-        private _appService: AppService
-    ) {}
+        private _appService: AppService,
+    ) { }
 
     @ViewChild('sidenav') private _sidenav: MatDrawer;
 
-    state$ = this._appService.state$
-        .map(state =>
-            Object.assign({
-                action: state.action,
-                isLoggedIn: state.isLoggedIn,
-                isComponent: state.isComponent
-            })
-        )
-        .do(state => (state.action.type === ACTION.LOGOUT ? this._sidenav.close() : null));
+    state$ = this._appService.state$.pipe(
+        tap(state => (state.action.type === ACTION.LOGOUT ? this._sidenav.close() : null)));
 
     onSidebarToggle() {
         this._sidenav.toggle();

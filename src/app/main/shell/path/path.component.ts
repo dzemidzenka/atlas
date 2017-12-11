@@ -12,15 +12,9 @@ export class PathComponent {
         private _appService: AppService
     ) { }
 
-    path$ = this._appService.state$.map(state =>
-        Object.assign({
-            urlParams: state.urlParams,
-            isComponent: state.isComponent
-        })
-    );
+    path$ = this._appService.state$;
 
-    onClick(index: number) {
-        const urlParams = this._appService.currentState.urlParams;
+    onClick(urlParams: Array<string>, index: number) {
         this._appService.actionMenu(urlParams.slice(0, index + 1));
     }
 }

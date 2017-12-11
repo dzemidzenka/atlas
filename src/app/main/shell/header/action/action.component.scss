@@ -18,6 +18,7 @@ main {
     height: 100%;
     width: 100%;
     position: relative;
+    box-sizing: border-box;
     padding-right: 15px;
     padding-left: 15px;
     .user-context-menu {

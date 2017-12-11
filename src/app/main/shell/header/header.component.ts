@@ -12,19 +12,13 @@ import { NotificationService } from '@shared/providers/notification.service';
 export class HeaderComponent {
     constructor(
         private _appService: AppService,
-        private _notificationService: NotificationService
+        private _notificationService: NotificationService,
     ) { }
     // componentRef = DashboardComponent;
 
     @Output() sidebarToggle = new EventEmitter<void>();
 
-    state$ = this._appService.state$.map(state =>
-        Object.assign({
-            country: state.country,
-            isLoggedIn: state.isLoggedIn,
-            user: state.user
-        })
-    );
+    state$ = this._appService.state$;
     notifications$ = this._notificationService.notifications$;
 
 

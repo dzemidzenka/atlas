@@ -3,11 +3,8 @@ import { LoginComponent } from '../login.component';
 import { AppService } from '@main/app.service';
 import { LoadingService } from '@shared/providers/loading.service';
 import { LocalStorageService } from '@shared/providers/local-storage.service';
-import { NotificationService } from '@shared/providers/notification.service';
-import { Observable } from 'rxjs/Observable';
-import { MatDialogRef } from '@angular/material';
-import { ReLoginService } from '@shared/providers/re-login.service';
-import { environment } from '@env';
+// import { Observable } from 'rxjs/Observable';
+// import { environment } from '@env';
 
 
 @Component({
@@ -21,11 +18,8 @@ export class ReLoginComponent extends LoginComponent {
         _appService: AppService,
         _loadingService: LoadingService,
         _localStorageService: LocalStorageService,
-        _notificationService: NotificationService,
-        _reLoginService: ReLoginService,
-        private _dialogRef: MatDialogRef<ReLoginComponent>,
     ) {
-        super(_appService, _loadingService, _localStorageService, _reLoginService);
+        super(_appService, _loadingService, _localStorageService);
     }
 
     // reLoginPrompt$ = this._appService.state$.switchMap((state: IStateModel) => {
@@ -39,18 +33,15 @@ export class ReLoginComponent extends LoginComponent {
     //     }
     // });
 
-    timeToSessionExpiration$ = Observable.interval(1000)
-        .map(second => second * 100 / (environment.MINUTES_OF_BEFORE_RELOGIN * 60))
-        .take(environment.MINUTES_OF_BEFORE_RELOGIN * 60);
+    // timeToSessionExpiration$ = Observable.interval(1000)
+    //     .map(second => second * 100 / (environment.MINUTES_OF_BEFORE_RELOGIN * 60))
+    //     .take(environment.MINUTES_OF_BEFORE_RELOGIN * 60);
 
     logIn() {
-        this._dialogRef.close();
         super.logIn();
     }
 
-
     logOut() {
-        this._dialogRef.close();
         this._appService.actionLogOut();
     }
 }

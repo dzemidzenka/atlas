@@ -1,6 +1,6 @@
 <main *ngIf="path$ | async as path">
-  <ng-container *ngFor="let param of path.urlParams; let index = index; let first = first; let last = last">
-    <button mat-button (click)="onClick(index)">
+  <ng-container *ngFor="let param of path.urlParams; let i = index; let first = first; let last = last">
+    <button mat-button (click)="onClick(path.urlParams, i)">
       <ng-container *ngIf="path && (!last || last && !path.isComponent) else isComponent">
         <i class="material-icons" *ngIf="first">home</i>
         <i class="material-icons" *ngIf="!first">folder</i>

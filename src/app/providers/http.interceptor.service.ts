@@ -6,6 +6,7 @@ import { LocalStorageService } from '@shared/providers/local-storage.service';
 import { NotificationService } from '@shared/providers/notification.service';
 import { LoadingService } from '@shared/providers/loading.service';
 import { environment } from '@env';
+import { catchError } from "rxjs/operators/catchError";
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -18,7 +19,7 @@ export class AuthInterceptor implements HttpInterceptor {
 
     // https://medium.com/@ryanchenkie_40935/angular-authentication-using-the-http-client-and-http-interceptors-2f9d1540eb8
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        let _request;
+        let _request: HttpRequest<any>;
         if (request.url === environment.logInUrl) {
             _request = request.clone();
         } else {
@@ -32,7 +33,7 @@ export class AuthInterceptor implements HttpInterceptor {
             }
         }
 
-        return next.handle(_request).catch((err: HttpErrorResponse) => {
+        return next.handle(_request).pipe(catchError((err: HttpErrorResponse) => {
             if (err.error && err.error.Message) {
                 this._notificationsService.notifySingle(`${err.status}  ${err.error.Message}`);
             }
@@ -50,10 +51,7 @@ export class AuthInterceptor implements HttpInterceptor {
             }
             this._notificationsService.notifySingle(message);
             this._loadingService.off();
-            return Observable.of({} as HttpEvent<null>);
-        });
-        // .do((event: HttpEvent<any>) => {
-        //     if (event instanceof HttpResponse) { }
-        // }
+            return Observable.of({} as HttpEvent<{}>);
+        }));
     }
 }

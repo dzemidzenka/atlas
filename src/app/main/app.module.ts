@@ -70,7 +70,8 @@ import { ReLoginComponent } from './login/re-login/re-login.component';
         ReLoginComponent
     ],
     imports: [
-        environment.production ? ServiceWorkerModule.register('/ngsw-worker.js') : [],
+        // environment.production ? ServiceWorkerModule.register('/ngsw-worker.js') : [],
+        ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production }),
         SharedModule.forRoot(),
         BrowserAnimationsModule,
         // NoopAnimationsModule,

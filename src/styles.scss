@@ -6,7 +6,7 @@
 // @import "~@angular/material/prebuilt-themes/purple-green.css";
 // @import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
 // @import "~flag-icon-css/css/flag-icon.min.css";
-@import url(https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta/css/bootstrap-reboot.min.css);
+// @import url(https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta/css/bootstrap-reboot.min.css);
 @import url(https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/2.8.0/css/flag-icon.min.css);
 *::-webkit-scrollbar {
     width: 10px; // overflow-y: overlay; //Chrome only
@@ -25,6 +25,9 @@
     background-color: $scrollbar-button-color;
 }
 
+* {
+    box-sizing: border-box;
+}
 
 //
 .header-action-menu {
@@ -63,17 +66,6 @@ $theme: mat-light-theme($primary, $accent, $warn);
 
 
 // @import "~@angular/cdk/overlay-prebuilt.css";
-
-// @import '~@angular/material/theming';
-// @include mat-core();
-// $primary: mat-palette($mat-blue, 800);
-// $accent:  mat-palette($mat-light-blue, 600, A100, A400);
-// $warn:    mat-palette($mat-red, 600);
-// $theme: mat-dark-theme($primary, $accent, $warn);
-// @include angular-material-theme($theme);
-// @import '~@covalent/core/theming/all-theme';
-// @include covalent-theme($theme);
-
 // @import '~primeng/resources/primeng.min.css';
 // @import '~primeng/resources/themes/omega/theme.css';
 //  material icons

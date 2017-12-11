@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { AppService, COUNTRY } from '@main/app.service';
+import { map } from "rxjs/operators/map";
 
 @Component({
     selector: 'atlas-country-list',
@@ -12,7 +13,7 @@ export class CountryListComponent {
         private _appService: AppService
     ) { }
 
-    countries$ = this._appService.state$.map(state => {
+    countries$ = this._appService.state$.pipe(map(state => {
         let countries;
         if (state.hasOwnProperty('user') && state.user.hasOwnProperty('allowedCountries')) {
             countries = state.user.allowedCountries;
@@ -21,7 +22,7 @@ export class CountryListComponent {
             countries = COUNTRY;
         }
         return Object.values(countries).sort();
-    });
+    }));
 
     switchCountry(country: COUNTRY) {
         this._appService.actionCountry(country);

@@ -1,7 +1,11 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { AppService, IMenuModel } from '@main/app.service';
-import { environment } from '@env';
+// import { map, startWith, distinctUntilChanged, withLatestFrom } from "rxjs/operators";
+import { map } from "rxjs/operators/map";
+import { startWith } from "rxjs/operators/startWith";
+import { distinctUntilChanged } from "rxjs/operators/distinctUntilChanged";
+import { withLatestFrom } from "rxjs/operators/withLatestFrom";
 
 
 @Component({
@@ -17,12 +21,11 @@ export class TcodeComponent {
 
     menuCtrl = new FormControl();
 
-    filteredMenu = this.menuCtrl.valueChanges
-        .startWith(null)
-        .debounceTime(environment.debounceTime)
-        .distinctUntilChanged()
-        .withLatestFrom(this._appService.state$)
-        .map(array => (array[0] ? this.matchTcode(array[0], array[1].menu) : array[1].menu.filter(item => item.tcode)));
+    filteredMenu = this.menuCtrl.valueChanges.pipe(
+        startWith(''),
+        distinctUntilChanged(),
+        withLatestFrom(this._appService.state$),
+        map(array => (array[0] ? this.matchTcode(array[0], array[1].menu) : array[1].menu.filter(item => item.tcode))));
 
 
 

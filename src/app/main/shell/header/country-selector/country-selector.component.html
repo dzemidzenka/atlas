@@ -1,4 +1,4 @@
-<atlas-action *ngIf="country$ | async as country" [componentRef]="componentRef">
-  <span class="flag-icon flag-icon-{{ country }}"></span>
-  <span>{{ ('country.' + country) | translate }}</span>
+<atlas-action *ngIf="state$ | async as state" [componentRef]="componentRef">
+  <span class="flag-icon flag-icon-{{ state.country }}"></span>
+  <span>{{ ('country.' + state.country) | translate }}</span>
 </atlas-action>

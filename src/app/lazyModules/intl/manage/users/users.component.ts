@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { MatTabChangeEvent } from '@angular/material/tabs';
-import { UsersService, IUser } from './users.service';
+// import { MatTabChangeEvent } from '@angular/material/tabs';
+import { UsersService, IUserModel } from './users.service';
 
 
 @Component({
@@ -19,12 +19,13 @@ export class UsersComponent {
     inputCtrlActiveDir = this._usersService.inputCtrlActiveDir;
 
 
-    onSelectedTabChange(tabGroup: MatTabChangeEvent) {
+    // onSelectedTabChange(tabGroup: MatTabChangeEvent) {
+    onSelectedTabChange() {
         // this.user = null;
         // this._usersService.actionUser(null);
     }
 
-    onUserSelect(user: IUser) {
+    onUserSelect(user: IUserModel) {
         this._usersService.actionUserSelect(user);
     }
 

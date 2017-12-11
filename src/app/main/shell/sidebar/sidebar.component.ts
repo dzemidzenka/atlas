@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { AppService } from '@main/app.service';
+import { map } from "rxjs/operators/map";
 
 @Component({
     selector: 'atlas-sidebar',
@@ -12,5 +13,5 @@ export class SidebarComponent {
         private _appService: AppService
     ) { }
 
-    isLoggedIn$ = this._appService.state$.map(state => state.isLoggedIn);
+    isLoggedIn$ = this._appService.state$.pipe(map(state => state.isLoggedIn));
 }

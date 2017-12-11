@@ -2,6 +2,8 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { AppService } from '@main/app.service';
 import { LoadingService } from '@shared/providers/loading.service';
+import { map } from "rxjs/operators/map";
+import { filter } from "rxjs/operators/filter";
 
 @Component({
     selector: 'atlas-iframe',
@@ -17,12 +19,12 @@ export class IFrameComponent {
     ) { }
 
 
-    iFrameUrl$ = this._appService.state$
-        .filter(state => state.hasOwnProperty('menuItemCurrent'))
-        .filter(state => state.menuItemCurrent.hasOwnProperty('iFrameUrl'))
-        .filter(state => (state.menuItemCurrent.iFrameUrl ? true : false))
-        .map(state => state.menuItemCurrent.iFrameUrl.replace('{{country}}', state.country))
-        .map(iFrameUrl => this._sanitizer.bypassSecurityTrustResourceUrl(iFrameUrl));
+    iFrameUrl$ = this._appService.state$.pipe(
+        filter(state => state.hasOwnProperty('menuItemCurrent')),
+        filter(state => state.menuItemCurrent.hasOwnProperty('iFrameUrl')),
+        filter(state => (state.menuItemCurrent.iFrameUrl ? true : false)),
+        map(state => state.menuItemCurrent.iFrameUrl.replace('{{country}}', state.country)),
+        map(iFrameUrl => this._sanitizer.bypassSecurityTrustResourceUrl(iFrameUrl)));
 
 
 

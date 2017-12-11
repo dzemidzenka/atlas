@@ -1,6 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { LoadingService } from '../../../shared/providers/loading.service';
+// import { LoadingService } from '@shared/providers/loading.service';
 
 @Component({
     selector: 'atlas-home',
@@ -10,13 +9,11 @@ import { LoadingService } from '../../../shared/providers/loading.service';
 })
 export class HomeComponent implements OnInit {
     constructor(
-        private _http: HttpClient,
-        private _loadingService: LoadingService,
+        // private _http: HttpClient,
+        // private _loadingService: LoadingService,
     ) { }
 
     ngOnInit() {
-        this._loadingService.off();
-        // const headers = new HttpHeaders().set('Content-type', 'application/x-www-form-urlencoded');
 
         // const payload = {
         //     filters: [
@@ -25,16 +22,5 @@ export class HomeComponent implements OnInit {
         //     ],
         //     sorting: [{ property: 'shipDate', direction: 0 }, { property: 'key', direction: 1 }]
         // };
-
-        return this._http
-            .get(
-            // 'http://de.atlasglobal-dev.nuvasive.com/api/V1/en-us/users',
-            // 'http://de.atlasglobal-dev.nuvasive.com/api/V1/en-us/users/tenants?q=names',
-            'http://de.atlasglobal-dev.nuvasive.com/api/V1/en-us/users/claims?q=[claimtypes,rolenames]',
-            // JSON.stringify(payload)
-            // { headers: headers }
-        )
-            .do(json => console.log(json))
-            .subscribe();
     }
 }

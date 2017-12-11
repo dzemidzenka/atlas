@@ -1,12 +1,22 @@
 import { Injectable } from '@angular/core';
-import { Router, Route, ActivatedRoute, RouterEvent, NavigationEnd } from '@angular/router';
+import { Router, Route, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
 import { TranslateService } from '@ngx-translate/core';
 import { NotificationService } from '@shared/providers/notification.service';
 import { LocalStorageService } from '@shared/providers/local-storage.service';
+import { LoadingService } from '@shared/providers/loading.service';
+import { ReLoginService } from '@shared/providers/re-login.service';
 import { environment } from '@env';
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
+import { map } from 'rxjs/operators/map';
+import { filter } from 'rxjs/operators/filter';
+import { scan } from 'rxjs/operators/scan';
+import { tap } from 'rxjs/operators/tap';
+import { startWith } from 'rxjs/operators/startWith';
+import { merge } from 'rxjs/operators/merge';
+import { publishBehavior } from 'rxjs/operators/publishBehavior';
+import { refCount } from 'rxjs/operators/refCount';
 import cloneDeep from 'lodash-es/cloneDeep';
 
 export enum ACTION {
@@ -40,28 +50,32 @@ export enum VIEW {
     RECENT = 'recent'
 }
 
-type IActionModel = IActionInitModel | IActionRouteModel | IActionLogInModel | IAction | IActionFavoriteToggleModel;
+type IActionModel = IActionInitModel | IActionRouteModel | IActionLogInModel | IActionLogOutModel | IActionFavoriteToggleModel;
 
-interface IAction {
+interface IActionRouteModel {
     type: ACTION;
-}
-
-interface IActionRouteModel extends IAction {
     url: string;
     urlParams: Array<string>;
     queryParams: IQueryParamsModel;
 }
 
-interface IActionInitModel extends IAction {
+interface IActionInitModel {
+    type: ACTION;
     user: IUserModel;
 }
 
-interface IActionLogInModel extends IAction {
+interface IActionLogInModel {
+    type: ACTION;
     user: IUserModel;
     rememberMe: boolean;
 }
 
-interface IActionFavoriteToggleModel extends IAction {
+interface IActionLogOutModel {
+    type: ACTION;
+}
+
+interface IActionFavoriteToggleModel {
+    type: ACTION;
     menuItem: IMenuModel;
 }
 
@@ -124,56 +138,52 @@ export class AppService {
         private _translate: TranslateService,
         private _notificationsService: NotificationService,
         private _localStorageService: LocalStorageService,
+        private _loadingService: LoadingService,
+        private _reLoginService: ReLoginService,
     ) {
         this._translate.setDefaultLang(LANGUAGE.EN);
         this._initializeReducers();
         // console.log('ROUTES', this._router.config);
-        // generateAdditionalRoutes(this._router.config);
         // this._translate.get('HOME.HELLO', { value: 'world' }).subscribe((res: string) => {
         //   console.log(res);
         // });
     }
 
     private _currentState: IStateModel;
-    private _reducers = new Map();
+    private _reducers = new Map<ACTION, (state: IStateModel, action: any) => void>();
     private _actionSubject$ = new Subject<IActionModel>();
-
-
-
-    // ROUTING EVENTS HANDLER
-    private _routerEvents$ = this._router.events
-        .filter((event: {}) => event instanceof NavigationEnd)
-        .map((event: {}) => {
+    private _routerEvents$ = this._router.events.pipe(
+        filter((event: {}) => event instanceof NavigationEnd),
+        map((event: {}) => {
             const url = (<NavigationEnd>event).urlAfterRedirects;
             const urlTree = this._router.parseUrl(url);
             const urlParams = url
                 .split('/')
-                .filter((param: string) => param !== '')
+                .filter((param: string) => (param))
+                // .filter((param: string) => param !== '')
                 .map((param: string) => param.split('?')[0]);
             const queryParams = urlTree.queryParams;
-            return { type: ACTION.ROUTE, url: url, urlParams: urlParams, queryParams: queryParams };
-        });
+            return { type: ACTION.ROUTE, url, urlParams, queryParams };
+        }));
 
     // APPLICATION STATE STORE
-    state$: Observable<IStateModel> = this._actionSubject$
-        .startWith({ type: ACTION.INIT, user: this._localStorageService.user })
-        .merge(this._routerEvents$)
-        .scan((state: IStateModel, action: IActionModel) => this._reducer(state, action), this._initializeState())
-        .map(this._getActiveMenu)
-        .do((state: IStateModel) => this._currentState = state)
-        .publishBehavior({})
-        .refCount() as Observable<IStateModel>;
+    state$: Observable<IStateModel> = this._actionSubject$.pipe(
+        startWith({ type: ACTION.INIT, user: this._localStorageService.user } as IActionModel),
+        merge(this._routerEvents$),
+        scan((state: IStateModel, action: Readonly<IActionModel>) => this._reducer(state, action), this._initializeState()),
+        map(this._getActiveMenu),
+        tap((state: IStateModel) => this._currentState = state),
+        publishBehavior(this._initializeState()),
+        refCount());
 
 
 
     // REDUCER HANDLER
-    private _reducer(state: IStateModel, action: IActionModel): IStateModel {
+    private _reducer(state: IStateModel, action: Readonly<IActionModel>): IStateModel {
         const _state = cloneDeep(state);
-        if (action.type in ACTION) {
-            const _action = cloneDeep(action);
-            this._reducers.get(_action.type).call(this, _state, _action);
-            _state.action = _action;
-        }
+        const _action = cloneDeep(action);
+        this._reducers.get(_action.type)!(_state, _action);
+        _state.action = _action;
         _state.isLoggedIn = _state.user.hasOwnProperty('accessToken');
         return _state;
     }
@@ -200,7 +210,7 @@ export class AppService {
     }
 
     private _initializeReducers() {
-        this._reducers.set(ACTION.INIT, (state: IStateModel, action: IActionInitModel) => {
+        this._reducers.set(ACTION.INIT, (state: IStateModel, action: Readonly<IActionInitModel>) => {
             state.user = action.user;
             const url = window.location.pathname.substring(1);
             if (url) {
@@ -211,20 +221,20 @@ export class AppService {
             }
         });
 
-        this._reducers.set(ACTION.LOGIN, (state: IStateModel, action: IActionLogInModel) => {
+        this._reducers.set(ACTION.LOGIN, (state: IStateModel, action: Readonly<IActionLogInModel>) => {
             state.user = action.user;
-            // state.isLoggedIn = true;
             this._localStorageService.user = state.user;
             this._notificationsService.clear();
+            this._loadingService.off();
+            this._reLoginService.retry();
         });
 
-        this._reducers.set(ACTION.LOGOUT, (state: IStateModel, action: IAction) => {
+        this._reducers.set(ACTION.LOGOUT, (state: IStateModel, action: Readonly<IActionLogOutModel>) => {
             state.user = {} as IUserModel;
             this._localStorageService.user = state.user;
-            // state.isLoggedIn = false;
         });
 
-        this._reducers.set(ACTION.ROUTE, (state: IStateModel, action: IActionRouteModel) => {
+        this._reducers.set(ACTION.ROUTE, (state: IStateModel, action: Readonly<IActionRouteModel>) => {
             state.url = action.url;
             state.urlParams = action.urlParams.filter(param => param.length > 0).map(param => param.toLowerCase());
             state.queryParams = action.queryParams;
@@ -255,7 +265,7 @@ export class AppService {
             }
         });
 
-        this._reducers.set(ACTION.FAVORITE_TOGGLE, (state: IStateModel, action: IActionFavoriteToggleModel) => {
+        this._reducers.set(ACTION.FAVORITE_TOGGLE, (state: IStateModel, action: Readonly<IActionFavoriteToggleModel>) => {
             state.menu
                 .filter(menu => action.menuItem && menu.id === action.menuItem.id)
                 .map(menu => menu.isFavorite = !menu.isFavorite);
@@ -266,13 +276,16 @@ export class AppService {
 
 
     // REDUX ACTIONS
-    actionLogIn(username: string, password: string, rememberMe: boolean): Observable<IUserModel> {
+    actionLogIn(username: string, password: string, rememberMe: boolean) {
+        this._loadingService.on();
         const data = `grant_type=password&username=${username}&password=${password}&client_id=atlaswebapp`;
         // const headers = new HttpHeaders().set('Content-type', 'application/x-www-form-urlencoded');
-        return this._http
+        this._http
             .post(environment.logInUrl, data)
-            .map(this._userFromAuthResponse)
-            .do(user => this._actionSubject$.next({ type: ACTION.LOGIN, user: user, rememberMe: rememberMe }));
+            .pipe(
+            map(this._userFromAuthResponse),
+            tap((user: IUserModel) => this._actionSubject$.next({ type: ACTION.LOGIN, user, rememberMe })))
+            .toPromise();
     }
 
     actionLogOut() {
@@ -282,24 +295,24 @@ export class AppService {
     }
 
     actionFavoriteToggle(menuItem: IMenuModel) {
-        this._actionSubject$.next({ type: ACTION.FAVORITE_TOGGLE, menuItem: menuItem });
+        this._actionSubject$.next({ type: ACTION.FAVORITE_TOGGLE, menuItem });
     }
 
     actionLanguage(language: LANGUAGE) {
         this._translate.use(language);
         const urlParams = this._currentState.urlParams;
         const queryParams = this._currentState.queryParams;
-        this._router.navigate([urlParams.join('/')], { queryParams: { ...queryParams, language: language } });
+        this._router.navigate([urlParams.join('/')], { queryParams: { ...queryParams, language } });
     }
 
     actionCountry(country: COUNTRY) {
         const urlParams = this._currentState.urlParams;
         const queryParams = this._currentState.queryParams;
-        this._router.navigate([urlParams.join('/')], { queryParams: { ...queryParams, country: country } });
+        this._router.navigate([urlParams.join('/')], { queryParams: { ...queryParams, country } });
     }
 
     actionDashboard(view: VIEW) {
-        this._router.navigate([''], { queryParams: { ...this._route.snapshot.queryParams, view: view } });
+        this._router.navigate([''], { queryParams: { ...this._route.snapshot.queryParams, view } });
     }
 
     actionMenu(urlParams: Array<string>) {
@@ -307,9 +320,8 @@ export class AppService {
     }
 
     actionTcode(tcode: string) {
-        if (tcode.trim().length === 0) {
-            return;
-        }
+        if (tcode.trim().length === 0) return;
+
         const urlParams: Array<string> = this._currentState.menu
             .filter(menu => menu.isComponent)
             .filter(menu => menu.hasOwnProperty('tcode'))
@@ -318,7 +330,7 @@ export class AppService {
     }
 
     // current state getter to prevent direct state access
-    get currentState(): IStateModel {
+    get currentState(): Readonly<IStateModel> {
         return cloneDeep(this._currentState);
     }
 
@@ -332,9 +344,7 @@ export class AppService {
                     return item;
                 }
                 if (state.view === VIEW.RECENT) {
-                    if (state.hasOwnProperty('menuRecent')) {
-                        item.active = state.menuRecent.some(menuItem => menuItem.id === item.id);
-                    }
+                    item.active = state.menuRecent.some(menuItem => menuItem.id === item.id);
                     return item;
                 }
 
@@ -347,14 +357,7 @@ export class AppService {
                 }
 
                 // match URL params and menu params
-                let i = 0;
-                for (const param of state.urlParams) {
-                    if (item.urlParams[i] !== state.urlParams[i]) {
-                        item.active = false;
-                        break;
-                    }
-                    i++;
-                }
+                state.urlParams.forEach((param, i) => item.active = (item.urlParams[i] === param));
                 return item;
             });
         }
@@ -364,13 +367,11 @@ export class AppService {
 
 
     private _menuItemFromRoute(route: Route, index: number): IMenuModel {
-        if (!route.path) {
-            return {} as IMenuModel;
-        }
+        if (!route.path) return {} as IMenuModel;
 
         const params = route.path.split('/');
 
-        let tcode;
+        let tcode = '';
         if (route.data && route.data.isComponent) {
             tcode = params[params.length - 1];
         }
@@ -409,27 +410,3 @@ export class AppService {
         return user;
     }
 }
-
-// ***********************************************************************
-// UTILITY FUNCTIONS
-// ***********************************************************************
-// function generateAdditionalRoutes(routes) {
-    // const _routes = routes;
-    // create a route for each country
-    // Object.keys(models.COUNTRY)
-    //   .map(country => country.toLowerCase())
-    //   .forEach(country => _routes.push(
-    //     {
-    //       path: country.toLowerCase(),
-    //       component: 'DashboardComponent',
-    //       canActivate: [],
-    //       resolve: {},
-    //       data: { description: country.toUpperCase() },
-    //     }));
-    // _routes.push(
-    //   {
-    //     path: '**',
-    //     redirectTo: 'us/page-not-found',
-    //   }
-    // );
-// }
