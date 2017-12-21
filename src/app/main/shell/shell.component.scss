@@ -1,15 +1,12 @@
 @import 'media-breakpoints';
 @import 'theme';
-
 .page {
     width: 100vw;
     height: 100vh;
-    display: grid;
-    position: fixed;
+    display: grid; // position: fixed;
     grid-template-columns: 1fr;
     grid-template-rows: auto auto 1fr;
-    grid-template-areas: "header" "path" "content";
-    background-color: $main-bg-color;
+    grid-template-areas: "header" "path" "content"; // background-color: $main-bg-color;
 }
 
 atlas-header {
@@ -24,12 +21,12 @@ mat-sidenav,
 mat-sidenav-container,
 router-outlet,
 atlas-login {
-    grid-area: content;
-    background-color: inherit;
+    grid-area: content; // background-color: inherit;
 }
 
 mat-sidenav {
-    width: 200px;
+    width: 250px;
+    background-color: $main-bg-color;
 }
 
 .path_tcode {

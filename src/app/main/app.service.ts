@@ -93,9 +93,14 @@ export interface IStateModel {
     isComponent: boolean;
     isLoggedIn: boolean;
     user: IUserModel;
+    app: string;
+    apps: Array<IMenuModel>;
     country: COUNTRY;
+    countries: Array<COUNTRY>;
     language: LANGUAGE;
+    languages: Array<LANGUAGE>,
     view: VIEW;
+    views: Array<VIEW>;
     menu: Array<IMenuModel>;
     menuItemCurrent: IMenuModel;
     menuRecent: Array<IMenuModel>;
@@ -117,6 +122,7 @@ export interface IMenuModel {
     id: number;
     active: boolean;
     description: string;
+    excludeFromMenu: boolean;
     help: string;
     isComponent: boolean;
     isLazy: boolean;
@@ -125,6 +131,7 @@ export interface IMenuModel {
     urlParams: Array<string>;
     tcode: string;
     iFrameUrl: string;
+    children: Array<IMenuModel>;
 }
 
 
@@ -163,8 +170,14 @@ export class AppService {
                 // .filter((param: string) => param !== '')
                 .map((param: string) => param.split('?')[0]);
             const queryParams = urlTree.queryParams;
+            if (urlParams.length === 0) {
+                urlParams.push('domestic');
+                urlParams.push('home');
+                this.actionMenu(urlParams);
+            }
             return { type: ACTION.ROUTE, url, urlParams, queryParams };
         }));
+
 
     // APPLICATION STATE STORE
     state$: Observable<IStateModel> = this._actionSubject$.pipe(
@@ -175,7 +188,6 @@ export class AppService {
         tap((state: IStateModel) => this._currentState = state),
         publishBehavior(this._initializeState()),
         refCount());
-
 
 
     // REDUCER HANDLER
@@ -190,23 +202,31 @@ export class AppService {
 
 
     private _initializeState(): IStateModel {
-        return Object.freeze({
+        const _state = {
             action: {} as IActionModel,
             url: '',
-            urlParams: [],
+            urlParams: [] as Array<string>,
             queryParams: {} as IQueryParamsModel,
             isComponent: false,
             isLoggedIn: false,
             user: {} as IUserModel,
+            app: '',
+            apps: [] as Array<IMenuModel>,
             country: COUNTRY.US,
+            countries: Object.values(COUNTRY).sort() as Array<COUNTRY>,
             language: LANGUAGE.EN,
+            languages: Object.values(LANGUAGE).sort() as Array<LANGUAGE>,
             view: VIEW.DASHBOARD,
+            views: Object.values(VIEW).sort() as Array<VIEW>,
             menu: this._router.config
                 .filter((route: Route) => route.data && route.data.description)
-                .map(this._menuItemFromRoute),
+                .map(this._menuItemFromRoute)
+                .map(this._menuChildren),
             menuItemCurrent: {} as IMenuModel,
-            menuRecent: [],
-        });
+            menuRecent: [] as Array<IMenuModel>,
+        };
+        _state.apps = _state.menu.filter((menu: IMenuModel) => menu.urlParams.length === 1 && !menu.excludeFromMenu);
+        return Object.freeze(_state);
     }
 
     private _initializeReducers() {
@@ -238,6 +258,7 @@ export class AppService {
             state.url = action.url;
             state.urlParams = action.urlParams.filter(param => param.length > 0).map(param => param.toLowerCase());
             state.queryParams = action.queryParams;
+            state.app = state.urlParams[0];
             state.language = state.queryParams.language || LANGUAGE.EN;
             this._translate.use(state.language);
             state.country = state.queryParams.country || COUNTRY.US;
@@ -315,7 +336,19 @@ export class AppService {
         this._router.navigate([''], { queryParams: { ...this._route.snapshot.queryParams, view } });
     }
 
-    actionMenu(urlParams: Array<string>) {
+    actionMenu(urlParams: Array<string>, defaultToFirst: boolean = true) {
+        if (defaultToFirst) {
+            let item: IMenuModel | undefined;
+            if (urlParams.length === 1) {
+                item = this._currentState.menu.find(menu => menu.urlParams[0] === urlParams[0] && menu.urlParams.length > urlParams.length);
+            }
+            else if (urlParams.length === 2) {
+                item = this._currentState.menu.find(menu => menu.urlParams[0] === urlParams[0] && menu.urlParams[1] === urlParams[1] && menu.urlParams.length > urlParams.length);
+            }
+            if (item) {
+                urlParams = item.urlParams;
+            }
+        }
         this._router.navigate([urlParams.join('/')], { queryParams: { ...this._route.snapshot.queryParams, view: null } });
     }
 
@@ -366,7 +399,7 @@ export class AppService {
 
 
 
-    private _menuItemFromRoute(route: Route, index: number): IMenuModel {
+    private _menuItemFromRoute(route: Route, index: number, routes: Array<Route>): IMenuModel {
         if (!route.path) return {} as IMenuModel;
 
         const params = route.path.split('/');
@@ -382,8 +415,15 @@ export class AppService {
             routerPath: route.path,
             isLazy: route.hasOwnProperty('loadChildren'),
             tcode: tcode,
-            ...route.data
+            ...route.data,
         } as IMenuModel;
+    }
+
+
+
+    private _menuChildren(menuItem: IMenuModel, index: number, menu: Array<IMenuModel>): IMenuModel {
+        menuItem.children = menu.filter(item => item.routerPath.startsWith(menuItem.routerPath) && item.urlParams.length === menuItem.urlParams.length + 1);
+        return menuItem;
     }
 
 

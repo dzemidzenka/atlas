@@ -6,17 +6,40 @@
 
 header {
     display: flex;
-    height: $header-height;
-    min-height: $header-height;
-    max-height: $header-height;
+    flex-wrap: wrap; // height: $header-height;
+    // min-height: $header-height;
+    // max-height: $header-height;
+    min-width: 350px;
     background-color: $header-bg-color;
     color: $font-color;
     justify-content: start;
     padding-top: 5px;
-    padding-bottom: 5px;
-    @include atMobile {
-        justify-content: center;
+    padding-bottom: 5px; // @include atMobile {
+    //     justify-content: center;
+    // }
+     :not(.collapsed) {
+        @include beforeDesktop {
+            display: none;
+        }
     }
+}
+
+.subheader {
+    border-top: 1px solid $font-color;
+    @include beforeDesktop {
+        display: none;
+    }
+}
+
+.collapsed {
+    display: none;
+    @include beforeDesktop {
+        display: block;
+    }
+}
+
+.always {
+    display: block!important;
 }
 
 .spacer {
@@ -25,6 +48,14 @@ header {
 
 .rightMarginWhenNotLoggedIn {
     margin-right: 5rem;
+}
+
+.menuActive {
+    color: $header-user-picture-border-color;
+}
+
+span:hover {
+    color: $header-user-picture-border-color;
 }
 
 // p-megaMenu::ng-deep div.ui-megamenu {

@@ -1,0 +1,32 @@
+@import 'theme';
+:host::ng-deep * {
+    background-color: $main-bg-color!important;
+}
+
+mat-expansion-panel-header {
+    color: $font-color;
+    font-weight: bold;
+    font-size: 120%;
+    user-select: none;
+}
+
+li {
+    width: 100%;
+    cursor: pointer;
+    color: $font-color;
+    line-height: 300%;
+    white-space: nowrap;
+    margin-left: -2em;
+    user-select: none;
+}
+
+// li:hover {
+//     color: $header-user-picture-border-color;
+// }
+.active {
+    color: $header-user-picture-border-color;
+}
+
+.flag-icon {
+    margin-right: 0.5rem;
+}

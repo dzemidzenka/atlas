@@ -2,6 +2,10 @@
     display: none;
 }
 
+.views, .header-action-separator {
+    display: none;
+}
+
 :host-context(atlas-action) {
     li {
         display: inline-flex;
@@ -10,8 +14,11 @@
         display: block;
         margin-right: 0.5rem;
     }
-    .views{
-      display: flex;
-      justify-content: space-around;
+    .views {
+        display: flex;
+        justify-content: space-around;
+    }
+    .header-action-separator {
+        display: block;
     }
 }

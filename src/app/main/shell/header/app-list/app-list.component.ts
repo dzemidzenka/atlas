@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { AppService, VIEW } from '@main/app.service';
+import { pluck } from 'rxjs/operators/pluck';
 
 @Component({
     selector: 'atlas-app-list',
@@ -12,6 +13,7 @@ export class AppListComponent {
         private _appService: AppService
     ) { }
     view = VIEW;
+    apps$ = this._appService.state$.pipe(pluck('apps'));
 
     switchApp(app: string) {
         if (Object.values(VIEW).includes(app)) {

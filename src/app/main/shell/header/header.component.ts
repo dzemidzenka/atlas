@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy, Output, EventEmitter } from '@angular/core';
-import { AppService } from '@main/app.service';
+import { AppService, IStateModel, IMenuModel } from '@main/app.service';
 import { NotificationService } from '@shared/providers/notification.service';
+import { map } from 'rxjs/operators/map';
 // import { DashboardComponent } from '../../dashboard/dashboard.component';
 
 @Component({
@@ -19,11 +20,23 @@ export class HeaderComponent {
     @Output() sidebarToggle = new EventEmitter<void>();
 
     state$ = this._appService.state$;
+    menu$ = this._appService.state$.pipe(
+        map((state: IStateModel) => state.menu.filter(menu => menu.urlParams[0] === state.app)),
+        map((menu: Array<IMenuModel>) => menu.filter(menu => menu.urlParams.length === 2))
+    );
+    subMenu$ = this._appService.state$.pipe(
+        map((state: IStateModel) => state.menu.filter(menu => menu.urlParams[0] === state.app && menu.urlParams[1] === state.menuItemCurrent.urlParams[1])),
+        map((menu: Array<IMenuModel>) => menu.filter(menu => menu.urlParams.length > 2))
+    );
     notifications$ = this._notificationService.notifications$;
 
 
     onSidebarToggle() {
         this.sidebarToggle.emit();
+    }
+
+    onMenuClick(menu: IMenuModel) {
+        this._appService.actionMenu(menu.urlParams);
     }
 }
 

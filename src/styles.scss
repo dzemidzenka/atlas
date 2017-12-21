@@ -8,8 +8,15 @@
 // @import "~flag-icon-css/css/flag-icon.min.css";
 // @import url(https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta/css/bootstrap-reboot.min.css);
 @import url(https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/2.8.0/css/flag-icon.min.css);
+@import url(https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css);
+
+@import "~primeng/resources/themes/omega/theme.css";
+@import "~primeng/resources/primeng.min.css";
+
+
 *::-webkit-scrollbar {
-    width: 10px; // overflow-y: overlay; //Chrome only
+    width: 10px; 
+    // overflow-y: overlay; //Chrome only
 }
 
 *::-webkit-scrollbar-track {

@@ -29,19 +29,19 @@
         "allowUnreachableCode": false,
         "noEmitHelpers": true,
         "importHelpers": true,
-        "baseUrl": "src",
+        "baseUrl": "",
         "paths": {
             "@main/*": [
-                "./app/main/*"
+                "./src/app/main/*"
             ],
             "@shared/*": [
-                "./app/shared/*"
+                "./src/app/shared/*"
             ],
             "@routes": [
-                "./app/routes/app.routes"
+                "./src/app/routes/app.routes"
             ],
             "@env": [
-                "./environments/environment"
+                "./src/environments/environment"
             ]
         }
     },

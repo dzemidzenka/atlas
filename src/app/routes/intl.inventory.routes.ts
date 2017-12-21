@@ -28,7 +28,7 @@ export const INTL_INVENTORY_ROUTES: Routes = [
     component: IFrameComponent,
     data: {
       isComponent: true,
-      description: 'set inventory',
+      description: 'Set Inventory',
       iFrameUrl: 'http://{{country}}.atlasglobal-dev.nuvasive.com/inventory/allocation/current',
     },
   },

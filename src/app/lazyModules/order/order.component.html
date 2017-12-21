@@ -1,6 +1,25 @@
-ORDER COMPONENT
+<div class="container">
+        <ng-container *ngIf="state$ | async as state">
+                <p-treeTable [value]="state.nodes" selectionMode="single" [(selection)]="selectedFile" (onNodeSelect)="onNodeSelect($event)">
+                        <p-column field="name" header="Name"></p-column>
+                        <p-column field="size" header="Size"></p-column>
+                        <p-column field="type" header="Type">
+                                <ng-template let-node="rowData" pTemplate="body">
+                                        <i class="material-icons" (click)="onNodeRemove(node); $event.stopPropagation()">delete</i>
+                                </ng-template>
+                        </p-column>
+                </p-treeTable>
 
-<div [innerHTML]="'order.hello' | translate"></div>
 
+                <button mat-button mat-raised-button (click)="onNodeAdd()">Add Node</button>
+                <button mat-button mat-raised-button (click)="onNodeRemove()">Remove Node</button>
+                <button mat-button mat-raised-button (click)="onAssignMaterial()">Assign Material</button>
+                <div>
+                        <input placeholder='Materials search (3char minimum)' aria-label="materials" [formControl]="inputCtrl">
 
-
+                        <div *ngFor="let material of state.filteredMaterials">
+                                <strong class="material" (click)="onMaterialSelect(material)">{{ material.Material }}</strong>
+                        </div>
+                </div>
+        </ng-container>
+</div>

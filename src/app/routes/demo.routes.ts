@@ -9,6 +9,7 @@ export const DEMO_ROUTES: Routes = [
     component: DashboardComponent,
     data: {
       description: 'demo',
+      excludeFromMenu: true
     }
   },
 

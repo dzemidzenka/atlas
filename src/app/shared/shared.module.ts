@@ -18,6 +18,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatExpansionModule } from '@angular/material/expansion';
 // import { MatTabsModule } from '@angular/material/tabs';
 import { OverlayModule } from '@angular/cdk/overlay';
 
@@ -34,6 +35,7 @@ const MODULES = [
     MatProgressBarModule,
     MatProgressSpinnerModule,
     MatSidenavModule,
+    MatExpansionModule,
     // MatTabsModule,
     MatTooltipModule
 ];

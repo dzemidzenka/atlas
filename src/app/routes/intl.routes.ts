@@ -9,26 +9,26 @@ export const INTL_ROUTES: Routes = [
     path: 'intl',
     component: DashboardComponent,
     data: {
-      description: 'atlas international',
+      description: 'INTL',
     },
   },
 
   // COMPONENTS
-  {
-    path: 'intl/intl-home-native',
-    loadChildren: '../lazyModules/intl/home/home.module#HomeModule',
-    data: {
-      isComponent: true,
-      description: 'International Home (Native)',
-    },
-  },
+  // {
+  //   path: 'intl/intl-home-native',
+  //   loadChildren: '../lazyModules/intl/home/home.module#HomeModule',
+  //   data: {
+  //     isComponent: true,
+  //     description: 'International Home (Native)',
+  //   },
+  // },
   {
     path: 'intl/intl-home',
     component: IFrameComponent,
     data: {
       isComponent: true,
       isFavorite: true,
-      description: 'International Home',
+      description: 'Home',
       iFrameUrl: 'http://{{country}}.atlasglobal-dev.nuvasive.com/dashboard',
     },
   },

@@ -9,7 +9,7 @@ export const SAP_ROUTES: Routes = [
     path: 'sap',
     component: DashboardComponent,
     data: {
-      description: 'sap'
+      description: 'SAP'
     }
   },
 

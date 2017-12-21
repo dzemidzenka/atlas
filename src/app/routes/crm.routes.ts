@@ -9,7 +9,7 @@ export const CRM_ROUTES: Routes = [
     path: 'crm',
     component: DashboardComponent,
     data: {
-      description: 'crm',
+      description: 'CRM',
     }
   },
 
