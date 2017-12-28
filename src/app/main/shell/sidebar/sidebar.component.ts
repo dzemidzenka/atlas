@@ -1,6 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { AppService, IStateModel, IMenuModel, LANGUAGE, COUNTRY } from '@main/app.service';
-import { map } from 'rxjs/operators/map';
+import { AppService, IMenu, LANGUAGE, COUNTRY } from '@main/app.service';
 
 @Component({
     selector: 'atlas-sidebar',
@@ -13,26 +12,16 @@ export class SidebarComponent {
         private _appService: AppService
     ) { }
 
-    expanded = false;
-    id = 2;
-
     state$ = this._appService.state$;
-    menu$ = this.state$.pipe(
-        map((state: IStateModel) => state.menu.filter(menu => menu.urlParams[0] === state.app)),
-        map((menu: Array<IMenuModel>) => menu.filter(menu => menu.urlParams.length === 2))
-    );
 
-    onMenuClick(menu: IMenuModel) {
-        this.id = 2;
-        this._appService.actionMenu(menu.urlParams, menu.children.length === 0);
-    }
-
-    setId(id: number) {
-        this.id = id;
+    onMenuClick(menu: IMenu) {
+        if (menu.children.length === 0) {
+            this._appService.actionMenu(menu.urlParams, menu.children.length === 0);
+        }
     }
 
     switchApp(app: string) {
-        this._appService.actionMenu([app]);
+        this._appService.actionMenu([app], false);
     }
 
     switchLanguage(language: LANGUAGE) {
@@ -47,4 +36,7 @@ export class SidebarComponent {
         this._appService.actionLogOut();
     }
 
+    trackById(index: number, item: IMenu): number {
+        return item.id;
+    }
 }

@@ -10,8 +10,9 @@ import { environment } from '@env';
 
 // providers
 import { AppService } from './app.service';
-import { AuthInterceptor } from '../providers/http.interceptor.service';
-
+import { AuthInterceptor } from '@http/http.interceptor.service';
+import { RouteAuthInterceptor } from '@http/route.auth.interceptor.service';
+import { RouteGuardService } from '../routes/route-guard.service';
 
 // routes
 import { ROUTES } from '@routes';
@@ -84,12 +85,16 @@ import { ReLoginComponent } from './login/re-login/re-login.component';
                 deps: [HttpClient]
             }
         }),
-        SimpleNotificationsModule.forRoot()
+        SimpleNotificationsModule.forRoot(),
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     providers: [
         AppService,
-        [{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }]
+        RouteGuardService,
+        [
+            { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+            { provide: HTTP_INTERCEPTORS, useClass: RouteAuthInterceptor, multi: true },
+        ]
     ],
     entryComponents: [
         CountryListComponent,
@@ -101,4 +106,4 @@ import { ReLoginComponent } from './login/re-login/re-login.component';
     ],
     bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }

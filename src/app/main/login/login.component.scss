@@ -12,6 +12,7 @@
 
 [mat-button] {
     background-color: $header-bg-color;
+    color: $font-color;
 }
 
 main {
@@ -42,4 +43,13 @@ main {
 label {
     display: inline-block;
     margin-bottom: .5rem;
+}
+
+.spacer {
+    flex: 1 1 auto;
+}
+
+.flex {
+    display: flex;
+    align-items: center;
 }

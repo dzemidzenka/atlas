@@ -1,13 +1,15 @@
 import { Routes } from '@angular/router';
 import { DashboardComponent } from '@main/dashboard/dashboard.component';
 import { IFrameComponent } from '@shared/components/iframe/iframe.component';
- 
+import { RouteGuardService } from './route-guard.service';
+
 
 export const DOMESTIC_CONSIGNMENT_ROUTES: Routes = [
   // FOLDER
   {
     path: 'domestic/consignment',
     component: DashboardComponent,
+    canActivate: [RouteGuardService],
     data: {
       description: 'Consignment',
     }
@@ -17,6 +19,7 @@ export const DOMESTIC_CONSIGNMENT_ROUTES: Routes = [
   {
     path: 'domestic/consignment/approval_queue',
     component: IFrameComponent,
+    canActivate: [RouteGuardService],
     data: {
       isComponent: true,
       description: 'Approval Queue',
@@ -26,6 +29,7 @@ export const DOMESTIC_CONSIGNMENT_ROUTES: Routes = [
   {
     path: 'domestic/consignment/master_form',
     component: IFrameComponent,
+    canActivate: [RouteGuardService],
     data: {
       isComponent: true,
       description: 'Consignment Master Form',
@@ -35,6 +39,7 @@ export const DOMESTIC_CONSIGNMENT_ROUTES: Routes = [
   {
     path: 'domestic/consignment/short_sets',
     component: IFrameComponent,
+    canActivate: [RouteGuardService],
     data: {
       isComponent: true,
       description: 'Short Consignment Sets',

@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 // import { MatTabChangeEvent } from '@angular/material/tabs';
-import { UsersService, IUserModel } from './users.service';
+import { UsersService, IUser } from './users.service';
 
 
 @Component({
@@ -25,7 +25,7 @@ export class UsersComponent {
         // this._usersService.actionUser(null);
     }
 
-    onUserSelect(user: IUserModel) {
+    onUserSelect(user: IUser) {
         this._usersService.actionUserSelect(user);
     }
 

@@ -14,10 +14,12 @@
       <div *ngIf="logInForm.get('password').touched && !logInForm.get('password').valid">{{ 'Password Required' | translate }}</div>
     </div>
 
-    <mat-checkbox formControlName="rememberMe">Remember me</mat-checkbox>
-
-    <div>
+    <div class="flex">
       <button mat-button mat-raised-button>{{ 'Login' | translate }}</button>
+      <span class="spacer"></span>
+      <mat-checkbox formControlName="rememberMe">Remember me</mat-checkbox>
+        <!-- <hr>
+      <button mat-button mat-raised-button>{{ 'Login' | translate }}</button> -->
     </div>
   </form>
 </main>

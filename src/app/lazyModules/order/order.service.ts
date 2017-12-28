@@ -49,7 +49,7 @@ export interface IMaterial {
 
 export interface IState {
     action: IAction;
-    filteredMaterials: Array<IMaterial> | null;
+    filteredMaterials: IMaterial[] | null;
     materialSelected: IMaterial | null;
     nodes: TreeNode[];
     nodeSelected: TreeNode | null;
@@ -63,7 +63,7 @@ interface IActionInit {
 
 interface IActionSearch {
     type: ACTION;
-    materials: Array<IMaterial> | null;
+    materials: IMaterial[] | null;
 }
 
 interface IActionMaterialSelect {
@@ -111,10 +111,10 @@ export class OrderService {
         distinctUntilChanged(),
         tap(() => this._loadingService.on()),
         switchMap((term: string) => term.length >= environment.minCharForHttpSearch ?
-            this._http.get<Array<IMaterial> | null>(`http://sdaccdv01.nuvasive.com/admin/hierarchy/findmaterials?term=${term}&_=1513090456090`) :
+            this._http.get<IMaterial[] | null>(`http://sdaccdv01.nuvasive.com/admin/hierarchy/findmaterials?term=${term}&_=1513090456090`) :
             Observable.of(null)
         ),
-        map((materials: Array<IMaterial> | null) => ({ type: ACTION.SEARCH, materials })),
+        map((materials: IMaterial[] | null) => ({ type: ACTION.SEARCH, materials })),
         tap(() => this._loadingService.off()));
 
 

@@ -1,5 +1,5 @@
 <ul class="header-action-menu">
-  <div class="views">
+  <!-- <div class="views">
     <li (click)="switchApp(view.FAVORITE)">
       <i class="material-icons">favorite</i>
       <span>{{ view.FAVORITE | titlecase }}</span>
@@ -9,8 +9,8 @@
       <span>{{ view.RECENT | titlecase }}</span>
     </li>
   </div>
-  <div class="header-action-separator"></div>
-  <li *ngFor="let app of apps$ | async" (click)="switchApp(app.urlParams[0])">
+  <div class="header-action-separator"></div> -->
+  <li *ngFor="let app of (state$ | async).apps" (click)="switchApp(app.urlParams[0])">
     {{ app.description }}
   </li>
 </ul>

@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { AppService, IMenuModel } from '@main/app.service';
+import { AppService, IMenu } from '@main/app.service';
 // import { map, startWith, distinctUntilChanged, withLatestFrom } from "rxjs/operators";
 import { map } from "rxjs/operators/map";
 import { startWith } from "rxjs/operators/startWith";
@@ -30,7 +30,7 @@ export class TcodeComponent {
 
 
 
-    matchTcode(tcode: string, menu: Array<IMenuModel>): Array<IMenuModel> {
+    matchTcode(tcode: string, menu: IMenu[]): IMenu[] {
         return menu
             .filter(item => item.hasOwnProperty('tcode'))
             .filter(item => item.tcode)

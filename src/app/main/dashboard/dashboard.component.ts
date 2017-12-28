@@ -1,7 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { AppService, IMenuModel } from '@main/app.service';
+import { AppService, IMenu } from '@main/app.service';
 import { map } from "rxjs/operators/map";
-import { filter } from "rxjs/operators/filter";
 
 @Component({
     selector: 'atlas-dashboard',
@@ -16,22 +15,21 @@ export class DashboardComponent {
 
 
     state$ = this._appService.state$.pipe(
-        filter(state => state.hasOwnProperty('menu')),
         map(state => ({
             view: state.view,
             menu: state.menu.filter(menu => menu.active)
         })));
 
 
-    onNavigate(urlParams: Array<string>) {
+    onNavigate(urlParams: string[]) {
         this._appService.actionMenu(urlParams);
     }
 
-    onFavoriteToggle(item: IMenuModel) {
+    onFavoriteToggle(item: IMenu) {
         this._appService.actionFavoriteToggle(item);
     }
 
-    trackByItemId(index: number, item: IMenuModel): number {
+    trackByItemId(index: number, item: IMenu): number {
         return item.id;
     }
 }

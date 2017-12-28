@@ -25,59 +25,59 @@ enum ACTION {
     SEARCH_ACTIVE_DIR = 'SEARCH_ACTIVE_DIR'
 }
 
-export interface IUserModel {
+export interface IUser {
     accountType: string;
-    authorizedTenantContexts: Array<string>;
-    claims: Array<any>;
+    authorizedTenantContexts: string[];
+    claims: any[];
     email: string;
     exists: boolean;
     lockoutEnabled: boolean;
     name: string;
     phoneNumber: string;
-    preferences: Array<string>;
+    preferences: string[];
     preferredTenantContext: string;
     source: string;
     userName: string;
 }
 
-export interface IStateModel {
-    action: IActionModel;
+export interface IState {
+    action: IAction;
     term: string;
-    tenants: Array<string>;
-    claims: Array<string>;
-    users: Array<IUserModel>;
-    user: IUserModel | null;
-    filteredUsers: Array<IUserModel>;
-    filteredUsersActiveDir: Array<IUserModel> | null;
+    tenants: string[];
+    claims: string[];
+    users: IUser[];
+    user: IUser | null;
+    filteredUsers: IUser[];
+    filteredUsersActiveDir: IUser[] | null;
 }
 
-type IActionModel = IActionInitModel | IActionSearchModel | IActionSearchActiveDirModel | IActionUserSelectModel | IActionUserUpdateModel;
+type IAction = IActionInit | IActionSearch | IActionSearchActiveDir | IActionUserSelect | IActionUserUpdate;
 
-interface IActionInitModel {
+interface IActionInit {
     type: ACTION;
-    users: Array<IUserModel>;
-    tenants: Array<string>;
-    claims: Array<string>;
+    users: IUser[];
+    tenants: string[];
+    claims: string[];
 }
 
-interface IActionUserSelectModel {
+interface IActionUserSelect {
     type: ACTION;
-    user: IUserModel;
+    user: IUser;
 }
 
-interface IActionUserUpdateModel {
+interface IActionUserUpdate {
     type: ACTION;
-    user: IUserModel;
+    user: IUser;
 }
 
-interface IActionSearchModel {
+interface IActionSearch {
     type: ACTION;
     term: string;
 }
 
-interface IActionSearchActiveDirModel {
+interface IActionSearchActiveDir {
     type: ACTION;
-    users: Array<IUserModel> | null;
+    users: IUser[] | null;
 }
 
 
@@ -97,34 +97,34 @@ export class UsersService {
 
     inputCtrl = new FormControl();
     inputCtrlActiveDir = new FormControl();
-    private _reducers = new Map<ACTION, (state: IStateModel, action: any) => void>();
-    private _actionSubject$ = new Subject<IActionModel>();
-    private _inputCtrl$: Observable<IActionSearchModel> = this.inputCtrl.valueChanges.pipe(map((term: string) => ({ type: ACTION.SEARCH, term })));
-    private _inputCtrlActiveDir$: Observable<IActionSearchActiveDirModel> = this.inputCtrlActiveDir.valueChanges.pipe(
+    private _reducers = new Map<ACTION, (state: IState, action: any) => void>();
+    private _actionSubject$ = new Subject<IAction>();
+    private _inputCtrl$: Observable<IActionSearch> = this.inputCtrl.valueChanges.pipe(map((term: string) => ({ type: ACTION.SEARCH, term })));
+    private _inputCtrlActiveDir$: Observable<IActionSearchActiveDir> = this.inputCtrlActiveDir.valueChanges.pipe(
         debounceTime(environment.debounceTime),
         map((term: string) => term.trim()),
         distinctUntilChanged(),
         tap(() => this._loadingService.on()),
         switchMap((term: string) => term.length >= environment.minCharForHttpSearch ?
-            this._http.get<Array<IUserModel> | null>(`${environment.users.users}/search/${term}?index=0&limit=20`) :
+            this._http.get<IUser[] | null>(`${environment.users.users}/search/${term}?index=0&limit=20`) :
             Observable.of(null)
         ),
-        map((users: Array<IUserModel> | null) => ({ type: ACTION.SEARCH_ACTIVE_DIR, users })),
+        map((users: IUser[] | null) => ({ type: ACTION.SEARCH_ACTIVE_DIR, users })),
         tap(() => this._loadingService.off()));
 
 
 
     // USERS STATE STORE
-    state$: Observable<IStateModel> = this._actionSubject$.pipe(
+    state$: Observable<IState> = this._actionSubject$.pipe(
         merge(this._inputCtrl$, this._inputCtrlActiveDir$),
-        scan((state: IStateModel, action: Readonly<IActionModel>) => this._reducer(state, action), this._initializeState()),
+        scan((state: IState, action: Readonly<IAction>) => this._reducer(state, action), this._initializeState()),
         publishBehavior(this._initializeState()),
         refCount());
 
 
 
     // REDUCER HANDLER
-    private _reducer(state: IStateModel, action: Readonly<IActionModel>): IStateModel {
+    private _reducer(state: IState, action: Readonly<IAction>): IState {
         const _state = cloneDeep(state);
         const _action = cloneDeep(action);
         this._reducers.get(_action.type)!(_state, _action);
@@ -137,7 +137,7 @@ export class UsersService {
 
 
     private _initializeReducers() {
-        this._reducers.set(ACTION.INIT, (state: IStateModel, action: Readonly<IActionInitModel>) => {
+        this._reducers.set(ACTION.INIT, (state: IState, action: Readonly<IActionInit>) => {
             state.users = action.users;
             state.tenants = action.tenants;
             state.claims = action.claims;
@@ -145,11 +145,11 @@ export class UsersService {
             state.user = null;
         });
 
-        this._reducers.set(ACTION.USER_SELECT, (state: IStateModel, action: Readonly<IActionUserSelectModel>) => {
+        this._reducers.set(ACTION.USER_SELECT, (state: IState, action: Readonly<IActionUserSelect>) => {
             state.user = action.user;
         });
 
-        this._reducers.set(ACTION.USER_UPDATE, (state: IStateModel, action: Readonly<IActionUserUpdateModel>) => {
+        this._reducers.set(ACTION.USER_UPDATE, (state: IState, action: Readonly<IActionUserUpdate>) => {
             state.user = action.user;
             let index = state.filteredUsers.findIndex(u => u.userName === action.user.userName);
             if (index === -1) {
@@ -167,21 +167,21 @@ export class UsersService {
             }
         });
 
-        this._reducers.set(ACTION.SEARCH, (state: IStateModel, action: Readonly<IActionSearchModel>) => {
+        this._reducers.set(ACTION.SEARCH, (state: IState, action: Readonly<IActionSearch>) => {
             state.user = null;
             state.filteredUsers = action.term ? state.users.filter(user => user.name.toLowerCase().includes(action.term.toLowerCase())) : state.users;
         });
 
-        this._reducers.set(ACTION.SEARCH_ACTIVE_DIR, (state: IStateModel, action: Readonly<IActionSearchActiveDirModel>) => {
+        this._reducers.set(ACTION.SEARCH_ACTIVE_DIR, (state: IState, action: Readonly<IActionSearchActiveDir>) => {
             state.user = null;
             state.filteredUsersActiveDir = action.users;
         });
     }
 
 
-    private _initializeState(): IStateModel {
+    private _initializeState(): IState {
         return Object.freeze({
-            action: {} as IActionModel,
+            action: {} as IAction,
             term: '',
             tenants: [],
             claims: [],
@@ -196,14 +196,14 @@ export class UsersService {
     // REDUX ACTIONS
     private _actionInit() {
         this._loadingService.on()
-        const users$: Observable<Array<IUserModel>> = this._http.get<Array<IUserModel>>(environment.users.users);
-        const tenants$: Observable<Array<string>> = this._http.get<Array<string>>(environment.users.tenants);
-        const claims$: Observable<Array<string>> = this._http.get<Array<string>>(environment.users.claims);
+        const users$: Observable<IUser[]> = this._http.get<IUser[]>(environment.users.users);
+        const tenants$: Observable<string[]> = this._http.get<string[]>(environment.users.tenants);
+        const claims$: Observable<string[]> = this._http.get<string[]>(environment.users.claims);
 
         Observable
             .forkJoin(users$, tenants$, claims$)
             .toPromise()
-            .then((responses: [Array<IUserModel>, Array<string>, Array<string>]) => {
+            .then((responses: [IUser[], string[], string[]]) => {
                 const [users, tenants, claims] = responses;
                 this._actionSubject$.next({ type: ACTION.INIT, users, tenants, claims });
             })
@@ -211,27 +211,27 @@ export class UsersService {
 
 
         // Promise.all([
-        //     this._http.get<Array<IUserModel>>(environment.users.users).toPromise(),
-        //     this._http.get<Array<string>>(environment.users.tenants).toPromise(),
-        //     this._http.get<Array<string>>(environment.users.claims).toPromise()
-        // ]).then((responses: Array<any>) => {
+        //     this._http.get<IUser[]>(environment.users.users).toPromise(),
+        //     this._http.get<string[]>(environment.users.tenants).toPromise(),
+        //     this._http.get<string[]>(environment.users.claims).toPromise()
+        // ]).then((responses: any[]) => {
         //     const [users, tenants, claims] = responses;
         //     this._actionSubject$.next({ type: ACTION.INIT, users, tenants, claims });
         // }).then(() => this._loadingService.off());
     }
 
-    actionUserSelect(user: IUserModel) {
+    actionUserSelect(user: IUser) {
         this._actionSubject$.next({ type: ACTION.USER_SELECT, user });
     }
 
     actionUserUpdate(userUpdateData: any) {
         this._loadingService.on();
         this._http
-            .put<IUserModel>(`${environment.users.users}/${userUpdateData.userName}`, JSON.stringify(userUpdateData), {
+            .put<IUser>(`${environment.users.users}/${userUpdateData.userName}`, JSON.stringify(userUpdateData), {
                 headers: new HttpHeaders().set('Content-Type', 'application/json'),
             })
             .toPromise()
-            .then((user: IUserModel) => this._actionSubject$.next({ type: ACTION.USER_UPDATE, user }))           // there is a bug on API side that nulls the new tenants
+            .then((user: IUser) => this._actionSubject$.next({ type: ACTION.USER_UPDATE, user }))           // there is a bug on API side that nulls the new tenants
             .then(() => this._notificationsService.notifySingle('Updated successfully'))
             .then(() => this._loadingService.off());
     }

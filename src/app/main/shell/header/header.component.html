@@ -1,45 +1,44 @@
 <ng-container *ngIf="state$ | async as state">
-  <header>
-    <atlas-action class="collapsed">
-      <i (click)="onSidebarToggle()" class="material-icons collapsed" style="font-size: 250%">menu</i>
-    </atlas-action>
-
-    <atlas-action [rightBorder]="true" class="always">
-      <img src="../../../../assets/atlas-logo.png" alt="logo" class="always">
-    </atlas-action>
-
-    <ng-container *ngIf="state.isLoggedIn">
-      <atlas-action *ngFor="let menu of menu$ | async" (click)="onMenuClick(menu)" [ngClass]="{ 'menuActive': menu.urlParams[0] === state.app  && menu.urlParams[1] === state.menuItemCurrent.urlParams[1] }">
-        <span>{{ menu.description }}</span>
+    <header>
+      <atlas-action class="collapsed">
+        <i (click)="onSidebarToggle()" class="material-icons collapsed" style="font-size: 250%">menu</i>
       </atlas-action>
-    </ng-container>
 
-    <span class="spacer"></span>
+      <atlas-action [rightBorder]="false" class="always">
+        <img src="../../../../assets/atlas-logo.png" alt="logo" class="always">
+      </atlas-action>
+ 
+      <ng-container *ngIf="state.isLoggedIn">
+        <atlas-action *ngFor="let menu of menu$ | async; trackBy: trackById" [rightBorder]="false" (click)="onMenuClick(menu)" [ngClass]="{ 'menuActive': menu.urlParams[0] === state.app  && state.menuItemCurrent.urlParams && menu.urlParams[1] === state.menuItemCurrent.urlParams[1] }">
+          <span>{{ menu.description }}</span>
+        </atlas-action>
+      </ng-container>
 
-    <!-- <atlas-action [componentRef]="componentRef">
+      <span class="spacer"></span>
+
+      <!-- <atlas-action [componentRef]="componentRef">
     <span>Dashboard</span>
   </atlas-action> -->
 
-    <atlas-country-selector></atlas-country-selector>
-    <atlas-language-selector></atlas-language-selector>
-    <span *ngIf="!state.isLoggedIn" class="rightMarginWhenNotLoggedIn"></span>
+      <atlas-country-selector></atlas-country-selector>
+      <atlas-language-selector></atlas-language-selector>
+      <span *ngIf="!state.isLoggedIn" class="rightMarginWhenNotLoggedIn"></span>
 
+
+      <ng-container *ngIf="state.isLoggedIn">
+        <atlas-app-selector></atlas-app-selector>
+        <atlas-notification-count [notifications]="(notifications$ | async).length"></atlas-notification-count>
+        <atlas-user [name]="('dashboard.hello' | translate:{value: state.user.nameDisplay + '!'})" picture="../../../../../assets/steve.jpg"></atlas-user>
+      </ng-container>
+    </header>
 
     <ng-container *ngIf="state.isLoggedIn">
-      <atlas-app-selector></atlas-app-selector>
-      <atlas-notification-count [notifications]="(notifications$ | async).length"></atlas-notification-count>
-      <atlas-user [name]="('dashboard.hello' | translate:{value: state.user.nameDisplay + '!'})" picture="../../../../../assets/steve.jpg"></atlas-user>
+      <ng-container *ngIf="subMenu$ | async as subMenu">
+        <header *ngIf="subMenu.length > 0" class="subheader">
+          <atlas-action *ngFor="let menu of subMenu; trackBy: trackById" [rightBorder]="false" (click)="onMenuClick(menu)" [ngClass]="{ 'subMenuActive': state.menuItemCurrent.urlParams && menu.id === state.menuItemCurrent.id }">
+            <span>{{ menu.description }}</span>
+          </atlas-action>
+        </header>
+      </ng-container>
     </ng-container>
-  </header>
-
-  <ng-container *ngIf="state.isLoggedIn">
-    <ng-container *ngIf="subMenu$ | async as subMenu">
-      <header *ngIf="subMenu.length > 0" class="subheader">
-        <atlas-action *ngFor="let subMenu of subMenu" (click)="onMenuClick(subMenu)" [ngClass]="{ 'menuActive': subMenu.id === state.menuItemCurrent.id }">
-          <span>{{ subMenu.description }}</span>
-        </atlas-action>
-        <span class="spacer"></span>
-      </header>
-    </ng-container>
-  </ng-container>
 </ng-container>

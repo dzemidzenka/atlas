@@ -1,29 +1,30 @@
 <mat-accordion *ngIf="state$ | async as state" displayMode="default">
-        <mat-expansion-panel [expanded]="id === 1" (opened)="setId(1)">
+        <mat-expansion-panel>
                 <mat-expansion-panel-header>Apps</mat-expansion-panel-header>
                 <ul>
-                        <li *ngFor="let app of state.apps" (click)="onMenuClick(app)" [ngClass]="{ 'active': app.urlParams[0] === state.app }">
+                        <li *ngFor="let app of state.apps" (click)="switchApp(app.urlParams[0])" [ngClass]="{ 'active': app.urlParams[0] === state.app }">
                                 {{ app.description }}
                         </li>
                 </ul>
         </mat-expansion-panel>
 
 
-        <mat-expansion-panel *ngFor="let menu of menu$ | async" (opened)="setId(2)" [expanded]="id === 2 && menu.urlParams[0] === state.menuItemCurrent.urlParams[0] && menu.urlParams[1] === state.menuItemCurrent.urlParams[1]"
-                [hideToggle]="menu.children.length === 0">
-                <mat-expansion-panel-header (click)="onMenuClick(menu)" [ngClass]="{ 'active': menu.urlParams[0] === state.menuItemCurrent.urlParams[0] && menu.urlParams[1] === state.menuItemCurrent.urlParams[1] }">
-                        {{ menu.description }}
-                </mat-expansion-panel-header>
+        <ng-container *ngFor="let menu of state.menu; trackBy: trackById">
+                <mat-expansion-panel *ngIf="menu.urlParams[0] === state.app && menu.urlParams.length === 2" [hideToggle]="menu.children.length === 0">
+                        <mat-expansion-panel-header (click)="onMenuClick(menu)" [ngClass]="{ 'active': state.menuItemCurrent.urlParams && menu.urlParams[0] === state.menuItemCurrent.urlParams[0] && menu.urlParams[1] === state.menuItemCurrent.urlParams[1] }">
+                                {{ menu.description }}
+                        </mat-expansion-panel-header>
 
-                <ul *ngIf="menu.children.length > 0">
-                        <li *ngFor="let subMenu of menu.children" (click)="onMenuClick(subMenu)" [ngClass]="{ 'active': subMenu.id === state.menuItemCurrent.id }">
-                                {{ subMenu.description }}
-                        </li>
-                </ul>
-        </mat-expansion-panel>
+                        <ul *ngIf="menu.children.length > 0">
+                                <li *ngFor="let subMenu of menu.children" (click)="onMenuClick(subMenu)" [ngClass]="{ 'active': state.menuItemCurrent.urlParams && subMenu.id === state.menuItemCurrent.id }">
+                                        {{ subMenu.description }}
+                                </li>
+                        </ul>
+                </mat-expansion-panel>
+        </ng-container>
 
 
-        <mat-expansion-panel [expanded]="id === 3" (opened)="setId(3)">
+        <mat-expansion-panel>
                 <mat-expansion-panel-header>Country</mat-expansion-panel-header>
                 <ul>
                         <li *ngFor="let country of state.countries" (click)="switchCountry(country)" [ngClass]="{ 'active': country === state.country }">
@@ -34,7 +35,7 @@
         </mat-expansion-panel>
 
 
-        <mat-expansion-panel [expanded]="id === 4" (opened)="setId(4)">
+        <mat-expansion-panel>
                 <mat-expansion-panel-header>Language</mat-expansion-panel-header>
                 <ul>
                         <li *ngFor="let lang of state.languages" (click)="switchLanguage(lang)" [ngClass]="{ 'active': lang === state.language }">
@@ -44,7 +45,7 @@
         </mat-expansion-panel>
 
 
-        <mat-expansion-panel *ngIf="state.isLoggedIn" [expanded]="id === 5" (opened)="setId(5)" hideToggle="true">
+        <mat-expansion-panel *ngIf="state.isLoggedIn" hideToggle="true">
                 <mat-expansion-panel-header (click)="logOut()"> {{ 'dashboard.logout' | translate }} </mat-expansion-panel-header>
         </mat-expansion-panel>
 </mat-accordion>

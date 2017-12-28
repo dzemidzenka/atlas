@@ -15,8 +15,14 @@ import { DOMESTIC_ADMIN_ROUTES } from './domestic.admin.routes';
 import { CRM_ROUTES } from './crm.routes';
 import { SAP_ROUTES } from './sap.routes';
 import { DEMO_ROUTES } from './demo.routes';
-  
+// import { DashboardComponent } from '@main/dashboard/dashboard.component';
+
 export const ROUTES: Routes = [
+    {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: '',
+    },
     ...INTL_ROUTES,
     ...INTL_MANAGE_ROUTES,
     ...INTL_INVENTORY_ROUTES,
@@ -32,5 +38,21 @@ export const ROUTES: Routes = [
     ...DOMESTIC_ADMIN_ROUTES,
     ...CRM_ROUTES,
     ...SAP_ROUTES,
-    ...DEMO_ROUTES
+    ...DEMO_ROUTES,
+    // {
+    //     path: '**',
+    //     component: DashboardComponent,
+    // }
+    {
+        path: 'not-found',
+        loadChildren: '../lazyModules/not-found/not-found.module#NotFoundModule',
+    },
+    {
+        path: 'not-authorized',
+        loadChildren: '../lazyModules/not-authorized/not-authorized.module#NotAuthorizedModule',
+    },    
+    {
+        path: '**',
+        redirectTo: 'not-found'
+    }
 ];

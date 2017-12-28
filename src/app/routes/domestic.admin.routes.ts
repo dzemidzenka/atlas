@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { DashboardComponent } from '@main/dashboard/dashboard.component';
 import { IFrameComponent } from '@shared/components/iframe/iframe.component';
+import { RouteGuardService } from './route-guard.service';
 
 
 export const DOMESTIC_ADMIN_ROUTES: Routes = [
@@ -8,6 +9,7 @@ export const DOMESTIC_ADMIN_ROUTES: Routes = [
   {
     path: 'domestic/admin',
     component: DashboardComponent,
+    canActivate: [RouteGuardService],
     data: {
       description: 'Administration',
     }
@@ -17,6 +19,7 @@ export const DOMESTIC_ADMIN_ROUTES: Routes = [
   {
     path: 'domestic/admin/users',
     component: IFrameComponent,
+    canActivate: [RouteGuardService],
     data: {
       isComponent: true,
       description: 'Manage Users',
@@ -26,6 +29,7 @@ export const DOMESTIC_ADMIN_ROUTES: Routes = [
   {
     path: 'domestic/admin/product_config',
     loadChildren: '../lazyModules/order/order.module#OrderModule',
+    canActivate: [RouteGuardService],
     data: {
       isComponent: true,
       description: 'Product Configuration',
@@ -33,6 +37,7 @@ export const DOMESTIC_ADMIN_ROUTES: Routes = [
   },
   {
     path: 'domestic/admin/warehouse',
+    canActivate: [RouteGuardService],
     component: IFrameComponent,
     data: {
       isComponent: true,
@@ -43,6 +48,7 @@ export const DOMESTIC_ADMIN_ROUTES: Routes = [
   {
     path: 'domestic/admin/orders',
     component: IFrameComponent,
+    canActivate: [RouteGuardService],
     data: {
       isComponent: true,
       description: 'Orders',
@@ -52,6 +58,7 @@ export const DOMESTIC_ADMIN_ROUTES: Routes = [
   {
     path: 'domestic/admin/set_extensions',
     component: IFrameComponent,
+    canActivate: [RouteGuardService],
     data: {
       isComponent: true,
       description: 'Set Extensions',
@@ -61,6 +68,7 @@ export const DOMESTIC_ADMIN_ROUTES: Routes = [
   {
     path: 'domestic/admin/mobile',
     component: IFrameComponent,
+    canActivate: [RouteGuardService],
     data: {
       isComponent: true,
       description: 'Mobile',
@@ -70,6 +78,7 @@ export const DOMESTIC_ADMIN_ROUTES: Routes = [
   {
     path: 'domestic/admin/logs',
     component: IFrameComponent,
+    canActivate: [RouteGuardService],
     data: {
       isComponent: true,
       description: 'Logs',

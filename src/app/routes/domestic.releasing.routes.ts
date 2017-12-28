@@ -1,13 +1,15 @@
 import { Routes } from '@angular/router';
 import { DashboardComponent } from '@main/dashboard/dashboard.component';
 import { IFrameComponent } from '@shared/components/iframe/iframe.component';
- 
+import { RouteGuardService } from './route-guard.service';
+
 
 export const DOMESTIC_RELEASING_ROUTES: Routes = [
   // FOLDER
   {
     path: 'domestic/releasing',
     component: DashboardComponent,
+    canActivate: [RouteGuardService],
     data: {
       description: 'Releasing',
     }
@@ -17,6 +19,7 @@ export const DOMESTIC_RELEASING_ROUTES: Routes = [
   {
     path: 'domestic/releasing/summary',
     component: IFrameComponent,
+    canActivate: [RouteGuardService],
     data: {
       isComponent: true,
       description: 'Releasing Queue',
@@ -26,6 +29,7 @@ export const DOMESTIC_RELEASING_ROUTES: Routes = [
   {
     path: 'domestic/releasing/sets',
     component: IFrameComponent,
+    canActivate: [RouteGuardService],
     data: {
       isComponent: true,
       description: 'Constrained Sets',
@@ -35,6 +39,7 @@ export const DOMESTIC_RELEASING_ROUTES: Routes = [
   {
     path: 'domestic/releasing/allograft',
     component: IFrameComponent,
+    canActivate: [RouteGuardService],
     data: {
       isComponent: true,
       description: 'Constrained Allograft',
@@ -44,6 +49,7 @@ export const DOMESTIC_RELEASING_ROUTES: Routes = [
   {
     path: 'domestic/releasing/courier_orders',
     component: IFrameComponent,
+    canActivate: [RouteGuardService],
     data: {
       isComponent: true,
       description: 'Courier Orders',
@@ -53,6 +59,7 @@ export const DOMESTIC_RELEASING_ROUTES: Routes = [
   {
     path: 'domestic/releasing/pending_field_source',
     component: IFrameComponent,
+    canActivate: [RouteGuardService],
     data: {
       isComponent: true,
       description: 'Pending Field Source',
@@ -62,6 +69,7 @@ export const DOMESTIC_RELEASING_ROUTES: Routes = [
   {
     path: 'domestic/releasing/dropped',
     component: IFrameComponent,
+    canActivate: [RouteGuardService],
     data: {
       isComponent: true,
       description: 'Dropped Orders',
@@ -71,6 +79,7 @@ export const DOMESTIC_RELEASING_ROUTES: Routes = [
   {
     path: 'domestic/releasing/field_response_queue',
     component: IFrameComponent,
+    canActivate: [RouteGuardService],
     data: {
       isComponent: true,
       description: 'Field Response Queue',
@@ -80,6 +89,7 @@ export const DOMESTIC_RELEASING_ROUTES: Routes = [
   {
     path: 'domestic/releasing/auto_audit',
     component: IFrameComponent,
+    canActivate: [RouteGuardService],
     data: {
       isComponent: true,
       description: 'Auto Releasing Audit',

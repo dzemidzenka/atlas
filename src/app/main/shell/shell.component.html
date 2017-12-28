@@ -10,10 +10,13 @@
       <atlas-sidebar></atlas-sidebar>
     </mat-sidenav>
 
-    <atlas-login *ngIf="!state.isLoggedIn else loggedIn"></atlas-login>
+    <router-outlet *ngIf="state.isLoggedIn" (click)="sidenav.toggle()"></router-outlet>
+    <atlas-login *ngIf="!state.isLoggedIn"></atlas-login>
+
+    <!-- <atlas-login *ngIf="!state.isLoggedIn else loggedIn"></atlas-login>
     <ng-template #loggedIn>
-      <router-outlet *ngIf="state.isComponent" (click)="sidenav.toggle()"></router-outlet>
-      <atlas-dashboard *ngIf="!state.isComponent"></atlas-dashboard>
-    </ng-template>
+      <router-outlet *ngIf="state.isComponent" (click)="sidenav.toggle()"></router-outlet> 
+      <atlas-dashboard *ngIf="!state.isComponent"></atlas-dashboard> 
+    </ng-template> -->
   </mat-sidenav-container>
 </div>

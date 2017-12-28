@@ -14,7 +14,7 @@ export class PathComponent {
 
     path$ = this._appService.state$;
 
-    onClick(urlParams: Array<string>, index: number) {
+    onClick(urlParams: string[], index: number) {
         this._appService.actionMenu(urlParams.slice(0, index + 1));
     }
 }

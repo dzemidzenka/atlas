@@ -1,6 +1,6 @@
 import { Component, OnChanges, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
-import { IUserModel } from '../users.service';
+import { IUser } from '../users.service';
 import cloneDeep from 'lodash-es/cloneDeep';
 
 
@@ -11,10 +11,10 @@ import cloneDeep from 'lodash-es/cloneDeep';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserChangeComponent implements OnChanges {
-  @Input() user: IUserModel;
-  @Input() tenants: Array<string>;
-  @Input() claims: Array<string>;
-  @Output() userUpdated: EventEmitter<IUserModel> = new EventEmitter();
+  @Input() user: IUser;
+  @Input() tenants: string[];
+  @Input() claims: string[];
+  @Output() userUpdated: EventEmitter<IUser> = new EventEmitter();
   userForm: FormGroup;
 
 
@@ -52,7 +52,7 @@ export class UserChangeComponent implements OnChanges {
     //   { key: 'Role', value: 'GlobalAdmin' }
     // ];
 
-    const claims: Array<{ key: string, value: string }> = [];
+    const claims: { key: string, value: string }[] = [];
     Object.entries(_user.claims).forEach(claim => claim[1].forEach((value: string) => claims.push({ 'key': claim[0], 'value': value })));
     _user.claims = claims;
     const data = Object.assign(_user, this.userForm.value);

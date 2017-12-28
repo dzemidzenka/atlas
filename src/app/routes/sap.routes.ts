@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { DashboardComponent } from '@main/dashboard/dashboard.component';
 import { IFrameComponent } from '@shared/components/iframe/iframe.component';
+import { RouteGuardService } from './route-guard.service';
 
 
 export const SAP_ROUTES: Routes = [
@@ -8,6 +9,7 @@ export const SAP_ROUTES: Routes = [
   {
     path: 'sap',
     component: DashboardComponent,
+    canActivate: [RouteGuardService],
     data: {
       description: 'SAP'
     }
@@ -17,6 +19,7 @@ export const SAP_ROUTES: Routes = [
   {
     path: 'sap/sap-gui',
     component: IFrameComponent,
+    canActivate: [RouteGuardService],
     data: {
       isComponent: true,
       description: 'SAPGUI',
@@ -27,6 +30,7 @@ export const SAP_ROUTES: Routes = [
   {
     path: 'sap/sap-zsetinfo',
     component: IFrameComponent,
+    canActivate: [RouteGuardService],
     data: {
       isComponent: true,
       description: 'ZSETINFO',
@@ -37,6 +41,7 @@ export const SAP_ROUTES: Routes = [
   {
     path: 'sap/sap-app2',
     loadChildren: '../lazyModules/settings/settings.module#SettingsModule',
+    canActivate: [RouteGuardService],
     data: {
       isComponent: true,
       description: 'App2'
@@ -45,6 +50,7 @@ export const SAP_ROUTES: Routes = [
   {
     path: 'sap/configurator',
     component: IFrameComponent,
+    canActivate: [RouteGuardService],
     data: {
       isComponent: true,
       description: 'Configurator',

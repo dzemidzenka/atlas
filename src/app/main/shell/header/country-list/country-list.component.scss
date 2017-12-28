@@ -2,11 +2,11 @@
     margin-right: 0.5rem;
 }
 
-:host-context(atlas-action) {
-    ul {
-        column-count: 2;
-    }
-    li {
-        break-inside: avoid-column;
-    }
-}
+// :host-context(atlas-action) {
+    // ul {
+    //     column-count: 2;
+    // }
+    // li {
+    //     break-inside: avoid-column;
+    // }
+// }

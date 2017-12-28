@@ -17,12 +17,14 @@ import { startWith } from 'rxjs/operators/startWith';
 import { merge } from 'rxjs/operators/merge';
 import { publishBehavior } from 'rxjs/operators/publishBehavior';
 import { refCount } from 'rxjs/operators/refCount';
+import { IRoutesAuth } from '@http/route.auth.interceptor.service';
 import cloneDeep from 'lodash-es/cloneDeep';
 
 export enum ACTION {
     INIT = 'INIT',
     LOGIN = 'LOGIN',
     LOGOUT = 'LOGOUT',
+    NOT_AUTHORIZED = 'NOT_AUTHORIZED',
     ROUTE = 'ROUTE',
     FAVORITE_TOGGLE = 'FAVORITE_TOGGLE'
 }
@@ -50,75 +52,82 @@ export enum VIEW {
     RECENT = 'recent'
 }
 
-type IActionModel = IActionInitModel | IActionRouteModel | IActionLogInModel | IActionLogOutModel | IActionFavoriteToggleModel;
+type IAction = IActionInit | IActionRoute | IActionLogIn | IActionLogOut | IActionFavoriteToggle | IActionNotAuthorized;
 
-interface IActionRouteModel {
+interface IActionRoute {
     type: ACTION;
     url: string;
-    urlParams: Array<string>;
-    queryParams: IQueryParamsModel;
+    urlParams: string[];
+    queryParams: IQueryParams;
 }
 
-interface IActionInitModel {
+interface IActionInit {
     type: ACTION;
-    user: IUserModel;
+    user: IUser;
 }
 
-interface IActionLogInModel {
+interface IActionLogIn {
     type: ACTION;
-    user: IUserModel;
+    user: IUser;
     rememberMe: boolean;
 }
 
-interface IActionLogOutModel {
+interface IActionLogOut {
     type: ACTION;
 }
 
-interface IActionFavoriteToggleModel {
+interface IActionNotAuthorized {
     type: ACTION;
-    menuItem: IMenuModel;
+    url: string;
 }
 
-interface IQueryParamsModel {
+interface IActionFavoriteToggle {
+    type: ACTION;
+    menuItem: IMenu;
+}
+
+interface IQueryParams {
     country: COUNTRY;
     language: LANGUAGE;
     view: VIEW;
 }
 
-export interface IStateModel {
-    action: IActionModel;
+export interface IState {
+    action: IAction;
     url: string;
-    urlParams: Array<string>;
-    queryParams: IQueryParamsModel;
+    urlParams: string[];
+    queryParams: IQueryParams;
     isComponent: boolean;
     isLoggedIn: boolean;
-    user: IUserModel;
+    user: IUser;
     app: string;
-    apps: Array<IMenuModel>;
+    apps: IMenu[];
     country: COUNTRY;
-    countries: Array<COUNTRY>;
+    countries: COUNTRY[];
     language: LANGUAGE;
-    languages: Array<LANGUAGE>,
+    languages: LANGUAGE[],
     view: VIEW;
-    views: Array<VIEW>;
-    menu: Array<IMenuModel>;
-    menuItemCurrent: IMenuModel;
-    menuRecent: Array<IMenuModel>;
+    views: VIEW[];
+    menu: IMenu[];
+    menuItemCurrent: IMenu;
+    menuRecent: IMenu[];
+    urlNotAuthorized: string;
 }
 
 
-export interface IUserModel {
+export interface IUser {
     userName: string;
+    routesAuth: IRoutesAuth[],
     phone: string;
     nameDisplay: string;
     countryDefault: COUNTRY;
-    allowedCountries: Array<string>;
+    allowedCountries: string[];
     languageDefault: LANGUAGE;
     expires: number;
     accessToken: string;
 }
 
-export interface IMenuModel {
+export interface IMenu {
     id: number;
     active: boolean;
     description: string;
@@ -128,10 +137,11 @@ export interface IMenuModel {
     isLazy: boolean;
     isFavorite: boolean;
     routerPath: string;
-    urlParams: Array<string>;
+    urlParams: string[];
     tcode: string;
     iFrameUrl: string;
-    children: Array<IMenuModel>;
+    children: IMenu[];
+    notAuthorized: boolean;
 }
 
 
@@ -156,10 +166,11 @@ export class AppService {
         // });
     }
 
-    private _currentState: IStateModel;
-    private _reducers = new Map<ACTION, (state: IStateModel, action: any) => void>();
-    private _actionSubject$ = new Subject<IActionModel>();
+    private _currentState: IState;
+    private _reducers = new Map<ACTION, (state: IState, action: any) => void>();
+    private _actionSubject$ = new Subject<IAction>();
     private _routerEvents$ = this._router.events.pipe(
+        // tap((event: {}) => console.log('EVENT', event)),
         filter((event: {}) => event instanceof NavigationEnd),
         map((event: {}) => {
             const url = (<NavigationEnd>event).urlAfterRedirects;
@@ -167,31 +178,31 @@ export class AppService {
             const urlParams = url
                 .split('/')
                 .filter((param: string) => (param))
-                // .filter((param: string) => param !== '')
                 .map((param: string) => param.split('?')[0]);
             const queryParams = urlTree.queryParams;
-            if (urlParams.length === 0) {
-                urlParams.push('domestic');
-                urlParams.push('home');
-                this.actionMenu(urlParams);
-            }
+            // if (urlParams.length === 0) {
+            //     urlParams.push('domestic');
+            //     urlParams.push('home');
+            //     this.actionMenu(urlParams);
+            // }
             return { type: ACTION.ROUTE, url, urlParams, queryParams };
         }));
 
 
     // APPLICATION STATE STORE
-    state$: Observable<IStateModel> = this._actionSubject$.pipe(
-        startWith({ type: ACTION.INIT, user: this._localStorageService.user } as IActionModel),
+    state$: Observable<IState> = this._actionSubject$.pipe(
+        startWith({ type: ACTION.INIT, user: this._localStorageService.user } as IAction),
         merge(this._routerEvents$),
-        scan((state: IStateModel, action: Readonly<IActionModel>) => this._reducer(state, action), this._initializeState()),
-        map(this._getActiveMenu),
-        tap((state: IStateModel) => this._currentState = state),
+        scan((state: IState, action: Readonly<IAction>) => this._reducer(state, action), this._initializeState()),
+        // map(this._getActiveMenu),
+        this._getActiveMenu(),
+        tap((state: IState) => this._currentState = state),
         publishBehavior(this._initializeState()),
         refCount());
 
 
     // REDUCER HANDLER
-    private _reducer(state: IStateModel, action: Readonly<IActionModel>): IStateModel {
+    private _reducer(state: IState, action: Readonly<IAction>): IState {
         const _state = cloneDeep(state);
         const _action = cloneDeep(action);
         this._reducers.get(_action.type)!(_state, _action);
@@ -201,64 +212,78 @@ export class AppService {
     }
 
 
-    private _initializeState(): IStateModel {
+    private _initializeState(): IState {
         const _state = {
-            action: {} as IActionModel,
+            action: {} as IAction,
             url: '',
-            urlParams: [] as Array<string>,
-            queryParams: {} as IQueryParamsModel,
+            urlParams: [] as string[],
+            queryParams: {} as IQueryParams,
             isComponent: false,
             isLoggedIn: false,
-            user: {} as IUserModel,
+            user: {} as IUser,
             app: '',
-            apps: [] as Array<IMenuModel>,
+            apps: [] as IMenu[],
             country: COUNTRY.US,
-            countries: Object.values(COUNTRY).sort() as Array<COUNTRY>,
+            countries: Object.values(COUNTRY).sort() as COUNTRY[],
             language: LANGUAGE.EN,
-            languages: Object.values(LANGUAGE).sort() as Array<LANGUAGE>,
+            languages: Object.values(LANGUAGE).sort() as LANGUAGE[],
             view: VIEW.DASHBOARD,
-            views: Object.values(VIEW).sort() as Array<VIEW>,
-            menu: this._router.config
-                .filter((route: Route) => route.data && route.data.description)
-                .map(this._menuItemFromRoute)
-                .map(this._menuChildren),
-            menuItemCurrent: {} as IMenuModel,
-            menuRecent: [] as Array<IMenuModel>,
+            views: Object.values(VIEW).sort() as VIEW[],
+            // menu: this._router.config
+            //     .filter((route: Route) => route.data && route.data.description)
+            //     .map(this._menuItemFromRoute)
+            //     .map(this._menuChildren),
+            menu: [] as IMenu[],
+            menuItemCurrent: {} as IMenu,
+            menuRecent: [] as IMenu[],
+            urlNotAuthorized: ''
         };
-        _state.apps = _state.menu.filter((menu: IMenuModel) => menu.urlParams.length === 1 && !menu.excludeFromMenu);
+        // _state.apps = _state.menu.filter((menu: IMenu) => menu.urlParams.length === 1 && !menu.excludeFromMenu);
+        // _state.menuItemCurrent = _state.menu[0];
         return Object.freeze(_state);
     }
 
     private _initializeReducers() {
-        this._reducers.set(ACTION.INIT, (state: IStateModel, action: Readonly<IActionInitModel>) => {
+        this._reducers.set(ACTION.INIT, (state: IState, action: Readonly<IActionInit>) => {
             state.user = action.user;
-            const url = window.location.pathname.substring(1);
-            if (url) {
-                const menuItem = state.menu.find(menu => menu.routerPath.toLowerCase() === url.toLowerCase());
-                if (menuItem) {
-                    state.isComponent = menuItem.isComponent; // to prevent screen blinking due to the delay of lazy loading network request
-                }
-            }
+            this._handleRoutesAndMenu(state);
+            // const url = window.location.pathname.substring(1);
+            // if (url) {
+            //     const menuItem = state.menu.find((menu: IMenu) => menu.routerPath.toLowerCase() === url.toLowerCase());
+            //     if (menuItem) {
+            //         state.isComponent = menuItem.isComponent; // to prevent screen blinking due to the delay of lazy loading network request
+            //     }
+            // }
         });
 
-        this._reducers.set(ACTION.LOGIN, (state: IStateModel, action: Readonly<IActionLogInModel>) => {
+        this._reducers.set(ACTION.LOGIN, (state: IState, action: Readonly<IActionLogIn>) => {
             state.user = action.user;
             this._localStorageService.user = state.user;
             this._notificationsService.clear();
+            this._handleRoutesAndMenu(state);
+            this.actionMenu(state.menuItemCurrent.urlParams);
             this._loadingService.off();
             this._reLoginService.retry();
         });
 
-        this._reducers.set(ACTION.LOGOUT, (state: IStateModel, action: Readonly<IActionLogOutModel>) => {
-            state.user = {} as IUserModel;
+        this._reducers.set(ACTION.LOGOUT, (state: IState, action: Readonly<IActionLogOut>) => {
+            state.user = {} as IUser;
             this._localStorageService.user = state.user;
         });
 
-        this._reducers.set(ACTION.ROUTE, (state: IStateModel, action: Readonly<IActionRouteModel>) => {
+        this._reducers.set(ACTION.NOT_AUTHORIZED, (state: IState, action: Readonly<IActionNotAuthorized>) => {
+            state.urlNotAuthorized = action.url;
+            this._router.navigateByUrl('not-authorized');
+        });
+
+
+        this._reducers.set(ACTION.ROUTE, (state: IState, action: Readonly<IActionRoute>) => {
             state.url = action.url;
             state.urlParams = action.urlParams.filter(param => param.length > 0).map(param => param.toLowerCase());
             state.queryParams = action.queryParams;
-            state.app = state.urlParams[0];
+            if (state.urlParams[0] !== 'not-authorized') {
+                state.app = state.urlParams[0];
+            }
             state.language = state.queryParams.language || LANGUAGE.EN;
             this._translate.use(state.language);
             state.country = state.queryParams.country || COUNTRY.US;
@@ -270,7 +295,7 @@ export class AppService {
             const _urlParams = [...state.urlParams];
             const _routerPath = _urlParams.join('/');
             if (state.menu) {
-                state.menuItemCurrent = state.menu.find(item => item.routerPath === _routerPath) || {} as IMenuModel;
+                state.menuItemCurrent = state.menu.find((item: IMenu) => item.routerPath === _routerPath) || {} as IMenu;
             }
             state.isComponent = false;
             if (state.menuItemCurrent) {
@@ -286,7 +311,7 @@ export class AppService {
             }
         });
 
-        this._reducers.set(ACTION.FAVORITE_TOGGLE, (state: IStateModel, action: Readonly<IActionFavoriteToggleModel>) => {
+        this._reducers.set(ACTION.FAVORITE_TOGGLE, (state: IState, action: Readonly<IActionFavoriteToggle>) => {
             state.menu
                 .filter(menu => action.menuItem && menu.id === action.menuItem.id)
                 .map(menu => menu.isFavorite = !menu.isFavorite);
@@ -301,12 +326,27 @@ export class AppService {
         this._loadingService.on();
         const data = `grant_type=password&username=${username}&password=${password}&client_id=atlaswebapp`;
         // const headers = new HttpHeaders().set('Content-type', 'application/x-www-form-urlencoded');
-        this._http
-            .post(environment.logInUrl, data)
-            .pipe(
-            map(this._userFromAuthResponse),
-            tap((user: IUserModel) => this._actionSubject$.next({ type: ACTION.LOGIN, user, rememberMe })))
-            .toPromise();
+
+        const login$: Observable<any> = this._http.post<any>(environment.logInUrl, data);
+        const routeAuth$: Observable<IRoutesAuth[]> = this._http.get<IRoutesAuth[]>('api/mock/routeAuth');
+
+        Observable
+            .forkJoin(login$, routeAuth$)
+            .toPromise()
+            .then((responses: [any, IRoutesAuth[]]) => {
+                const authResponse = responses[0];
+                authResponse.routesAuth = responses[1];
+                return authResponse;
+            })
+            .then(this._userFromAuthResponse)
+            .then((user: IUser) => this._actionSubject$.next({ type: ACTION.LOGIN, user, rememberMe }));
+
+        // this._http
+        //     .post(environment.logInUrl, data)
+        //     .pipe(
+        //     map(this._userFromAuthResponse),
+        //     tap((user: IUser) => this._actionSubject$.next({ type: ACTION.LOGIN, user, rememberMe })))
+        //     .toPromise();
     }
 
     actionLogOut() {
@@ -315,7 +355,7 @@ export class AppService {
         }
     }
 
-    actionFavoriteToggle(menuItem: IMenuModel) {
+    actionFavoriteToggle(menuItem: IMenu) {
         this._actionSubject$.next({ type: ACTION.FAVORITE_TOGGLE, menuItem });
     }
 
@@ -336,71 +376,109 @@ export class AppService {
         this._router.navigate([''], { queryParams: { ...this._route.snapshot.queryParams, view } });
     }
 
-    actionMenu(urlParams: Array<string>, defaultToFirst: boolean = true) {
+    actionMenu(urlParams: string[], defaultToFirst: boolean = true) {
         if (defaultToFirst) {
-            let item: IMenuModel | undefined;
-            if (urlParams.length === 1) {
-                item = this._currentState.menu.find(menu => menu.urlParams[0] === urlParams[0] && menu.urlParams.length > urlParams.length);
-            }
-            else if (urlParams.length === 2) {
-                item = this._currentState.menu.find(menu => menu.urlParams[0] === urlParams[0] && menu.urlParams[1] === urlParams[1] && menu.urlParams.length > urlParams.length);
+            let item: IMenu | undefined;
+            if (urlParams) {
+                if (urlParams.length === 1) {
+                    item = this._currentState.menu.find(menu => menu.urlParams[0] === urlParams[0] && menu.urlParams.length > urlParams.length);
+                }
+                else if (urlParams.length === 2) {
+                    item = this._currentState.menu.find(menu => menu.urlParams[0] === urlParams[0] && menu.urlParams[1] === urlParams[1] && menu.urlParams.length > urlParams.length);
+                }
             }
             if (item) {
                 urlParams = item.urlParams;
             }
         }
-        this._router.navigate([urlParams.join('/')], { queryParams: { ...this._route.snapshot.queryParams, view: null } });
+        this._router.navigate([urlParams.join('/')], { queryParams: { ...this._route.snapshot.queryParams, view: null, from: null } });
     }
 
     actionTcode(tcode: string) {
         if (tcode.trim().length === 0) return;
 
-        const urlParams: Array<string> = this._currentState.menu
+        const urlParams: string[] = this._currentState.menu
             .filter(menu => menu.isComponent)
             .filter(menu => menu.hasOwnProperty('tcode'))
             .filter(menu => menu.tcode.trim().toLowerCase() === tcode.toLowerCase())[0].urlParams;
         this.actionMenu(urlParams);
     }
 
+    actionNotAuthorized(url: string) {
+        this._actionSubject$.next({ type: ACTION.NOT_AUTHORIZED, url });
+    }
+
     // current state getter to prevent direct state access
-    get currentState(): Readonly<IStateModel> {
+    get currentState(): Readonly<IState> {
         return cloneDeep(this._currentState);
     }
 
     // determine which menus are active per current URL params
-    private _getActiveMenu(state: IStateModel): IStateModel {
-        if (state.menu) {
-            state.menu.map(item => {
-                item.active = false;
-                if (state.view === VIEW.FAVORITE) {
-                    item.active = item.isFavorite;
-                    return item;
-                }
-                if (state.view === VIEW.RECENT) {
-                    item.active = state.menuRecent.some(menuItem => menuItem.id === item.id);
-                    return item;
-                }
+    // private _getActiveMenu(state: IState): IState {
+    //     if (state.menu) {
+    //         state.menu.map(item => {
+    //             item.active = false;
+    //             if (state.view === VIEW.FAVORITE) {
+    //                 item.active = item.isFavorite;
+    //                 return item;
+    //             }
+    //             if (state.view === VIEW.RECENT) {
+    //                 item.active = state.menuRecent.some(menuItem => menuItem.id === item.id);
+    //                 return item;
+    //             }
 
-                // e.g. if URL is /xxx, then menus for /xxx/yyy are allowed
-                if (item.urlParams.length === state.urlParams.length + 1) {
-                    item.active = true;
-                } else {
+    //             // e.g. if URL is /xxx, then menus for /xxx/yyy are allowed
+    //             if (item.urlParams.length === state.urlParams.length + 1) {
+    //                 item.active = true;
+    //             } else {
+    //                 item.active = false;
+    //                 return item;
+    //             }
+
+    //             // match URL params and menu params
+    //             state.urlParams.forEach((param, i) => item.active = (item.urlParams[i] === param));
+    //             return item;
+    //         });
+    //     }
+    //     return state;
+    // }
+
+    // determine which menus are active per current URL params
+    private _getActiveMenu(): (source: Observable<IState>) => Observable<IState> {
+        function getActiveMenu(state: IState): IState {
+            if (state.menu) {
+                state.menu.map(item => {
                     item.active = false;
-                    return item;
-                }
+                    if (state.view === VIEW.FAVORITE) {
+                        item.active = item.isFavorite;
+                        return item;
+                    }
+                    if (state.view === VIEW.RECENT) {
+                        item.active = state.menuRecent.some(menuItem => menuItem.id === item.id);
+                        return item;
+                    }
 
-                // match URL params and menu params
-                state.urlParams.forEach((param, i) => item.active = (item.urlParams[i] === param));
-                return item;
-            });
-        }
-        return state;
+                    // e.g. if URL is /xxx, then menus for /xxx/yyy are allowed
+                    if (item.urlParams.length === state.urlParams.length + 1) {
+                        item.active = true;
+                    } else {
+                        item.active = false;
+                        return item;
+                    }
+
+                    // match URL params and menu params
+                    state.urlParams.forEach((param, i) => item.active = (item.urlParams[i] === param));
+                    return item;
+                });
+            }
+            return state;
+        };
+        return (source: Observable<IState>) => source.pipe(map(getActiveMenu));
     }
 
 
-
-    private _menuItemFromRoute(route: Route, index: number, routes: Array<Route>): IMenuModel {
-        if (!route.path) return {} as IMenuModel;
+    private _menuItemFromRoute(route: Route, index: number): IMenu {
+        if (!route.path) return {} as IMenu;
 
         const params = route.path.split('/');
 
@@ -416,19 +494,19 @@ export class AppService {
             isLazy: route.hasOwnProperty('loadChildren'),
             tcode: tcode,
             ...route.data,
-        } as IMenuModel;
+        } as IMenu;
     }
 
 
 
-    private _menuChildren(menuItem: IMenuModel, index: number, menu: Array<IMenuModel>): IMenuModel {
+    private _menuChildren(menuItem: IMenu, index: number, menu: IMenu[]): IMenu {
         menuItem.children = menu.filter(item => item.routerPath.startsWith(menuItem.routerPath) && item.urlParams.length === menuItem.urlParams.length + 1);
         return menuItem;
     }
 
 
 
-    private _userFromAuthResponse(response: any): IUserModel {
+    private _userFromAuthResponse(response: any): IUser {
         const allowedCountries = response['as:tenantContextHosts']
             .split(', ')
             .map((country: string) => country.trim().slice(0, 2).toLowerCase());
@@ -436,8 +514,9 @@ export class AppService {
             allowedCountries[0] = COUNTRY.US;
         }
 
-        const user: IUserModel = {
+        const user: IUser = {
             userName: response['userName'],
+            routesAuth: response['routesAuth'],
             phone: response['as:claim:http://schemas.xmlsoap.org/ws/2005/05/identity/claims/mobilephone'],
             nameDisplay: response['as:claim:http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname'],
             countryDefault: response['as:claim:http://schemas.xmlsoap.org/ws/2005/05/identity/claims/country'],
@@ -448,5 +527,76 @@ export class AppService {
         };
         user.countryDefault = user.countryDefault ? user.countryDefault.toLowerCase() as COUNTRY : COUNTRY.US;
         return user;
+    }
+
+    // private _applyRoutesAuthToRoutes(routesAuth: IRoutesAuth[]) {
+    //     function applyRoutesAuthToRoutes(a: Route[], c: Route, i: number, routes: Route[]) {
+    //         if (routesAuth.length > 0) {
+    //             const _routes: Route[] = [];
+    //             routes.forEach((route: Route) => {
+    //                 const item = routesAuth.find((routeAuth: IRoutesAuth) => routeAuth.path === route.path);
+    //                 if (item) {
+    //                     if (item.allow !== 'hidden') {
+    //                         _routes.push(route);
+    //                     }
+    //                 } else {
+    //                     // _routes.push(route);
+    //                 }
+    //             });
+    //             return _routes;
+    //         } else {
+    //             return routes;
+    //         }
+    //     };
+    //     return applyRoutesAuthToRoutes;
+    // }
+
+    private _applyRoutesAuthToRoutes(routes: Route[], routesAuth: IRoutesAuth[]): Route[] {
+        if (routesAuth && routesAuth.length > 0) {
+            const _routes: Route[] = [];
+            routes.forEach((route: Route) => {
+                const item = routesAuth.find((routeAuth: IRoutesAuth) => routeAuth.path === route.path);
+                if (item) {
+                    if (item.allow === 'hidden') {
+                        // route.path = 'page-not-found';
+                        // route.data!.notAuthorized = true;
+                        // _routes.push(route);
+                    } else if (item.allow) {
+                        _routes.push(route);
+                    } else {
+                        route.data!.notAuthorized = true;
+                        _routes.push(route);
+                    }
+                } else {
+                    // _routes.push(route);
+                }
+            });
+
+            // append system routes
+            _routes.push(...routes.filter((route: Route) => !route.data || !route.data.description));
+
+            // change redirect for the default route
+            const defaultRoute = _routes.find((route: Route) => !route.path);
+            if (defaultRoute) {
+                const defaultComponent = _routes.find((route: Route) => route.data && route.data.isComponent && !route.data.notAuthorized);
+                if (defaultComponent) {
+                    defaultRoute.redirectTo = defaultComponent.path;
+                }
+            }
+            return _routes;
+        } else {
+            return routes;
+        }
+    }
+
+
+    private _handleRoutesAndMenu(state: IState) {
+        this._router.config = this._applyRoutesAuthToRoutes(this._router.config, state.user.routesAuth);
+        state.menu = this._router.config
+            .filter((route: Route) => route.data && route.data.description)
+            .map(this._menuItemFromRoute)
+            .map(this._menuChildren);
+        state.apps = state.menu.filter((menu: IMenu) => menu.urlParams.length === 1 && !menu.excludeFromMenu);
+        state.menuItemCurrent = state.menu.find((item: IMenu) => item.isComponent && !item.notAuthorized) || {} as IMenu;
     }
 }

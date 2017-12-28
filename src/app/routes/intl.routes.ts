@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { DashboardComponent } from '@main/dashboard/dashboard.component';
 import { IFrameComponent } from '@shared/components/iframe/iframe.component';
+import { RouteGuardService } from './route-guard.service';
 
 
 export const INTL_ROUTES: Routes = [
@@ -8,6 +9,7 @@ export const INTL_ROUTES: Routes = [
   {
     path: 'intl',
     component: DashboardComponent,
+    canActivate: [RouteGuardService],
     data: {
       description: 'INTL',
     },
@@ -25,6 +27,7 @@ export const INTL_ROUTES: Routes = [
   {
     path: 'intl/intl-home',
     component: IFrameComponent,
+    canActivate: [RouteGuardService],
     data: {
       isComponent: true,
       isFavorite: true,
@@ -35,6 +38,7 @@ export const INTL_ROUTES: Routes = [
   {
     path: 'intl/intl-order',
     component: IFrameComponent,
+    canActivate: [RouteGuardService],
     data: {
       isComponent: true,
       isFavorite: true,

@@ -1,0 +1,6 @@
+<ng-container *ngIf="state$ | async as state">
+        Not authorized for
+        <strong>{{ state.urlNotAuthorized }}</strong>
+</ng-container>
+
+<!-- Not authorized for <strong>{{url}}</strong> -->

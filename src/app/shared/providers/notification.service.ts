@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { NotificationsService } from 'angular2-notifications';
 
-export interface INotificationModel {
+export interface INotification {
     message: string;
     date?: number;
 }
@@ -15,13 +15,13 @@ export class NotificationService {
         private _notificationsService: NotificationsService
     ) { }
 
-    private _subject$ = new BehaviorSubject<Array<INotificationModel>>([]);
-    notifications$: Observable<Array<INotificationModel>> = this._subject$.asObservable();
-    notifications: Array<INotificationModel> = [];
+    private _subject$ = new BehaviorSubject<INotification[]>([]);
+    notifications$: Observable<INotification[]> = this._subject$.asObservable();
+    notifications: INotification[] = [];
 
-    notify(notifications: Array<INotificationModel>) {
+    notify(notifications: INotification[]) {
         notifications
-            .map((notification: INotificationModel) => {
+            .map((notification: INotification) => {
                 notification.date = Date.now();
                 return notification;
             })

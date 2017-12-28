@@ -22,7 +22,7 @@ export class ReLoginComponent extends LoginComponent {
         super(_appService, _loadingService, _localStorageService);
     }
 
-    // reLoginPrompt$ = this._appService.state$.switchMap((state: IStateModel) => {
+    // reLoginPrompt$ = this._appService.state$.switchMap((state: IState) => {
     //     if (!state.isLoggedIn) {
     //         return Observable.of(false);
     //     }

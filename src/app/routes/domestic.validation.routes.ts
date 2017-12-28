@@ -1,13 +1,15 @@
 import { Routes } from '@angular/router';
 import { DashboardComponent } from '@main/dashboard/dashboard.component';
 import { IFrameComponent } from '@shared/components/iframe/iframe.component';
- 
+import { RouteGuardService } from './route-guard.service';
+
 
 export const DOMESTIC_VALIDATION_ROUTES: Routes = [
   // FOLDER
   {
     path: 'domestic/validation',
     component: DashboardComponent,
+    canActivate: [RouteGuardService],
     data: {
       description: 'Validation',
     }
@@ -17,6 +19,7 @@ export const DOMESTIC_VALIDATION_ROUTES: Routes = [
   {
     path: 'domestic/validation/order',
     component: IFrameComponent,
+    canActivate: [RouteGuardService],
     data: {
       isComponent: true,
       description: 'Pending Validation',
@@ -26,6 +29,7 @@ export const DOMESTIC_VALIDATION_ROUTES: Routes = [
   {
     path: 'domestic/validation/courier',
     component: IFrameComponent,
+    canActivate: [RouteGuardService],
     data: {
       isComponent: true,
       description: 'Mobile Queue',

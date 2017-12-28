@@ -6,7 +6,6 @@ import { OrderService, IMaterial } from './order.service';
     templateUrl: './order.component.html',
     styleUrls: ['./order.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
-
 })
 export class OrderComponent {
     constructor(

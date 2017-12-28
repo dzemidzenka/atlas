@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
-import { IUserModel } from '@main/app.service';
+import { IUser } from '@main/app.service';
 
 @Injectable()
 export class LocalStorageService {
     readonly lsAuth = 'lsAUTH';
     readonly lsRememberMe = 'lsRememberMe';
 
-    private _user: IUserModel | null;
+    private _user: IUser | null;
     private _rememberMe: boolean;
 
     // USER
-    get user(): IUserModel {
+    get user(): IUser {
         if (this._user) {
             return this._user;
         }
@@ -18,10 +18,10 @@ export class LocalStorageService {
         if (_lsAuth) {
             return JSON.parse(_lsAuth);
         }
-        return {} as IUserModel;
+        return {} as IUser;
     }
 
-    set user(user: IUserModel) {
+    set user(user: IUser) {
         if (Object.keys(user).length === 0) {
             this._user = null;
             localStorage.removeItem(this.lsAuth);

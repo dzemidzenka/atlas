@@ -24,7 +24,7 @@ export class Demo1Component implements OnInit {
         private _componentFactoryResolver: ComponentFactoryResolver,
         private _applicationRef: ApplicationRef,
         private _injector: Injector
-    ) {}
+    ) { }
 
     isOpen = false;
     componentOutlet = TestComponent;

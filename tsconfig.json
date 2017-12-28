@@ -18,6 +18,7 @@
         ],
         "strict": true,
         "strictNullChecks": true,
+        "strictFunctionTypes": true,
         "suppressExcessPropertyErrors": false,
         "suppressImplicitAnyIndexErrors": false,
         "noUnusedParameters": false,
@@ -37,12 +38,15 @@
             "@shared/*": [
                 "./src/app/shared/*"
             ],
+            "@http/*": [
+                "./src/app/http.interceptors/*"
+            ],            
             "@routes": [
                 "./src/app/routes/app.routes"
             ],
             "@env": [
                 "./src/environments/environment"
-            ]
+            ],
         }
     },
     "angularCompilerOptions": {

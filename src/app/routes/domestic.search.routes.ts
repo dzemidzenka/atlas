@@ -1,13 +1,15 @@
 import { Routes } from '@angular/router';
 import { DashboardComponent } from '@main/dashboard/dashboard.component';
 import { IFrameComponent } from '@shared/components/iframe/iframe.component';
- 
+import { RouteGuardService } from './route-guard.service';
+
 
 export const DOMESTIC_SEARCH_ROUTES: Routes = [
   // FOLDER
   {
     path: 'domestic/search',
     component: DashboardComponent,
+    canActivate: [RouteGuardService],
     data: {
       description: 'Search',
     }
@@ -17,6 +19,7 @@ export const DOMESTIC_SEARCH_ROUTES: Routes = [
   {
     path: 'domestic/search/order',
     component: IFrameComponent,
+    canActivate: [RouteGuardService],
     data: {
       isComponent: true,
       description: 'Order Search',
@@ -26,6 +29,7 @@ export const DOMESTIC_SEARCH_ROUTES: Routes = [
   {
     path: 'domestic/search/fedex',
     component: IFrameComponent,
+    canActivate: [RouteGuardService],
     data: {
       isComponent: true,
       description: 'Fedex Pickups',
@@ -35,6 +39,7 @@ export const DOMESTIC_SEARCH_ROUTES: Routes = [
   {
     path: 'domestic/search/fedex_tracking',
     component: IFrameComponent,
+    canActivate: [RouteGuardService],
     data: {
       isComponent: true,
       description: 'Fedex Tracking',
@@ -44,6 +49,7 @@ export const DOMESTIC_SEARCH_ROUTES: Routes = [
   {
     path: 'domestic/search/tasks',
     component: IFrameComponent,
+    canActivate: [RouteGuardService],
     data: {
       isComponent: true,
       description: 'Tasks',

@@ -2,9 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { SharedModule } from '@shared/shared.module';
-
 import { Demo1Component } from './demo1.component';
-
 import { TestComponent } from './test/test.component';
 
 
